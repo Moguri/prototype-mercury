@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[[source]]
+url = "https://archive.panda3d.org/simple"
+verify_ssl = true
+name = "Panda3D"
+
+[packages]
+panda3d = {version = "*", index="Panda3D"}
+
+[dev-packages]
+pylint = "*"
+pycodestyle = "*"
+
+[requires]
+python_version = "3.6"
