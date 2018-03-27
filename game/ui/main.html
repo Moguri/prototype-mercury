@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="vue.js"></script>
+        <link rel="stylesheet" href="pure-min.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div id="app">
+            <div id='card-bar' class="pure-g">
+                <monster-card class="pure-u-1-3" :monster="player_monster"></monster-card>
+                <div id='timer' class="pure-u-1-3"><p>{{timer}}</p></div>
+                <monster-card class="pure-u-1-3" :monster="opponent_monster"></monster-card>
+            </div>
+        </div>
+    </body>
+
+    <script type="text/x-template" id="card-tmpl">
+        <div>
+            <div class='monster-card'>
+                <progress class='progress-hp' :value='monster.hp_current' :max='monster.hp_max'></progress>
+                <progress class='progress-ap' :value='monster.ap_current' :max='monster.ap_max'></progress>
+                <div class="pure-g" v-for="(key, i) in monster.inputs.abilities">
+                    <span class="pure-u-1-6">{{key}}</span><span class="pure-u-5-6">{{monster.abilities[i]}}</span>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script>
+        var data = {
+            player_monster: {
+                inputs: {
+                    abilities: ['Q', 'W', 'E', 'R'],
+                },
+                name: 'foo',
+                abilities: ['stab', 'poke', 'jab', 'nuke'],
+                hp_current: 123,
+                hp_max: 304,
+                ap_current: 24,
+                ap_max: 100,
+            },
+            opponent_monster: {
+                inputs: {
+                    abilities: ['Q', 'W', 'E', 'R'],
+                },
+                name: '!foo',
+                abilities: ['stab', 'poke', 'jab', 'nuke'],
+                hp_current: 70,
+                hp_max: 100,
+                ap_current: 66,
+                ap_max: 100,
+            },
+            timer: 60,
+        };
+
+        Vue.component('monster-card', {
+            props: ['monster'],
+            template: '#card-tmpl'
+        });
+        var app = new Vue({
+            el: '#app',
+            data: data
+        });
+    </script>
+</html>
