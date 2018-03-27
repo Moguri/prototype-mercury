@@ -1,16 +1,27 @@
 import math
+import os
 import sys
 
 from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
 import panda3d.core as p3d
 
+import cefpanda
 import blenderpanda
 
 p3d.load_prc_file_data(
     '',
     'win-size 1280 720'
 )
+
+
+if hasattr(sys, 'frozen'):
+    APP_ROOT_DIR = os.path.dirname(sys.executable)
+else:
+    APP_ROOT_DIR = os.path.dirname(__file__)
+if not APP_ROOT_DIR:
+    print("empty app_root_dir")
+    sys.exit()
 
 
 class CameraController():
@@ -75,6 +86,13 @@ class GameApp(ShowBase):
 
         self.cam_controller = CameraController(self.camera, self.combatants)
         self.taskMgr.add(self.cam_controller.update, 'Camera Controller')
+
+        # UI
+        self.ui = cefpanda.CEFPanda()
+        self.load_ui('main')
+
+    def load_ui(self, uiname):
+        self.ui.load(os.path.join(APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
 
     def move_combatant(self, index, delta):
         new_positions = [model.get_x() for model in self.combatants]
