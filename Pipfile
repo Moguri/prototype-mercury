@@ -10,6 +10,7 @@ name = "Panda3D"
 
 [packages]
 panda3d = {version = "==1.10.0.dev1460", index="Panda3D"}
+cefpanda = "*"
 
 [dev-packages]
 pylint = "*"
