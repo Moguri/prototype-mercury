@@ -9,7 +9,7 @@ verify_ssl = true
 name = "Panda3D"
 
 [packages]
-panda3d = {version = "*", index="Panda3D"}
+panda3d = {version = "==1.10.0.dev1460", index="Panda3D"}
 
 [dev-packages]
 pylint = "*"
