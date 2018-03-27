@@ -78,9 +78,15 @@ class GameApp(ShowBase):
 
     def move_combatant(self, index, delta):
         new_positions = [model.get_x() for model in self.combatants]
-        new_positions[index] += delta
-        distance = max(new_positions) - min(new_positions)
 
+        new_position = new_positions[index] + delta
+        if abs(new_position) > 10:
+            print(abs(new_position))
+            return
+
+        new_positions[index] = new_position
+
+        distance = max(new_positions) - min(new_positions)
         if distance > 8 or distance < 2:
             return
 
