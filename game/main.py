@@ -91,6 +91,8 @@ class Combatant:
         self.max_ap = 100
         self.current_ap = 0
 
+        self.ap_per_second = 5
+
         self.abilities = [Ability() for i in range(4)]
 
     def get_state(self):
@@ -99,7 +101,7 @@ class Combatant:
             'name': self.name,
             'hp_current': self.current_hp,
             'hp_max': self.max_hp,
-            'ap_current': self.current_ap,
+            'ap_current': int(self.current_ap),
             'ap_max': self.max_ap,
             'abilities': [{
                 'name': ability.name,
@@ -162,7 +164,12 @@ class CombatState(DirectObject):
         combatant.path.set_x(combatant.path.get_x() + delta)
 
     def update_state(self, task):
+        dt = p3d.ClockObject.get_global_clock().get_dt()
         self.time_remaining = 60 - task.time
+
+        for combatant in self.combatants:
+            combatant.current_ap += combatant.ap_per_second * dt
+            combatant.current_ap = min(combatant.current_ap, combatant.max_ap)
 
         state = {
             'timer': math.floor(self.time_remaining),
