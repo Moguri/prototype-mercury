@@ -63,8 +63,12 @@ html {
 }
 
 progress {
-    width: 100%;
     -webkit-appearance: none;
+    width: 100%;
+}
+
+progress:after {
+    content: attr(value)'/'attr(max);
 }
 
 progress::-webkit-progress-bar,
