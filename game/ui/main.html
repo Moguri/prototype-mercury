@@ -12,21 +12,45 @@
     <body>
         <div id="app">
             <div id='card-bar' class="pure-g">
-                <monster-card class="pure-u-1-3" :monster="player_monster"></monster-card>
+                <monster-card class="pure-u-1-3" :monster="player_monster" :range="range" :flip="false">
+                </monster-card>
                 <div id='timer' class="pure-u-1-3"><p>{{timer}}</p></div>
-                <monster-card class="pure-u-1-3" :monster="opponent_monster"></monster-card>
+                <monster-card class="pure-u-1-3" :monster="opponent_monster" :range="range" :flip="true">
+                </monster-card>
             </div>
         </div>
     </body>
 
     <script type="text/x-template" id="card-tmpl">
-        <div>
-            <div class='monster-card'>
+        <div class='monster-card pure-g'>
+            <div v-if="flip" class='mc-range pure-u-1-3'>
+                <table>
+                    <br><br>
+                    <tr v-for="ability in monster.abilities">
+                        <td v-for="i in [3, 2, 1, 0]"
+                            v-bind:class="{'mc-range-valid': ability.range.includes(i), 'mc-range-active':i==range}">
+                            &nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class='mc-stats pure-u-2-3'>
                 <progress class='progress-hp' :value='monster.hp_current' :max='monster.hp_max'></progress>
                 <progress class='progress-ap' :value='monster.ap_current' :max='monster.ap_max'></progress>
-                <div class="pure-g" v-for="(key, i) in monster.inputs.abilities">
-                    <span class="pure-u-1-6">{{key}}</span><span class="pure-u-5-6">{{monster.abilities[i]}}</span>
+                <div class="pure-g" v-for="ability in monster.abilities">
+                    <span class="pure-u-1-6">{{ability.input}}</span><span class="pure-u-5-6">{{ability.name}}</span>
                 </div>
+            </div>
+            <div v-if="!flip" class='mc-range pure-u-1-3'>
+                <table>
+                    <br><br>
+                    <tr v-for="ability in monster.abilities">
+                        <td v-for="i in [0, 1, 2, 3]"
+                            v-bind:class="{'mc-range-valid': ability.range.includes(i), 'mc-range-active':i==range}">
+                            &nbsp;
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
     </script>
@@ -34,32 +58,37 @@
     <script>
         var data = {
             player_monster: {
-                inputs: {
-                    abilities: ['Q', 'W', 'E', 'R'],
-                },
                 name: 'foo',
-                abilities: ['stab', 'poke', 'jab', 'nuke'],
+                abilities: [
+                    {name: 'stab', input: 'Q', range: [0, 1]},
+                    {name: 'poke', input: 'W', range: [0]},
+                    {name: 'jab', input: 'E', range: [0]},
+                    {name: 'nuke', input: 'R', range: [3]},
+                ],
                 hp_current: 123,
                 hp_max: 304,
                 ap_current: 24,
                 ap_max: 100,
             },
             opponent_monster: {
-                inputs: {
-                    abilities: ['Q', 'W', 'E', 'R'],
-                },
                 name: '!foo',
-                abilities: ['stab', 'poke', 'jab', 'nuke'],
+                abilities: [
+                    {name: 'stab', input: 'Q', range: [0, 1]},
+                    {name: 'poke', input: 'W', range: [0]},
+                    {name: 'jab', input: 'E', range: [0]},
+                    {name: 'nuke', input: 'R', range: [3]},
+                ],
                 hp_current: 70,
                 hp_max: 100,
                 ap_current: 66,
                 ap_max: 100,
             },
+            range: Math.floor(Math.random() * 4),
             timer: 60,
         };
 
         Vue.component('monster-card', {
-            props: ['monster'],
+            props: ['monster', 'range', 'flip'],
             template: '#card-tmpl'
         });
         var app = new Vue({

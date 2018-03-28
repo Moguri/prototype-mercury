@@ -20,10 +20,46 @@ html {
 }
 
 .monster-card {
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.mc-stats {
     padding: 0.5em;
-    margin: 1em;
+    box-sizing: border-box;
     background-color: #ccc;
     border-radius: 0.2em;
+}
+
+.mc-range {
+    padding: 0.5em;
+    box-sizing: border-box;
+    border-radius: 0.2em;
+    width: 32%;
+    height: 100%;
+}
+
+.mc-range > table {
+    width: 100%;
+    height: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+
+.mc-range > table > tr > td {
+    border: 1px solid black;
+}
+
+.mc-range > table > tr > td:not(.mc-range-valid) {
+    background-color: #fff;
+}
+
+.mc-range-valid {
+    background-color: #333;
+}
+
+.mc-range-active {
+    transform: scale(1.2);
 }
 
 progress {
