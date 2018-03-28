@@ -1,3 +1,4 @@
+import json
 import math
 import os
 import sys
@@ -89,10 +90,16 @@ class CombatState(DirectObject):
         self.ui = cefpanda.CEFPanda()
         self.load_ui('main')
 
+        self.update_ui({'timer': 45})
+
         base.taskMgr.add(self.update_timer, 'Combat Timer')
 
     def load_ui(self, uiname):
         self.ui.load(os.path.join(APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
+
+    def update_ui(self, new_state):
+        data = json.dumps(new_state)
+        self.ui.execute_js('update_state({})'.format(data), onload=True)
 
     def move_combatant(self, index, delta):
         new_positions = [model.get_x() for model in self.combatants]
