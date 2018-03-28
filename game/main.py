@@ -12,7 +12,9 @@ import blenderpanda
 
 p3d.load_prc_file_data(
     '',
-    'win-size 1280 720'
+    'win-size 1280 720\n'
+    'framebuffer-multisample 1\n'
+    'multisamples 8\n'
 )
 
 
@@ -113,6 +115,7 @@ class GameApp(ShowBase):
 
         self.disable_mouse()
         self.render.set_shader_auto()
+        self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
 
         self.combat = CombatState(self.render)
 
