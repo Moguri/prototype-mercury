@@ -24,7 +24,7 @@ if hasattr(sys, 'frozen'):
 else:
     APP_ROOT_DIR = os.path.dirname(__file__)
 if not APP_ROOT_DIR:
-    print("empty app_root_dir")
+    print('empty app_root_dir')
     sys.exit()
 
 
@@ -40,7 +40,7 @@ class CameraController():
         self.camera.set_pos(self.widget, p3d.LVecBase3(0.0, -7.5, 0.0))
 
     def update(self, _):
-        positions = [model.get_x() for model in self.combatants]
+        positions = [combatant.path.get_x() for combatant in self.combatants]
 
         target_pos = math.fsum(positions) / len(positions)
         current_pos = self.widget.get_x()
@@ -59,27 +59,69 @@ class CameraController():
         return Task.cont
 
 
+class Ability:
+    def __init__(self):
+        self.name = 'Ability'
+        self.cost = 10
+
+        self.range = [0]
+
+        self.effects = [
+            {
+                'type': 'damage',
+                'parameters': {
+                    'physical_coef': 1.0,
+                    'magical_coef': 0.0,
+                    'base_coef': 0.0,
+                }
+            }
+        ]
+
+
+class Combatant:
+    def __init__(self, scene_path):
+        self.path = base.loader.load_model('monster.bam')
+        self.path.reparent_to(scene_path)
+
+        self.name = 'CatShark'
+
+        self.max_hp = 100
+        self.current_hp = 100
+
+        self.max_ap = 100
+        self.current_ap = 0
+
+        self.abilities = [Ability() for i in range(4)]
+
+    def get_state(self):
+        inputs = ['Q', 'W', 'E', 'R']
+        return {
+            'name': self.name,
+            'hp_current': self.current_hp,
+            'hp_max': self.max_hp,
+            'ap_current': self.current_ap,
+            'ap_max': self.max_ap,
+            'abilities': [{
+                'name': ability.name,
+                'input': _input,
+                'range': ability.range,
+            } for ability, _input in zip(self.abilities, inputs)],
+        }
+
+
 class CombatState(DirectObject):
     def __init__(self, root_np):
         super().__init__()
 
         self.time_remaining = 60
+        self.range_index = 0
 
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(root_np)
 
-        self.monster_a_model = base.loader.load_model('monster.bam')
-        self.monster_a_model.reparent_to(self.arena_model)
-        self.monster_a_model.set_pos(-1.0, 0.0, 0.0)
-
-        self.monster_b_model = base.loader.load_model('monster.bam')
-        self.monster_b_model.reparent_to(self.arena_model)
-        self.monster_b_model.set_pos(1.0, 0.0, 0.0)
-
-        self.combatants = [
-            self.monster_a_model,
-            self.monster_b_model,
-        ]
+        self.combatants = [Combatant(self.arena_model) for i in range(2)]
+        self.combatants[0].path.set_x(-1.0)
+        self.combatants[1].path.set_x(1.0)
 
         self.accept('j', self.move_combatant, [0, -2.0])
         self.accept('k', self.move_combatant, [0, 2.0])
@@ -92,7 +134,7 @@ class CombatState(DirectObject):
 
         self.update_ui({'timer': 45})
 
-        base.taskMgr.add(self.update_timer, 'Combat Timer')
+        base.taskMgr.add(self.update_state, 'Combat State')
 
     def load_ui(self, uiname):
         self.ui.load(os.path.join(APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
@@ -102,7 +144,7 @@ class CombatState(DirectObject):
         self.ui.execute_js('update_state({})'.format(data), onload=True)
 
     def move_combatant(self, index, delta):
-        new_positions = [model.get_x() for model in self.combatants]
+        new_positions = [combatant.path.get_x() for combatant in self.combatants]
 
         new_position = new_positions[index] + delta
         if abs(new_position) > 10:
@@ -111,20 +153,27 @@ class CombatState(DirectObject):
         new_positions[index] = new_position
 
         distance = max(new_positions) - min(new_positions)
+
         if distance > 8 or distance < 2:
             return
 
-        model = self.combatants[index]
-        model.set_x(model.get_x() + delta)
+        self.range_index = int((distance - 2) // 2)
+        combatant = self.combatants[index]
+        combatant.path.set_x(combatant.path.get_x() + delta)
 
-    def update_timer(self, task):
+    def update_state(self, task):
         self.time_remaining = 60 - task.time
-        return Task.cont
 
-    def get_state(self):
-        return {
-            "time": self.time_remaining,
+        state = {
+            'timer': math.floor(self.time_remaining),
+            'range': self.range_index,
+            'player_monster': self.combatants[0].get_state(),
+            'opponent_monster': self.combatants[1].get_state(),
         }
+
+        self.update_ui(state)
+
+        return Task.cont
 
 
 class GameApp(ShowBase):
