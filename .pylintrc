@@ -281,7 +281,8 @@ good-names=i,
            k,
            ex,
            Run,
-           _
+           _,
+           ui
 
 # Include a hint for the correct naming format with invalid-name
 include-naming-hint=no
@@ -331,7 +332,7 @@ variable-naming-style=snake_case
 
 # List of additional names supposed to be defined in builtins. Remember that
 # you should avoid to define new builtins when possible.
-additional-builtins=
+additional-builtins=base
 
 # Tells whether unused global variables should be treated as a violation.
 allow-global-unused-variables=yes

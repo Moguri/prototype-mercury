@@ -3,6 +3,7 @@ import os
 import sys
 
 from direct.showbase.ShowBase import ShowBase
+from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
 import panda3d.core as p3d
 
@@ -51,41 +52,34 @@ class CameraController():
         offset_delta = 0.01 * (target_offset - current_offset)
         offset_vector = p3d.LVecBase3(0.0, -(current_offset + offset_delta), 0.0)
         self.camera.set_pos(self.widget, offset_vector)
+
         return Task.cont
 
 
-class GameApp(ShowBase):
-    def __init__(self):
-        ShowBase.__init__(self)
-        blenderpanda.init(self)
-        self.accept('escape', sys.exit)
+class CombatState(DirectObject):
+    def __init__(self, root_np):
+        super().__init__()
 
-        self.arena_model = self.loader.load_model('arena.bam')
-        self.arena_model.reparent_to(self.render)
+        self.arena_model = base.loader.load_model('arena.bam')
+        self.arena_model.reparent_to(root_np)
 
-        self.monster_a_model = self.loader.load_model('monster.bam')
+        self.monster_a_model = base.loader.load_model('monster.bam')
         self.monster_a_model.reparent_to(self.arena_model)
         self.monster_a_model.set_pos(-1.0, 0.0, 0.0)
 
-        self.monster_b_model = self.loader.load_model('monster.bam')
+        self.monster_b_model = base.loader.load_model('monster.bam')
         self.monster_b_model.reparent_to(self.arena_model)
         self.monster_b_model.set_pos(1.0, 0.0, 0.0)
-
-        self.accept('j', self.move_combatant, [0, -2.0])
-        self.accept('k', self.move_combatant, [0, 2.0])
-        self.accept('u', self.move_combatant, [1, -2.0])
-        self.accept('i', self.move_combatant, [1, 2.0])
-
-        self.disable_mouse()
-        self.render.set_shader_auto()
 
         self.combatants = [
             self.monster_a_model,
             self.monster_b_model,
         ]
 
-        self.cam_controller = CameraController(self.camera, self.combatants)
-        self.taskMgr.add(self.cam_controller.update, 'Camera Controller')
+        self.accept('j', self.move_combatant, [0, -2.0])
+        self.accept('k', self.move_combatant, [0, 2.0])
+        self.accept('u', self.move_combatant, [1, -2.0])
+        self.accept('i', self.move_combatant, [1, 2.0])
 
         # UI
         self.ui = cefpanda.CEFPanda()
@@ -99,7 +93,6 @@ class GameApp(ShowBase):
 
         new_position = new_positions[index] + delta
         if abs(new_position) > 10:
-            print(abs(new_position))
             return
 
         new_positions[index] = new_position
@@ -110,6 +103,21 @@ class GameApp(ShowBase):
 
         model = self.combatants[index]
         model.set_x(model.get_x() + delta)
+
+
+class GameApp(ShowBase):
+    def __init__(self):
+        ShowBase.__init__(self)
+        blenderpanda.init(self)
+        self.accept('escape', sys.exit)
+
+        self.disable_mouse()
+        self.render.set_shader_auto()
+
+        self.combat = CombatState(self.render)
+
+        self.cam_controller = CameraController(self.camera, self.combat.combatants)
+        self.taskMgr.add(self.cam_controller.update, 'Camera Controller')
 
 
 APP = GameApp()
