@@ -27,7 +27,7 @@
                 <table>
                     <br><br>
                     <tr v-for="ability in monster.abilities">
-                        <td v-for="i in [3, 2, 1, 0]"
+                        <td v-for="i in [0, 1, 2, 3]"
                             v-bind:class="{'mc-range-valid': ability.range.includes(i), 'mc-range-active':i==range}">
                             &nbsp;
                         </td>
@@ -45,7 +45,7 @@
                 <table>
                     <br><br>
                     <tr v-for="ability in monster.abilities">
-                        <td v-for="i in [0, 1, 2, 3]"
+                        <td v-for="i in [3, 2, 1, 0]"
                             v-bind:class="{'mc-range-valid': ability.range.includes(i), 'mc-range-active':i==range}">
                             &nbsp;
                         </td>
