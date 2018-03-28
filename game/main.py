@@ -107,6 +107,7 @@ class Combatant:
                 'name': ability.name,
                 'input': _input,
                 'range': ability.range,
+                'cost': ability.cost,
             } for ability, _input in zip(self.abilities, inputs)],
         }
 
