@@ -62,6 +62,8 @@ class CombatState(DirectObject):
     def __init__(self, root_np):
         super().__init__()
 
+        self.time_remaining = 60
+
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(root_np)
 
@@ -87,6 +89,8 @@ class CombatState(DirectObject):
         self.ui = cefpanda.CEFPanda()
         self.load_ui('main')
 
+        base.taskMgr.add(self.update_timer, 'Combat Timer')
+
     def load_ui(self, uiname):
         self.ui.load(os.path.join(APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
 
@@ -105,6 +109,15 @@ class CombatState(DirectObject):
 
         model = self.combatants[index]
         model.set_x(model.get_x() + delta)
+
+    def update_timer(self, task):
+        self.time_remaining = 60 - task.time
+        return Task.cont
+
+    def get_state(self):
+        return {
+            "time": self.time_remaining,
+        }
 
 
 class GameApp(ShowBase):
