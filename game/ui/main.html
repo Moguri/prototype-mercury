@@ -24,37 +24,39 @@
     <script type="text/x-template" id="card-tmpl">
         <div class='monster-card pure-g'>
             <div v-if="flip" class='mc-range pure-u-1-3'>
-                <table>
-                    <br><br>
-                    <tr v-for="ability in monster.abilities">
-                        <td v-for="i in [0, 1, 2, 3]"
-                            v-bind:class="{'mc-range-valid': ability.range.includes(i), 'mc-range-active':i==range}">
-                            &nbsp;
-                        </td>
-                    </tr>
-                </table>
+                <range-indicator :monster="monster" :range="range" :flip="flip"></range-indicator>
             </div>
             <div class='mc-stats pure-u-2-3'>
                 <progress class='progress-hp' :value='monster.hp_current' :max='monster.hp_max'></progress>
                 <progress class='progress-ap' :value='monster.ap_current' :max='monster.ap_max'></progress>
-                <div class="pure-g" v-for="ability in monster.abilities">
+                <div class="pure-g" v-for="ability in monster.abilities.slice(0,4)">
                     <span class="pure-u-1-6">{{ability.input}}</span>
                     <span class="pure-u-1-6">{{ability.cost}}</span>
                     <span class="pure-u-2-3">{{ability.name}}</span>
                 </div>
+                <div class="pure-g" v-for="i in Math.max(0, 4-monster.abilities.length)">
+                    <span>&nbsp;</span>
+                </div>
             </div>
             <div v-if="!flip" class='mc-range pure-u-1-3'>
-                <table>
-                    <br><br>
-                    <tr v-for="ability in monster.abilities">
-                        <td v-for="i in [3, 2, 1, 0]"
-                            v-bind:class="{'mc-range-valid': ability.range.includes(i), 'mc-range-active':i==range}">
-                            &nbsp;
-                        </td>
-                    </tr>
-                </table>
+                <range-indicator :monster="monster" :range="range" :flip="flip"></range-indicator>
             </div>
         </div>
+    </script>
+
+    <script type="text/x-template" id="range-ind-tmpl">
+        <table>
+            <br><br>
+            <tr v-for="ability in monster.abilities.slice(0,4)">
+                <td v-for="i in (flip) ? [0, 1, 2, 3] : [3, 2, 1, 0]"
+                    v-bind:class="{'mc-range-valid': ability.range.includes(i), 'mc-range-active':i==range}">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr v-for="i in Math.max(0, 4-monster.abilities.length)">
+                <td v-for="n in 4">&nbsp;</td>
+            </tr>
+        </table>
     </script>
 
     <script>
@@ -94,6 +96,10 @@
         Vue.component('monster-card', {
             props: ['monster', 'range', 'flip'],
             template: '#card-tmpl'
+        });
+        Vue.component('range-indicator', {
+            props: ['monster', 'range', 'flip'],
+            template: '#range-ind-tmpl'
         });
         var app = new Vue({
             el: '#app',
