@@ -52,7 +52,7 @@
 
     <script type="text/x-template" id="range-ind-tmpl">
         <table>
-            <br><br>
+            <br><br><br>
             <tr v-for="ability in monster.abilities.slice(0,4)">
                 <td v-for="i in (flip) ? [0, 1, 2, 3] : [3, 2, 1, 0]"
                     v-bind:class="{'mc-range-valid': ability.range.includes(i), 'mc-range-active':i==range}">
