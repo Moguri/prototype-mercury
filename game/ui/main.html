@@ -30,9 +30,15 @@
                 <progress class='progress-hp' :value='monster.hp_current' :max='monster.hp_max'></progress>
                 <progress class='progress-ap' :value='monster.ap_current' :max='monster.ap_max'></progress>
                 <div class="pure-g" v-for="ability in monster.abilities.slice(0,4)">
-                    <span class="pure-u-1-6">{{ability.input}}</span>
-                    <span class="pure-u-1-6">{{ability.cost}}</span>
-                    <span class="pure-u-2-3">{{ability.name}}</span>
+                    <span class="pure-u-1-6" v-bind:class="{'mc-disabled': !ability.usable}">
+                        {{ability.input}}
+                    </span>
+                    <span class="pure-u-1-6" v-bind:class="{'mc-disabled': !ability.usable}">
+                        {{ability.cost}}
+                    </span>
+                    <span class="pure-u-2-3" v-bind:class="{'mc-disabled': !ability.usable}">
+                        {{ability.name}}
+                    </span>
                 </div>
                 <div class="pure-g" v-for="i in Math.max(0, 4-monster.abilities.length)">
                     <span>&nbsp;</span>
@@ -65,10 +71,10 @@
                 player_monster: {
                     name: 'foo',
                     abilities: [
-                        {name: 'stab', input: 'Q', range: [0, 1], cost: 15},
-                        {name: 'poke', input: 'W', range: [0], cost: 10},
-                        {name: 'jab', input: 'E', range: [0], cost: 10},
-                        {name: 'nuke', input: 'R', range: [3], cost: 25},
+                        {name: 'stab', input: 'Q', range: [0, 1], cost: 15, usable: true},
+                        {name: 'poke', input: 'W', range: [0], cost: 10, usable: true},
+                        {name: 'jab', input: 'E', range: [0], cost: 10, usable: true},
+                        {name: 'nuke', input: 'R', range: [3], cost: 25, usable: true},
                     ],
                     hp_current: 123,
                     hp_max: 304,
@@ -78,10 +84,10 @@
                 opponent_monster: {
                     name: '!foo',
                     abilities: [
-                        {name: 'stab', input: 'Q', range: [0, 1], cost: 15},
-                        {name: 'poke', input: 'W', range: [0], cost: 10},
-                        {name: 'jab', input: 'E', range: [0], cost: 10},
-                        {name: 'nuke', input: 'R', range: [3], cost: 25},
+                        {name: 'stab', input: 'Q', range: [0, 1], cost: 15, usable: true},
+                        {name: 'poke', input: 'W', range: [0], cost: 10, usable: true},
+                        {name: 'jab', input: 'E', range: [0], cost: 10, usable: true},
+                        {name: 'nuke', input: 'R', range: [3], cost: 25, usable: false},
                     ],
                     hp_current: 70,
                     hp_max: 100,

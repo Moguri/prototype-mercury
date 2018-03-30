@@ -95,7 +95,7 @@ class Combatant:
 
         self.abilities = [Ability() for i in range(4)]
 
-    def get_state(self):
+    def get_state(self, range_index):
         inputs = ['Q', 'W', 'E', 'R']
         return {
             'name': self.name,
@@ -108,6 +108,7 @@ class Combatant:
                 'input': _input,
                 'range': ability.range,
                 'cost': ability.cost,
+                'usable': ability.cost < self.current_ap and range_index in ability.range,
             } for ability, _input in zip(self.abilities, inputs)],
         }
 
@@ -175,8 +176,8 @@ class CombatState(DirectObject):
         state = {
             'timer': math.floor(self.time_remaining),
             'range': self.range_index,
-            'player_monster': self.combatants[0].get_state(),
-            'opponent_monster': self.combatants[1].get_state(),
+            'player_monster': self.combatants[0].get_state(self.range_index),
+            'opponent_monster': self.combatants[1].get_state(self.range_index),
         }
 
         self.update_ui(state)

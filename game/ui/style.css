@@ -31,6 +31,10 @@ html {
     border-radius: 0.2em;
 }
 
+.mc-disabled {
+    color: grey;
+}
+
 .mc-range {
     padding: 0.5em;
     box-sizing: border-box;
