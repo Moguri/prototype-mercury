@@ -215,6 +215,7 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         blenderpanda.init(self)
+        self.win.set_close_request_event('escape')
         self.accept('escape', sys.exit)
 
         self.disable_mouse()
