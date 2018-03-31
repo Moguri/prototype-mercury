@@ -79,7 +79,7 @@ class Ability:
 
 
 class Combatant:
-    def __init__(self, scene_path):
+    def __init__(self, scene_path, ability_inputs):
         self.path = base.loader.load_model('monster.bam')
         self.path.reparent_to(scene_path)
 
@@ -93,10 +93,17 @@ class Combatant:
 
         self.ap_per_second = 5
 
+        self.ability_inputs = ability_inputs
         self.abilities = [Ability() for i in range(4)]
 
-    def get_state(self, range_index):
-        inputs = ['Q', 'W', 'E', 'R']
+        self.range_index = 0
+
+    def update(self, dt, range_index):
+        self.range_index = range_index
+        self.current_ap += self.ap_per_second * dt
+        self.current_ap = min(self.current_ap, self.max_ap)
+
+    def get_state(self):
         return {
             'name': self.name,
             'hp_current': self.current_hp,
@@ -105,12 +112,22 @@ class Combatant:
             'ap_max': self.max_ap,
             'abilities': [{
                 'name': ability.name,
-                'input': _input,
+                'input': _input.upper(),
                 'range': ability.range,
                 'cost': ability.cost,
-                'usable': ability.cost < self.current_ap and range_index in ability.range,
-            } for ability, _input in zip(self.abilities, inputs)],
+                'usable': self._ability_is_usable(ability),
+            } for ability, _input in zip(self.abilities, self.ability_inputs)],
         }
+
+    def _ability_is_usable(self, ability):
+        return ability.cost < self.current_ap and self.range_index in ability.range
+
+    def use_ability(self, index):
+        ability = self.abilities[index]
+        if not self._ability_is_usable(ability):
+            return
+
+        self.current_ap -= ability.cost
 
 
 class CombatState(DirectObject):
@@ -123,12 +140,22 @@ class CombatState(DirectObject):
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(root_np)
 
-        self.combatants = [Combatant(self.arena_model) for i in range(2)]
+        self.combatants = [
+            Combatant(self.arena_model, ['a', 's', 'd', 'f']),
+            Combatant(self.arena_model, ['q', 'w', 'e', 'r']),
+        ]
         self.combatants[0].path.set_x(-1.0)
         self.combatants[1].path.set_x(1.0)
 
+        # Combatant 0 inputs
+        for idx, inp in enumerate(self.combatants[0].ability_inputs):
+            self.accept(inp, self.combatants[0].use_ability, [idx])
         self.accept('j', self.move_combatant, [0, -2.0])
         self.accept('k', self.move_combatant, [0, 2.0])
+
+        # Combatant 1 inputs
+        for idx, inp in enumerate(self.combatants[1].ability_inputs):
+            self.accept(inp, self.combatants[1].use_ability, [idx])
         self.accept('u', self.move_combatant, [1, -2.0])
         self.accept('i', self.move_combatant, [1, 2.0])
 
@@ -170,14 +197,13 @@ class CombatState(DirectObject):
         self.time_remaining = 60 - task.time
 
         for combatant in self.combatants:
-            combatant.current_ap += combatant.ap_per_second * dt
-            combatant.current_ap = min(combatant.current_ap, combatant.max_ap)
+            combatant.update(dt, self.range_index)
 
         state = {
             'timer': math.floor(self.time_remaining),
             'range': self.range_index,
-            'player_monster': self.combatants[0].get_state(self.range_index),
-            'opponent_monster': self.combatants[1].get_state(self.range_index),
+            'player_monster': self.combatants[0].get_state(),
+            'opponent_monster': self.combatants[1].get_state(),
         }
 
         self.update_ui(state)
