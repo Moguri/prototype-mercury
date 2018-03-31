@@ -93,10 +93,15 @@ class Combatant:
 
         self.ap_per_second = 5
 
+        self.physical_attack = 1
+        self.magical_attack = 1
+
         self.ability_inputs = ability_inputs
         self.abilities = [Ability() for i in range(4)]
 
         self.range_index = 0
+        self.target = None
+
 
     def update(self, dt, range_index):
         self.range_index = range_index
@@ -120,7 +125,11 @@ class Combatant:
         }
 
     def _ability_is_usable(self, ability):
-        return ability.cost < self.current_ap and self.range_index in ability.range
+        return (
+            ability.cost < self.current_ap and
+            self.range_index in ability.range and
+            self.target is not None
+        )
 
     def use_ability(self, index):
         ability = self.abilities[index]
@@ -128,6 +137,17 @@ class Combatant:
             return
 
         self.current_ap -= ability.cost
+
+        for effect in ability.effects:
+            if effect['type'] == 'damage':
+                damage = (
+                    effect['parameters']['physical_coef'] * self.physical_attack +
+                    effect['parameters']['magical_coef'] * self.magical_attack +
+                    effect['parameters']['base_coef']
+                )
+                self.target.current_hp -= damage
+            else:
+                raise RuntimeError("Unknown effect type: {}".format(effect['type']))
 
 
 class CombatState(DirectObject):
@@ -145,7 +165,9 @@ class CombatState(DirectObject):
             Combatant(self.arena_model, ['q', 'w', 'e', 'r']),
         ]
         self.combatants[0].path.set_x(-1.0)
+        self.combatants[0].target = self.combatants[1]
         self.combatants[1].path.set_x(1.0)
+        self.combatants[1].target = self.combatants[0]
 
         # Combatant 0 inputs
         for idx, inp in enumerate(self.combatants[0].ability_inputs):
