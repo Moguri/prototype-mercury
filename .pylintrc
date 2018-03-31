@@ -54,7 +54,7 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=missing-docstring, r
+disable=missing-docstring, r, c-extension-no-member
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -282,7 +282,8 @@ good-names=i,
            ex,
            Run,
            _,
-           ui
+           ui,
+           dt
 
 # Include a hint for the correct naming format with invalid-name
 include-naming-hint=no
