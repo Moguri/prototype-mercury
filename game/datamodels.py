@@ -2,6 +2,12 @@ import pprint
 
 
 class DataModel:
+    _props = []
+
+    def __init__(self, dict_data):
+        for prop in self._props:
+            setattr(self, prop, dict_data[prop])
+
     def __repr__(self):
         return '{}({})'.format(
             type(self).__name__,
@@ -10,19 +16,20 @@ class DataModel:
 
 
 class Ability(DataModel):
-    def __init__(self, dict_data):
-        self.name = dict_data['name']
-        self.cost = dict_data['cost']
-
-        self.range = dict_data['range']
-        self.effects = dict_data['effects']
+    _props = [
+        'name',
+        'cost',
+        'range',
+        'effects',
+    ]
 
 
 class Breed(DataModel):
-    def __init__(self, dict_data):
-        self.name = dict_data['name']
-        self.hp = dict_data['hp']
-        self.ap = dict_data['ap']
-        self.ap_per_second = dict_data['ap_per_second']
-        self.physical_attack = dict_data['physical_attack']
-        self.magical_attack = dict_data['magical_attack']
+    _props = [
+        'name',
+        'hp',
+        'ap',
+        'ap_per_second',
+        'physical_attack',
+        'magical_attack',
+    ]
