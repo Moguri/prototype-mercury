@@ -32,6 +32,7 @@ class CameraController():
     def __init__(self, camera, combatants):
         self.camera = camera
         self.combatants = combatants
+        self._old_cam_parent = camera.get_parent()
         self.widget = camera.get_parent().attach_new_node('camera_widget')
 
         self.camera.reparent_to(self.widget)
@@ -39,7 +40,11 @@ class CameraController():
         self.widget.set_z(1.0)
         self.camera.set_pos(self.widget, p3d.LVecBase3(0.0, -7.5, 0.0))
 
-    def update(self, _):
+    def cleanup(self):
+        self.camera.reparent_to(self._old_cam_parent)
+        self.widget.remove_node()
+
+    def update(self):
         positions = [combatant.path.get_x() for combatant in self.combatants]
 
         target_pos = math.fsum(positions) / len(positions)
@@ -55,8 +60,6 @@ class CameraController():
         offset_delta = 0.01 * (target_offset - current_offset)
         offset_vector = p3d.LVecBase3(0.0, -(current_offset + offset_delta), 0.0)
         self.camera.set_pos(self.widget, offset_vector)
-
-        return Task.cont
 
 
 class Ability:
@@ -150,15 +153,30 @@ class Combatant:
                 raise RuntimeError("Unknown effect type: {}".format(effect['type']))
 
 
-class CombatState(DirectObject):
-    def __init__(self, root_np):
+class GameState(DirectObject):
+    def __init__(self):
+        super().__init__()
+        self.root_node = p3d.NodePath('State Root')
+        self.root_node.reparent_to(base.render)
+
+    def cleanup(self):
+        self.ignoreAll()
+        self.root_node.remove_node()
+        self.root_node = None
+
+    def update(self, dt):
+        pass
+
+
+class CombatState(GameState):
+    def __init__(self):
         super().__init__()
 
         self.time_remaining = 60
         self.range_index = 0
 
         self.arena_model = base.loader.load_model('arena.bam')
-        self.arena_model.reparent_to(root_np)
+        self.arena_model.reparent_to(self.root_node)
 
         self.combatants = [
             Combatant(self.arena_model, ['a', 's', 'd', 'f']),
@@ -181,20 +199,26 @@ class CombatState(DirectObject):
         self.accept('u', self.move_combatant, [1, -2.0])
         self.accept('i', self.move_combatant, [1, 2.0])
 
+        def restart_state():
+            base.change_state(CombatState)
+        self.accept('space', restart_state)
+
         # UI
-        self.ui = cefpanda.CEFPanda()
-        self.load_ui('main')
+        base.load_ui('main')
 
-        self.update_ui({'timer': 45})
-
+        self.cam_controller = CameraController(base.camera, self.combatants)
         base.taskMgr.add(self.update_state, 'Combat State')
 
-    def load_ui(self, uiname):
-        self.ui.load(os.path.join(APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
+    def cleanup(self):
+        super().cleanup()
+        self.cam_controller.cleanup()
+        self.cam_controller = None
+
+        base.taskMgr.remove('Combat State')
 
     def update_ui(self, new_state):
         data = json.dumps(new_state)
-        self.ui.execute_js('update_state({})'.format(data), onload=True)
+        base.ui.execute_js('update_state({})'.format(data), onload=True)
 
     def move_combatant(self, index, delta):
         new_positions = [combatant.path.get_x() for combatant in self.combatants]
@@ -213,6 +237,9 @@ class CombatState(DirectObject):
         self.range_index = int((distance - 2) // 2)
         combatant = self.combatants[index]
         combatant.path.set_x(combatant.path.get_x() + delta)
+
+    def update(self, _dt):
+        self.cam_controller.update()
 
     def update_state(self, task):
         dt = p3d.ClockObject.get_global_clock().get_dt()
@@ -244,10 +271,23 @@ class GameApp(ShowBase):
         self.render.set_shader_auto()
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
 
-        self.combat = CombatState(self.render)
+        # UI
+        self.ui = cefpanda.CEFPanda()
 
-        self.cam_controller = CameraController(self.camera, self.combat.combatants)
-        self.taskMgr.add(self.cam_controller.update, 'Camera Controller')
+        # Game states
+        self.current_state = CombatState()
+        def update_gamestate(task):
+            self.current_state.update(p3d.ClockObject.get_global_clock().get_dt())
+            return task.cont
+        self.taskMgr.add(update_gamestate, 'GameState')
+
+    def change_state(self, next_state):
+        self.current_state.cleanup()
+        self.current_state = next_state()
+
+    def load_ui(self, uiname):
+        self.ui.load(os.path.join(APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
+
 
 
 APP = GameApp()
