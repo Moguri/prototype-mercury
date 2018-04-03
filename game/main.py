@@ -9,7 +9,7 @@ import panda3d.core as p3d
 
 import cefpanda
 import blenderpanda
-import gamedb
+from gamedb import GameDB
 
 p3d.load_prc_file_data(
     '',
@@ -62,25 +62,6 @@ class CameraController():
         self.camera.set_pos(self.widget, offset_vector)
 
 
-class Ability:
-    def __init__(self):
-        self.name = 'Ability'
-        self.cost = 10
-
-        self.range = [0]
-
-        self.effects = [
-            {
-                'type': 'damage',
-                'parameters': {
-                    'physical_coef': 1.0,
-                    'magical_coef': 0.0,
-                    'base_coef': 0.0,
-                }
-            }
-        ]
-
-
 class Combatant:
     def __init__(self, scene_path, ability_inputs):
         self.path = base.loader.load_model('monster.bam')
@@ -100,7 +81,7 @@ class Combatant:
         self.magical_attack = 1
 
         self.ability_inputs = ability_inputs
-        self.abilities = [Ability() for i in range(4)]
+        self.abilities = [GameDB.get_instance()['abilities']['punch'] for i in range(4)]
 
         self.range_index = 0
         self.target = None
@@ -266,7 +247,7 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         blenderpanda.init(self)
-        gamedb.init()
+        self.gamedb = GameDB.get_instance()
 
         self.win.set_close_request_event('escape')
         self.accept('escape', sys.exit)
