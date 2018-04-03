@@ -203,11 +203,12 @@ class CombatState(GameState):
             base.change_state(CombatState)
         self.accept('space', restart_state)
 
+        self.combat_timer = p3d.ClockObject()
+
         # UI
         base.load_ui('main')
 
         self.cam_controller = CameraController(base.camera, self.combatants)
-        base.taskMgr.add(self.update_state, 'Combat State')
 
     def cleanup(self):
         super().cleanup()
@@ -238,12 +239,9 @@ class CombatState(GameState):
         combatant = self.combatants[index]
         combatant.path.set_x(combatant.path.get_x() + delta)
 
-    def update(self, _dt):
+    def update(self, dt):
         self.cam_controller.update()
-
-    def update_state(self, task):
-        dt = p3d.ClockObject.get_global_clock().get_dt()
-        self.time_remaining = 60 - task.time
+        self.time_remaining = 60 - self.combat_timer.get_real_time()
 
         for combatant in self.combatants:
             combatant.update(dt, self.range_index)
@@ -255,9 +253,7 @@ class CombatState(GameState):
             'opponent_monster': self.combatants[1].get_state(),
         }
 
-        self.update_ui(state)
-
-        return Task.cont
+        base.ui.execute_js('update_state({})'.format(json.dumps(state)), onload=True)
 
 
 class GameApp(ShowBase):
