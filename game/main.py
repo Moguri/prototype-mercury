@@ -169,10 +169,11 @@ class GameState(DirectObject):
 
 
 class CombatState(GameState):
+    COMBAT_MAX_TIME = 60
+
     def __init__(self):
         super().__init__()
 
-        self.time_remaining = 60
         self.range_index = 0
 
         self.arena_model = base.loader.load_model('arena.bam')
@@ -241,13 +242,18 @@ class CombatState(GameState):
 
     def update(self, dt):
         self.cam_controller.update()
-        self.time_remaining = 60 - self.combat_timer.get_real_time()
+
+        combat_time = self.combat_timer.get_real_time()
+        time_remaining = self.COMBAT_MAX_TIME - combat_time
+        if time_remaining < 0:
+            base.change_state(CombatState)
+            return
 
         for combatant in self.combatants:
             combatant.update(dt, self.range_index)
 
         state = {
-            'timer': math.floor(self.time_remaining),
+            'timer': math.floor(time_remaining),
             'range': self.range_index,
             'player_monster': self.combatants[0].get_state(),
             'opponent_monster': self.combatants[1].get_state(),
