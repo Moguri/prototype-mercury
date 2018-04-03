@@ -64,27 +64,42 @@ class CameraController():
 
 class Combatant:
     def __init__(self, scene_path, ability_inputs):
+        gdb = GameDB.get_instance()
+
         self.path = base.loader.load_model('monster.bam')
         self.path.reparent_to(scene_path)
 
-        self.name = 'CatShark'
+        self.breed = gdb['breeds']['catshark']
 
-        self.max_hp = 100
+        self.name = self.breed.name
         self.current_hp = 100
-
-        self.max_ap = 100
         self.current_ap = 0
 
-        self.ap_per_second = 5
-
-        self.physical_attack = 1
-        self.magical_attack = 1
-
         self.ability_inputs = ability_inputs
-        self.abilities = [GameDB.get_instance()['abilities']['punch'] for i in range(4)]
+        self.abilities = [gdb['abilities']['punch'] for i in range(4)]
 
         self.range_index = 0
         self.target = None
+
+    @property
+    def max_hp(self):
+        return self.breed.hp
+
+    @property
+    def max_ap(self):
+        return self.breed.ap
+
+    @property
+    def ap_per_second(self):
+        return self.breed.ap_per_second
+
+    @property
+    def physical_attack(self):
+        return self.breed.physical_attack
+
+    @property
+    def magical_attack(self):
+        return self.breed.magical_attack
 
 
     def update(self, dt, range_index):
@@ -247,7 +262,7 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         blenderpanda.init(self)
-        self.gamedb = GameDB.get_instance()
+        GameDB.get_instance()
 
         self.win.set_close_request_event('escape')
         self.accept('escape', sys.exit)

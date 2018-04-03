@@ -20,9 +20,14 @@ class GameDB(collections.UserDict):
 
     def __init__(self):
         data_dir = os.path.join(_APP_ROOT_DIR, 'data')
+
         super().__init__({
-            'abilities': self._load_directory(datamodels.Ability, os.path.join(data_dir, 'abilities')),
-            'breeds': self._load_directory(dict, os.path.join(data_dir, 'breeds')),
+            'abilities': self._load_directory(
+                datamodels.Ability,
+                os.path.join(data_dir, 'abilities')),
+            'breeds': self._load_directory(
+                datamodels.Breed,
+                os.path.join(data_dir, 'breeds')),
         })
 
     def _load_directory(self, data_model, dirpath):

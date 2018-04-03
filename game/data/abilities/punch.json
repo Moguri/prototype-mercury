@@ -2,6 +2,7 @@
     "id": "punch",
     "name": "Punch",
     "cost": 10,
+    "range": [0],
     "effects": [
         {
             "type": "damage",
