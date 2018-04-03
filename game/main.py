@@ -10,6 +10,7 @@ import panda3d.core as p3d
 
 import cefpanda
 import blenderpanda
+import gamedb
 
 p3d.load_prc_file_data(
     '',
@@ -266,6 +267,8 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         blenderpanda.init(self)
+        gamedb.init()
+
         self.win.set_close_request_event('escape')
         self.accept('escape', sys.exit)
 

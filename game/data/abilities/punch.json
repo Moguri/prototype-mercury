@@ -1,0 +1,16 @@
+{
+    "id": "punch",
+    "name": "Punch",
+    "cost": 10,
+    "effects": [
+        {
+            "type": "damage",
+            "parameters": {
+                "physical_coef": 1.0,
+                "magical_coef": 0.0,
+                "base_coef": 0.0
+            }
+        }
+    ]
+}
+

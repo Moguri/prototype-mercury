@@ -1,0 +1,9 @@
+{
+    "id": "catshark",
+    "name": "CatShark",
+    "hp": 100,
+    "ap": 100,
+    "ap_per_second": 5,
+    "physical_attack": 1,
+    "magical_attack": 1
+}
