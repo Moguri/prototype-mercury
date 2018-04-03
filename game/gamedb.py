@@ -17,17 +17,16 @@ if not _APP_ROOT_DIR:
 
 class GameDB(collections.UserDict):
     _ptr = None
+    data_dir = os.path.join(_APP_ROOT_DIR, 'data')
+    top_level_keys = (
+        ('abilities', datamodels.Ability),
+        ('breeds', datamodels.Breed),
+    )
 
     def __init__(self):
-        data_dir = os.path.join(_APP_ROOT_DIR, 'data')
-
         super().__init__({
-            'abilities': self._load_directory(
-                datamodels.Ability,
-                os.path.join(data_dir, 'abilities')),
-            'breeds': self._load_directory(
-                datamodels.Breed,
-                os.path.join(data_dir, 'breeds')),
+            i[0]: self._load_directory(i[1], os.path.join(self.data_dir, i[0]))
+            for i in self.top_level_keys
         })
 
     def _load_directory(self, data_model, dirpath):
