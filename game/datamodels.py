@@ -1,4 +1,15 @@
-class Ability:
+import pprint
+
+
+class DataModel:
+    def __repr__(self):
+        return '{}({})'.format(
+            type(self).__name__,
+            pprint.pformat(self.__dict__)
+        )
+
+
+class Ability(DataModel):
     def __init__(self, dict_data):
         self.name = dict_data['name']
         self.cost = dict_data['cost']
@@ -7,7 +18,7 @@ class Ability:
         self.effects = dict_data['effects']
 
 
-class Breed:
+class Breed(DataModel):
     def __init__(self, dict_data):
         self.name = dict_data['name']
         self.hp = dict_data['hp']

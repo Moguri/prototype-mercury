@@ -48,5 +48,9 @@ class GameDB(collections.UserDict):
 
 
 if __name__ == '__main__':
-    import pprint
-    pprint.pprint(GameDB.get_instance())
+    print("GameDB:")
+    for key, value in GameDB.get_instance().items():
+        print("\t", key)
+        for i in value.values():
+            for j in repr(i).split('\n'):
+                print("\t\t", j)
