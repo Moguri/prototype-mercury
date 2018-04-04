@@ -9,6 +9,7 @@ import panda3d.core as p3d
 
 import cefpanda
 import blenderpanda
+import eventmapper
 from gamedb import GameDB
 
 p3d.load_prc_file_data(
@@ -26,6 +27,8 @@ else:
 if not APP_ROOT_DIR:
     print('empty app_root_dir')
     sys.exit()
+
+p3d.load_prc_file(os.path.join(APP_ROOT_DIR, 'config', 'inputs.prc'))
 
 
 class CameraController():
@@ -81,6 +84,11 @@ class Combatant:
         self.range_index = 0
         self.target = None
 
+        self.ability_labels = [
+            base.event_mapper.get_labels_for_event(inp)[0]
+            for inp in self.ability_inputs
+        ]
+
     @property
     def max_hp(self):
         return self.breed.hp
@@ -111,6 +119,7 @@ class Combatant:
         self.current_ap = min(self.current_ap, self.max_ap)
 
     def get_state(self):
+
         return {
             'name': self.name,
             'hp_current': self.current_hp,
@@ -123,7 +132,7 @@ class Combatant:
                 'range': ability.range,
                 'cost': ability.cost,
                 'usable': self._ability_is_usable(ability),
-            } for ability, _input in zip(self.abilities, self.ability_inputs)],
+            } for ability, _input in zip(self.abilities, self.ability_labels)],
         }
 
     def _ability_is_usable(self, ability):
@@ -179,8 +188,8 @@ class CombatState(GameState):
         self.arena_model.reparent_to(self.root_node)
 
         self.combatants = [
-            Combatant(self.arena_model, ['a', 's', 'd', 'f']),
-            Combatant(self.arena_model, ['q', 'w', 'e', 'r']),
+            Combatant(self.arena_model, ['p1-ability{}'.format(i) for i in range(4)]),
+            Combatant(self.arena_model, ['p2-ability{}'.format(i) for i in range(4)]),
         ]
         self.combatants[0].path.set_x(-1.0)
         self.combatants[0].target = self.combatants[1]
@@ -190,14 +199,14 @@ class CombatState(GameState):
         # Combatant 0 inputs
         for idx, inp in enumerate(self.combatants[0].ability_inputs):
             self.accept(inp, self.combatants[0].use_ability, [idx])
-        self.accept('j', self.move_combatant, [0, -2.0])
-        self.accept('k', self.move_combatant, [0, 2.0])
+        self.accept('p1-move-left', self.move_combatant, [0, -2.0])
+        self.accept('p1-move-right', self.move_combatant, [0, 2.0])
 
         # Combatant 1 inputs
         for idx, inp in enumerate(self.combatants[1].ability_inputs):
             self.accept(inp, self.combatants[1].use_ability, [idx])
-        self.accept('u', self.move_combatant, [1, -2.0])
-        self.accept('i', self.move_combatant, [1, 2.0])
+        self.accept('p2-move-left', self.move_combatant, [1, -2.0])
+        self.accept('p2-move-right', self.move_combatant, [1, 2.0])
 
         def restart_state():
             base.change_state(CombatState)
@@ -277,6 +286,8 @@ class GameApp(ShowBase):
         self.disable_mouse()
         self.render.set_shader_auto()
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
+
+        self.event_mapper = eventmapper.EventMapper()
 
         # UI
         self.ui = cefpanda.CEFPanda()
