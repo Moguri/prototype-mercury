@@ -101,6 +101,9 @@ class Combatant:
     def magical_attack(self):
         return self.breed.magical_attack
 
+    @property
+    def move_cost(self):
+        return self.breed.move_cost
 
     def update(self, dt, range_index):
         self.range_index = range_index
@@ -232,9 +235,13 @@ class CombatState(GameState):
         if distance > 8 or distance < 2:
             return
 
-        self.range_index = int((distance - 2) // 2)
         combatant = self.combatants[index]
+        if combatant.current_ap < combatant.move_cost:
+            return
+
+        combatant.current_ap -= combatant.move_cost
         combatant.path.set_x(combatant.path.get_x() + delta)
+        self.range_index = int((distance - 2) // 2)
 
     def update(self, dt):
         self.cam_controller.update()

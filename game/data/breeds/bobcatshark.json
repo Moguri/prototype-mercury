@@ -6,6 +6,7 @@
     "ap_per_second": 5,
     "physical_attack": 1,
     "magical_attack": 1,
+    "move_cost": 5,
     "abilities": [
         "punch",
         "punch",

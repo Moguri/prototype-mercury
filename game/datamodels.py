@@ -32,5 +32,6 @@ class Breed(DataModel):
         'ap_per_second',
         'physical_attack',
         'magical_attack',
+        'move_cost',
         'abilities',
     ]
