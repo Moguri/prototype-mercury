@@ -5,5 +5,11 @@
     "ap": 100,
     "ap_per_second": 5,
     "physical_attack": 1,
-    "magical_attack": 1
+    "magical_attack": 1,
+    "abilities": [
+        "punch",
+        "punch",
+        "punch",
+        "punch"
+    ]
 }

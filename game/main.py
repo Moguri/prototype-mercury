@@ -76,7 +76,7 @@ class Combatant:
         self.current_ap = 0
 
         self.ability_inputs = ability_inputs
-        self.abilities = [gdb['abilities']['punch'] for i in range(4)]
+        self.abilities = [gdb['abilities'][i] for i in self.breed.abilities]
 
         self.range_index = 0
         self.target = None
