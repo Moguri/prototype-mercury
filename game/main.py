@@ -73,7 +73,7 @@ class Combatant:
 
         self.name = self.breed.name
         self.current_hp = 100
-        self.current_ap = 0
+        self.current_ap = 20
 
         self.ability_inputs = ability_inputs
         self.abilities = [gdb['abilities'][i] for i in self.breed.abilities]
