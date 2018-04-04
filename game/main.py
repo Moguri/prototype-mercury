@@ -69,7 +69,7 @@ class Combatant:
         self.path = base.loader.load_model('monster.bam')
         self.path.reparent_to(scene_path)
 
-        self.breed = gdb['breeds']['catshark']
+        self.breed = gdb['breeds']['bobcatshark']
 
         self.name = self.breed.name
         self.current_hp = 100

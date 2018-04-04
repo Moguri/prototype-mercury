@@ -1,6 +1,6 @@
 {
-    "id": "catshark",
-    "name": "CatShark",
+    "id": "bobcatshark",
+    "name": "BobcatShark",
     "hp": 100,
     "ap": 100,
     "ap_per_second": 5,
