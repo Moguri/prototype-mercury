@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [[source]]
-url = "https://archive.panda3d.org/simple"
+url = "https://archive.panda3d.org/branches/input-overhaul"
 verify_ssl = true
 name = "Panda3D"
 
 [packages]
-panda3d = {version = "==1.10.0.dev1460", index="Panda3D"}
+panda3d = {version = "==1.10.0.dev1344+inputoverhaul.71", index="Panda3D"}
 cefpanda = "*"
 cefpython3 = "==57.0"
 
