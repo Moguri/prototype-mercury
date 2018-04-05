@@ -14,6 +14,23 @@ class EventMapper(DirectObject):
     def __init__(self):
         super().__init__()
 
+        self.gamepad_label_map = {
+            'rshoulder': 'RB',
+            'rtrigger': 'RT',
+            'lshoulder': 'LB',
+            'ltrigger': 'LT',
+        }
+        self.gamepad_label_map_dualshock = {
+            'rshoulder': 'R1',
+            'rtrigger': 'R2',
+            'lshoulder': 'L1',
+            'ltrigger': 'L2',
+            'x': '□',
+            'y': '△',
+            'a': '×',
+            'b': '○',
+        }
+
         # Setup input map
         self.input_map = {}
         self.reload_config()
@@ -73,17 +90,55 @@ class EventMapper(DirectObject):
     def get_inputs_for_event(self, event):
         return [key for key, value in self.input_map.items() if event in value]
 
+    def _get_mapped_gamepad_label(self, gamepad_device, inp):
+        if not inp.startswith('gamepad') or gamepad_device is None:
+            return ''
+
+        # remove gamepadN prefix
+        label = '-'.join(inp.split('-')[1:])
+
+        prefer_ds_labels = 'playstation' in gamepad_device.name.lower()
+
+        if label.startswith('action'):
+            label = label.replace('action_', '')
+            if prefer_ds_labels:
+                label = self.gamepad_label_map_dualshock.get(label, label.upper())
+            else:
+                label = self.gamepad_label_map.get(label, label.upper())
+            return label
+
+        # TODO handle other event types besides actions
+        return ''
+
     def get_labels_for_event(self, event):
         inputs = self.get_inputs_for_event(event)
         keymap = base.win.get_keyboard_map() if 'base' in globals() else None
 
+        gamepad_device = None
+        if hasattr(p3d, 'InputDeviceManager'):
+            devicemgr = p3d.InputDeviceManager.get_global_ptr()
+            devices = devicemgr.get_devices(p3d.InputDevice.DC_gamepad)
+
+            gpidx = [
+                int(i.split('-')[0].replace('gamepad', ''))
+                for i in inputs
+                if i.startswith('gamepad')
+            ]
+            gamepad_device = devices[gpidx[0]] if gpidx and gpidx[0] < len(devices) else None
+
+        inputs = filter(
+            lambda x: x.startswith('gamepad') == bool(gamepad_device is not None),
+            inputs
+        )
+
         retval = []
         for inp in inputs:
             inp = inp.replace('raw-', '')
-            retval += list(filter(None, [
+            retval.append(next(filter(None, [
+                self._get_mapped_gamepad_label(gamepad_device, inp),
                 keymap.get_mapped_button_label(inp) if keymap is not None else '',
                 inp
-            ]))
+            ])))
         return retval
 
 

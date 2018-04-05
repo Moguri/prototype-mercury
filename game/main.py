@@ -84,11 +84,6 @@ class Combatant:
         self.range_index = 0
         self.target = None
 
-        self.ability_labels = [
-            base.event_mapper.get_labels_for_event(inp)[0]
-            for inp in self.ability_inputs
-        ]
-
     @property
     def max_hp(self):
         return self.breed.hp
@@ -119,6 +114,10 @@ class Combatant:
         self.current_ap = min(self.current_ap, self.max_ap)
 
     def get_state(self):
+        ability_labels = [
+            base.event_mapper.get_labels_for_event(inp)[0]
+            for inp in self.ability_inputs
+        ]
 
         return {
             'name': self.name,
@@ -132,7 +131,7 @@ class Combatant:
                 'range': ability.range,
                 'cost': ability.cost,
                 'usable': self._ability_is_usable(ability),
-            } for ability, _input in zip(self.abilities, self.ability_labels)],
+            } for ability, _input in zip(self.abilities, ability_labels)],
         }
 
     def _ability_is_usable(self, ability):
