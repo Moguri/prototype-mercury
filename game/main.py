@@ -226,10 +226,6 @@ class CombatState(GameState):
 
         base.taskMgr.remove('Combat State')
 
-    def update_ui(self, new_state):
-        data = json.dumps(new_state)
-        base.ui.execute_js('update_state({})'.format(data), onload=True)
-
     def move_combatant(self, index, delta):
         new_positions = [combatant.path.get_x() for combatant in self.combatants]
 
