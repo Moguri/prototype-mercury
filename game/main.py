@@ -12,13 +12,6 @@ import blenderpanda
 import eventmapper
 from gamedb import GameDB
 
-p3d.load_prc_file_data(
-    '',
-    'win-size 1280 720\n'
-    'framebuffer-multisample 1\n'
-    'multisamples 8\n'
-)
-
 
 if hasattr(sys, 'frozen'):
     APP_ROOT_DIR = os.path.dirname(sys.executable)
@@ -28,7 +21,11 @@ if not APP_ROOT_DIR:
     print('empty app_root_dir')
     sys.exit()
 
-p3d.load_prc_file(os.path.join(APP_ROOT_DIR, 'config', 'inputs.prc'))
+# Load config files before ShowBase is initialized
+CONFIG_DIR = os.path.join(APP_ROOT_DIR, 'config')
+p3d.load_prc_file(os.path.join(CONFIG_DIR, 'game.prc'))
+p3d.load_prc_file(os.path.join(CONFIG_DIR, 'inputs.prc'))
+p3d.load_prc_file(os.path.join(CONFIG_DIR, 'user.prc'))
 
 
 class CameraController():
