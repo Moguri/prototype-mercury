@@ -5,8 +5,9 @@
     "range": [0],
     "effects": [
         {
-            "type": "damage",
+            "type": "change_stat",
             "parameters": {
+                "stat": "current_hp",
                 "physical_coef": 1.0,
                 "magical_coef": 0.0,
                 "base_coef": 0.0

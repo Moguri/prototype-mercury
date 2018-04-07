@@ -146,13 +146,23 @@ class Combatant:
         self.current_ap -= ability.cost
 
         for effect in ability.effects:
-            if effect['type'] == 'damage':
-                damage = (
-                    effect['parameters']['physical_coef'] * self.physical_attack +
-                    effect['parameters']['magical_coef'] * self.magical_attack +
-                    effect['parameters']['base_coef']
-                )
-                self.target.current_hp -= damage
+            parameters = effect['parameters']
+            strength = (
+                parameters.get('physical_coef', 0) * self.physical_attack +
+                parameters.get('magical_coef', 0) * self.magical_attack +
+                parameters.get('base_coef', 0)
+            )
+            target = effect.get('target', 'other')
+            if target == 'self':
+                target = self
+            elif target == 'other':
+                target = self.target
+            else:
+                raise RuntimeError("Unkown effect target: {}".format(target))
+
+            if effect['type'] == 'change_stat':
+                stat = parameters['stat']
+                setattr(target, stat, getattr(target, stat) - strength)
             else:
                 raise RuntimeError("Unknown effect type: {}".format(effect['type']))
 
