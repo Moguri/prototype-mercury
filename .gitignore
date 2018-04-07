@@ -103,3 +103,6 @@ ENV/
 # BlenderPanda
 game/assets
 .pman.user
+
+# User config
+game/config/user.prc
