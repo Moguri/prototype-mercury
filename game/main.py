@@ -5,6 +5,7 @@ import sys
 
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.DirectObject import DirectObject
+from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
 
 import cefpanda
@@ -127,44 +128,17 @@ class Combatant:
                 'input': _input.upper(),
                 'range': ability.range,
                 'cost': ability.cost,
-                'usable': self._ability_is_usable(ability),
+                'usable': self.ability_is_usable(ability),
             } for ability, _input in zip(self.abilities, ability_labels)],
         }
 
-    def _ability_is_usable(self, ability):
+    def ability_is_usable(self, ability):
         return (
             ability.cost < self.current_ap and
             self.range_index in ability.range and
             self.target is not None
         )
 
-    def use_ability(self, index):
-        ability = self.abilities[index]
-        if not self._ability_is_usable(ability):
-            return
-
-        self.current_ap -= ability.cost
-
-        for effect in ability.effects:
-            parameters = effect['parameters']
-            strength = (
-                parameters.get('physical_coef', 0) * self.physical_attack +
-                parameters.get('magical_coef', 0) * self.magical_attack +
-                parameters.get('base_coef', 0)
-            )
-            target = effect.get('target', 'other')
-            if target == 'self':
-                target = self
-            elif target == 'other':
-                target = self.target
-            else:
-                raise RuntimeError("Unkown effect target: {}".format(target))
-
-            if effect['type'] == 'change_stat':
-                stat = parameters['stat']
-                setattr(target, stat, getattr(target, stat) - strength)
-            else:
-                raise RuntimeError("Unknown effect type: {}".format(effect['type']))
 
 
 class GameState(DirectObject):
@@ -188,6 +162,7 @@ class CombatState(GameState):
     def __init__(self):
         super().__init__()
 
+        self.lock_controls = 0
         self.range_index = 0
 
         self.arena_model = base.loader.load_model('arena.bam')
@@ -204,13 +179,13 @@ class CombatState(GameState):
 
         # Combatant 0 inputs
         for idx, inp in enumerate(self.combatants[0].ability_inputs):
-            self.accept(inp, self.combatants[0].use_ability, [idx])
+            self.accept(inp, self.use_ability, [self.combatants[0], idx])
         self.accept('p1-move-left', self.move_combatant, [0, -2.0])
         self.accept('p1-move-right', self.move_combatant, [0, 2.0])
 
         # Combatant 1 inputs
         for idx, inp in enumerate(self.combatants[1].ability_inputs):
-            self.accept(inp, self.combatants[1].use_ability, [idx])
+            self.accept(inp, self.use_ability, [self.combatants[1], idx])
         self.accept('p2-move-left', self.move_combatant, [1, -2.0])
         self.accept('p2-move-right', self.move_combatant, [1, 2.0])
 
@@ -233,6 +208,9 @@ class CombatState(GameState):
         base.taskMgr.remove('Combat State')
 
     def move_combatant(self, index, delta):
+        if self.lock_controls:
+            return
+
         new_positions = [combatant.path.get_x() for combatant in self.combatants]
 
         new_position = new_positions[index] + delta
@@ -253,6 +231,48 @@ class CombatState(GameState):
         combatant.current_ap -= combatant.move_cost
         combatant.path.set_x(combatant.path.get_x() + delta)
         self.range_index = int((distance - 2) // 2)
+
+    def _interval_from_effect(self, combatant, effect):
+        parameters = effect['parameters']
+        etype = effect['type']
+        if etype == 'change_stat':
+            strength = (
+                parameters.get('physical_coef', 0) * combatant.physical_attack +
+                parameters.get('magical_coef', 0) * combatant.magical_attack +
+                parameters.get('base_coef', 0)
+            )
+            target = effect.get('target', 'other')
+            if target == 'self':
+                target = combatant
+            elif target == 'other':
+                target = combatant.target
+            else:
+                raise RuntimeError("Unkown effect target: {}".format(target))
+            stat = parameters['stat']
+            def change_stat():
+                setattr(target, stat, getattr(target, stat) - strength)
+            return intervals.Func(change_stat)
+        else:
+            raise RuntimeError("Unknown effect type: {}".format(etype))
+
+    def use_ability(self, combatant, index):
+        if self.lock_controls:
+            return
+
+        ability = combatant.abilities[index]
+        if not combatant.ability_is_usable(ability):
+            return
+
+        combatant.current_ap -= ability.cost
+
+        sequence = intervals.Sequence()
+        for effect in ability.effects:
+            sequence.append(self._interval_from_effect(combatant, effect))
+
+        def unlock_controls():
+            self.lock_controls = 0
+        sequence.append(intervals.Func(unlock_controls))
+        sequence.start()
 
     def update(self, dt):
         self.cam_controller.update()
