@@ -6,6 +6,7 @@ import sys
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.DirectObject import DirectObject
 from direct.interval import IntervalGlobal as intervals
+from direct.actor.Actor import Actor
 import panda3d.core as p3d
 
 import cefpanda
@@ -67,7 +68,10 @@ class Combatant:
     def __init__(self, scene_path, ability_inputs):
         gdb = GameDB.get_instance()
 
-        self.path = base.loader.load_model('monster.bam')
+        model = base.loader.load_model('clay_golem.bam')
+        model.ls()
+        self.path = Actor(model.find('**/ClayGolemArm'))
+        self.path.loop('ClayGolemMesh')
         self.path.reparent_to(scene_path)
 
         self.breed = gdb['breeds']['bobcatshark']
@@ -173,8 +177,10 @@ class CombatState(GameState):
             Combatant(self.arena_model, ['p2-ability{}'.format(i) for i in range(4)]),
         ]
         self.combatants[0].path.set_x(-1.0)
+        self.combatants[0].path.set_h(-90)
         self.combatants[0].target = self.combatants[1]
         self.combatants[1].path.set_x(1.0)
+        self.combatants[1].path.set_h(90)
         self.combatants[1].target = self.combatants[0]
 
         # Combatant 0 inputs
