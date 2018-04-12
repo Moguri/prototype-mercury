@@ -73,9 +73,6 @@ class EventMapper(DirectObject):
 
         self.notify.info("Loaded Event Map\n{}".format(pprint.pformat(self.input_map)))
 
-        #TODO Figure out why notify-level is not working
-        print("Loaded Event Map\n{}".format(pprint.pformat(self.input_map)))
-
         # Listen for events
         for trigger, events in self.input_map.items():
             self.accept(trigger, self.send, [events, ''])
