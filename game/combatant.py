@@ -11,7 +11,7 @@ class Combatant:
         if hasattr(builtins, 'base'):
             model = base.loader.load_model('clay_golem.bam')
             self.path = Actor(model.find('**/ClayGolemArm'))
-            self.path.loop('cg.Attack')
+            self.path.loop('cg.Run')
             self.path.reparent_to(parent_node)
         else:
             self.path = Actor()

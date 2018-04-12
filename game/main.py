@@ -173,9 +173,10 @@ class CombatState(GameState):
 
         sequence = effects.sequence_from_effects(combatant, ability.effects)
 
-        def unlock_controls():
+        def cleanup():
             self.lock_controls = 0
-        sequence.append(intervals.Func(unlock_controls))
+            combatant.path.loop('cg.Run')
+        sequence.append(intervals.Func(cleanup))
         sequence.start()
 
     def update(self, dt):

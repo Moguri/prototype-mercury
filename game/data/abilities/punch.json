@@ -5,6 +5,13 @@
     "range": [0],
     "effects": [
         {
+            "type": "play_animation",
+            "target": "self",
+            "parameters": {
+                "animation_name": "cg.Attack"
+            }
+        },
+        {
             "type": "change_stat",
             "parameters": {
                 "stat": "current_hp",
