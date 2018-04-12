@@ -18,7 +18,7 @@ from gamedb import GameDB
 if hasattr(sys, 'frozen'):
     APP_ROOT_DIR = os.path.dirname(sys.executable)
 else:
-    APP_ROOT_DIR = os.path.dirname(__file__)
+    APP_ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 if not APP_ROOT_DIR:
     print('empty app_root_dir')
     sys.exit()
