@@ -177,6 +177,7 @@ class CombatState(GameState):
             self.lock_controls = 0
             combatant.path.loop('cg.Run')
         sequence.append(intervals.Func(cleanup))
+        self.lock_controls = 1
         sequence.start()
 
     def update(self, dt):
