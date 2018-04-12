@@ -8,7 +8,7 @@
             "type": "change_stat",
             "parameters": {
                 "stat": "current_hp",
-                "physical_coef": 1.0,
+                "physical_coef": 10.0,
                 "magical_coef": 0.0,
                 "base_coef": 0.0
             }
