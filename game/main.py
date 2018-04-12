@@ -6,12 +6,13 @@ import sys
 from direct.showbase.ShowBase import ShowBase
 from direct.showbase.DirectObject import DirectObject
 from direct.interval import IntervalGlobal as intervals
-from direct.actor.Actor import Actor
 import panda3d.core as p3d
 
 import cefpanda
 import blenderpanda
 import eventmapper
+import effects
+from combatant import Combatant
 from gamedb import GameDB
 
 
@@ -64,84 +65,6 @@ class CameraController():
         self.camera.set_pos(self.widget, offset_vector)
 
 
-class Combatant:
-    def __init__(self, scene_path, ability_inputs):
-        gdb = GameDB.get_instance()
-
-        model = base.loader.load_model('clay_golem.bam')
-        model.ls()
-        self.path = Actor(model.find('**/ClayGolemArm'))
-        self.path.loop('ClayGolemMesh')
-        self.path.reparent_to(scene_path)
-
-        self.breed = gdb['breeds']['bobcatshark']
-
-        self.name = self.breed.name
-        self.current_hp = 100
-        self.current_ap = 20
-
-        self.ability_inputs = ability_inputs
-        self.abilities = [gdb['abilities'][i] for i in self.breed.abilities]
-
-        self.range_index = 0
-        self.target = None
-
-    @property
-    def max_hp(self):
-        return self.breed.hp
-
-    @property
-    def max_ap(self):
-        return self.breed.ap
-
-    @property
-    def ap_per_second(self):
-        return self.breed.ap_per_second
-
-    @property
-    def physical_attack(self):
-        return self.breed.physical_attack
-
-    @property
-    def magical_attack(self):
-        return self.breed.magical_attack
-
-    @property
-    def move_cost(self):
-        return self.breed.move_cost
-
-    def update(self, dt, range_index):
-        self.range_index = range_index
-        self.current_ap += self.ap_per_second * dt
-        self.current_ap = min(self.current_ap, self.max_ap)
-
-    def get_state(self):
-        ability_labels = [
-            base.event_mapper.get_labels_for_event(inp)[0]
-            for inp in self.ability_inputs
-        ]
-
-        return {
-            'name': self.name,
-            'hp_current': self.current_hp,
-            'hp_max': self.max_hp,
-            'ap_current': int(self.current_ap),
-            'ap_max': self.max_ap,
-            'abilities': [{
-                'name': ability.name,
-                'input': _input.upper(),
-                'range': ability.range,
-                'cost': ability.cost,
-                'usable': self.ability_is_usable(ability),
-            } for ability, _input in zip(self.abilities, ability_labels)],
-        }
-
-    def ability_is_usable(self, ability):
-        return (
-            ability.cost < self.current_ap and
-            self.range_index in ability.range and
-            self.target is not None
-        )
 
 
 
@@ -238,29 +161,6 @@ class CombatState(GameState):
         combatant.path.set_x(combatant.path.get_x() + delta)
         self.range_index = int((distance - 2) // 2)
 
-    def _interval_from_effect(self, combatant, effect):
-        parameters = effect['parameters']
-        etype = effect['type']
-        if etype == 'change_stat':
-            strength = (
-                parameters.get('physical_coef', 0) * combatant.physical_attack +
-                parameters.get('magical_coef', 0) * combatant.magical_attack +
-                parameters.get('base_coef', 0)
-            )
-            target = effect.get('target', 'other')
-            if target == 'self':
-                target = combatant
-            elif target == 'other':
-                target = combatant.target
-            else:
-                raise RuntimeError("Unkown effect target: {}".format(target))
-            stat = parameters['stat']
-            def change_stat():
-                setattr(target, stat, getattr(target, stat) - strength)
-            return intervals.Func(change_stat)
-        else:
-            raise RuntimeError("Unknown effect type: {}".format(etype))
-
     def use_ability(self, combatant, index):
         if self.lock_controls:
             return
@@ -271,9 +171,7 @@ class CombatState(GameState):
 
         combatant.current_ap -= ability.cost
 
-        sequence = intervals.Sequence()
-        for effect in ability.effects:
-            sequence.append(self._interval_from_effect(combatant, effect))
+        sequence = effects.sequence_from_effects(combatant, ability.effects)
 
         def unlock_controls():
             self.lock_controls = 0
