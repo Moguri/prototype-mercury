@@ -15,8 +15,9 @@ def change_stat(combatant, target, parameters):
 
 def play_animation(combatant, target, parameters):
     return target.path.actor_interval(
-        parameters['animation_name']
+        combatant.get_anim(parameters['animation_name'])
     )
+
 
 _effect_map = {
     'change_stat': change_stat,

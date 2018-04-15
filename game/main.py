@@ -175,7 +175,7 @@ class CombatState(GameState):
 
         def cleanup():
             self.lock_controls = 0
-            combatant.path.loop('cg.Run')
+            combatant.path.loop(combatant.get_anim('idle'))
         sequence.append(intervals.Func(cleanup))
         self.lock_controls = 1
         sequence.start()

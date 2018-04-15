@@ -8,7 +8,7 @@
             "type": "play_animation",
             "target": "self",
             "parameters": {
-                "animation_name": "cg.Attack"
+                "animation_name": "attack"
             }
         },
         {

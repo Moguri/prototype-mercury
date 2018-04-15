@@ -8,14 +8,6 @@ class Combatant:
     def __init__(self, parent_node, ability_inputs):
         gdb = GameDB.get_instance()
 
-        if hasattr(builtins, 'base'):
-            model = base.loader.load_model('clay_golem.bam')
-            self.path = Actor(model.find('**/ClayGolemArm'))
-            self.path.loop('cg.Run')
-            self.path.reparent_to(parent_node)
-        else:
-            self.path = Actor()
-
         self.breed = gdb['breeds']['bobcatshark']
 
         self.name = self.breed.name
@@ -27,6 +19,24 @@ class Combatant:
 
         self.range_index = 0
         self.target = None
+
+        # TODO get from breed?
+        self.anim_map = {
+            'idle': 'cg.Run',
+            'attack': 'cg.Attack',
+        }
+
+        if hasattr(builtins, 'base'):
+            model = base.loader.load_model('clay_golem.bam')
+            self.path = Actor(model.find('**/ClayGolemArm'))
+            self.path.loop(self.get_anim('idle'))
+            self.path.reparent_to(parent_node)
+        else:
+            self.path = Actor()
+
+
+    def get_anim(self, anim):
+        return self.anim_map[anim]
 
     @property
     def max_hp(self):
