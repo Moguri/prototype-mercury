@@ -20,12 +20,6 @@ class Combatant:
         self.range_index = 0
         self.target = None
 
-        # TODO get from breed?
-        self.anim_map = {
-            'idle': 'cg.Idle',
-            'attack': 'cg.Attack',
-        }
-
         if hasattr(builtins, 'base'):
             model = base.loader.load_model('{}.bam'.format(breed.bam_file))
             self.path = Actor(model.find('**/{}'.format(breed.root_node)))
@@ -36,7 +30,7 @@ class Combatant:
 
 
     def get_anim(self, anim):
-        return self.anim_map[anim]
+        return self.breed.anim_map[anim]
 
     @property
     def max_hp(self):

@@ -29,6 +29,7 @@ class Breed(DataModel):
         'name',
         'bam_file',
         'root_node',
+        'anim_map',
         'hp',
         'ap',
         'ap_per_second',
