@@ -22,7 +22,7 @@ class Combatant:
 
         # TODO get from breed?
         self.anim_map = {
-            'idle': 'cg.Run',
+            'idle': 'cg.Idle',
             'attack': 'cg.Attack',
         }
 
