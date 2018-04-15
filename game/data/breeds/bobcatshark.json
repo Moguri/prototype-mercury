@@ -1,6 +1,8 @@
 {
     "id": "bobcatshark",
     "name": "BobcatShark",
+    "bam_file": "clay_golem",
+    "root_node": "ClayGolemArm",
     "hp": 100,
     "ap": 100,
     "ap_per_second": 5,

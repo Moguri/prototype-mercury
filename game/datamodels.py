@@ -27,6 +27,8 @@ class Ability(DataModel):
 class Breed(DataModel):
     _props = [
         'name',
+        'bam_file',
+        'root_node',
         'hp',
         'ap',
         'ap_per_second',

@@ -5,10 +5,10 @@ from direct.actor.Actor import Actor
 from gamedb import GameDB
 
 class Combatant:
-    def __init__(self, parent_node, ability_inputs):
+    def __init__(self, breed, parent_node, ability_inputs):
         gdb = GameDB.get_instance()
 
-        self.breed = gdb['breeds']['bobcatshark']
+        self.breed = breed
 
         self.name = self.breed.name
         self.current_hp = 100
@@ -27,8 +27,8 @@ class Combatant:
         }
 
         if hasattr(builtins, 'base'):
-            model = base.loader.load_model('clay_golem.bam')
-            self.path = Actor(model.find('**/ClayGolemArm'))
+            model = base.loader.load_model('{}.bam'.format(breed.bam_file))
+            self.path = Actor(model.find('**/{}'.format(breed.root_node)))
             self.path.loop(self.get_anim('idle'))
             self.path.reparent_to(parent_node)
         else:

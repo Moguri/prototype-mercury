@@ -88,6 +88,7 @@ class CombatState(GameState):
 
     def __init__(self):
         super().__init__()
+        gdb = GameDB.get_instance()
 
         self.lock_controls = 0
         self.range_index = 0
@@ -95,9 +96,11 @@ class CombatState(GameState):
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(self.root_node)
 
+        breed = gdb['breeds']['bobcatshark']
+
         self.combatants = [
-            Combatant(self.arena_model, ['p1-ability{}'.format(i) for i in range(4)]),
-            Combatant(self.arena_model, ['p2-ability{}'.format(i) for i in range(4)]),
+            Combatant(breed, self.arena_model, ['p1-ability{}'.format(i) for i in range(4)]),
+            Combatant(breed, self.arena_model, ['p2-ability{}'.format(i) for i in range(4)]),
         ]
         self.combatants[0].path.set_x(-1.0)
         self.combatants[0].path.set_h(-90)
