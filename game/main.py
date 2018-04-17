@@ -1,6 +1,7 @@
 import json
 import math
 import os
+import random
 import sys
 
 from direct.showbase.ShowBase import ShowBase
@@ -96,11 +97,19 @@ class CombatState(GameState):
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(self.root_node)
 
-        breed = gdb['breeds']['bobcatshark']
+        breeds = list(gdb['breeds'].values())
 
         self.combatants = [
-            Combatant(breed, self.arena_model, ['p1-ability{}'.format(i) for i in range(4)]),
-            Combatant(breed, self.arena_model, ['p2-ability{}'.format(i) for i in range(4)]),
+            Combatant(
+                random.choice(breeds),
+                self.arena_model,
+                ['p1-ability{}'.format(i) for i in range(4)]
+            ),
+            Combatant(
+                random.choice(breeds),
+                self.arena_model,
+                ['p2-ability{}'.format(i) for i in range(4)]
+            ),
         ]
         self.combatants[0].path.set_x(-1.0)
         self.combatants[0].path.set_h(-90)
