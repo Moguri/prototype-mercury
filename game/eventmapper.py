@@ -1,4 +1,3 @@
-import itertools
 import pprint
 
 from direct.showbase.DirectObject import DirectObject
@@ -104,7 +103,6 @@ class EventMapper(DirectObject):
                 label = self.gamepad_label_map.get(label, label.upper())
             return label
 
-        # TODO handle other event types besides actions
         return ''
 
     def get_labels_for_event(self, event):
