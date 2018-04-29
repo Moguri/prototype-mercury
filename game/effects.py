@@ -8,9 +8,9 @@ def change_stat(combatant, target, parameters):
         parameters.get('base_coef', 0)
     )
     stat = parameters['stat']
-    def change_stat():
+    def func():
         setattr(target, stat, getattr(target, stat) - strength)
-    return intervals.Func(change_stat)
+    return intervals.Func(func)
 
 
 def play_animation(combatant, target, parameters):
@@ -19,7 +19,7 @@ def play_animation(combatant, target, parameters):
     )
 
 
-_effect_map = {
+_EFFECT_MAP = {
     'change_stat': change_stat,
     'play_animation': play_animation,
 }
@@ -39,10 +39,10 @@ def sequence_from_effects(combatant, effects):
         parameters = effect['parameters']
         etype = effect['type']
 
-        if etype not in _effect_map:
+        if etype not in _EFFECT_MAP:
             raise RuntimeError("Unknown effect type: {}".format(etype))
 
-        sequence.append(_effect_map[etype](combatant, target, parameters))
+        sequence.append(_EFFECT_MAP[etype](combatant, target, parameters))
 
     return sequence
 
@@ -52,13 +52,13 @@ if __name__ == '__main__':
     from gamedb import GameDB
     from combatant import Combatant
 
-    gdb = GameDB.get_instance()
+    GDB = GameDB.get_instance()
 
-    combatant = Combatant(None, [])
-    combatant.target = combatant
+    CMB = Combatant(None, [], [])
+    CMB.target = CMB
 
-    for ability in gdb['abilities'].values():
+    for ability in GDB['abilities'].values():
         print(ability.name)
         pprint.pprint(ability.effects)
 
-        print(sequence_from_effects(combatant, ability.effects))
+        print(sequence_from_effects(CMB, ability.effects))
