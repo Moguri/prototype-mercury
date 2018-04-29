@@ -1,19 +1,17 @@
+import random
+
 from direct.interval import IntervalGlobal as intervals
 
 
-def change_stat(combatant, target, parameters):
-    strength = (
-        parameters.get('physical_coef', 0) * combatant.physical_attack +
-        parameters.get('magical_coef', 0) * combatant.magical_attack +
-        parameters.get('base_coef', 0)
-    )
+def change_stat(_combatant, target, hit, strength, parameters):
     stat = parameters['stat']
     def func():
-        setattr(target, stat, getattr(target, stat) - strength)
+        if hit:
+            setattr(target, stat, getattr(target, stat) - strength)
     return intervals.Func(func)
 
 
-def play_animation(combatant, target, parameters):
+def play_animation(combatant, target, _hit, _strength, parameters):
     return target.path.actor_interval(
         combatant.get_anim(parameters['animation_name'])
     )
@@ -25,10 +23,25 @@ _EFFECT_MAP = {
 }
 
 
-def sequence_from_effects(combatant, effects):
+def calculate_hit_chance(_combatant, _target, _ability):
+    return 100
+
+
+def calculate_strength(combatant, _target, ability):
+    ab_str = ability.damage_rank * 10
+    cmb_str = (
+        combatant.physical_attack
+        if ability.type == 'physical'
+        else combatant.magical_attack
+    )
+
+    return ab_str * cmb_str
+
+
+def sequence_from_ability(combatant, ability):
     sequence = intervals.Sequence()
 
-    for effect in effects:
+    for effect in ability.effects:
         target = effect.get('target', 'other')
         if target == 'self':
             target = combatant
@@ -36,29 +49,36 @@ def sequence_from_effects(combatant, effects):
             target = combatant.target
         else:
             raise RuntimeError("Unkown effect target: {}".format(target))
+        hit = calculate_hit_chance(combatant, target, ability) > random.randrange(0, 99)
+        strength = calculate_strength(combatant, target, ability)
         parameters = effect['parameters']
         etype = effect['type']
 
         if etype not in _EFFECT_MAP:
             raise RuntimeError("Unknown effect type: {}".format(etype))
 
-        sequence.append(_EFFECT_MAP[etype](combatant, target, parameters))
+        sequence.append(_EFFECT_MAP[etype](combatant, target, hit, strength, parameters))
 
     return sequence
 
 
-if __name__ == '__main__':
+def _test():
     import pprint
     from gamedb import GameDB
     from combatant import Combatant
 
-    GDB = GameDB.get_instance()
+    gdb = GameDB.get_instance()
 
-    CMB = Combatant(None, [], [])
-    CMB.target = CMB
+    breeds = list(gdb['breeds'].values())
+    cmb = Combatant(breeds[0], None, [])
+    cmb.target = cmb
 
-    for ability in GDB['abilities'].values():
+    for ability in gdb['abilities'].values():
         print(ability.name)
         pprint.pprint(ability.effects)
 
-        print(sequence_from_effects(CMB, ability.effects))
+        print(sequence_from_ability(cmb, ability))
+
+
+if __name__ == '__main__':
+    _test()

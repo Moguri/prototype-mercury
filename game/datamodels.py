@@ -20,6 +20,9 @@ class Ability(DataModel):
         'name',
         'cost',
         'range',
+        'damage_rank',
+        'hit_rank',
+        'type',
         'effects',
     ]
 

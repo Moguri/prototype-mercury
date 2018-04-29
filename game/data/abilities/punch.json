@@ -3,6 +3,9 @@
     "name": "Punch",
     "cost": 10,
     "range": [0],
+    "damage_rank": 1,
+    "hit_rank": 5,
+    "type": "physical",
     "effects": [
         {
             "type": "play_animation",
@@ -14,10 +17,7 @@
         {
             "type": "change_stat",
             "parameters": {
-                "stat": "current_hp",
-                "physical_coef": 10.0,
-                "magical_coef": 0.0,
-                "base_coef": 0.0
+                "stat": "current_hp"
             }
         }
     ]

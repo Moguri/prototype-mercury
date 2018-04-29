@@ -183,7 +183,7 @@ class CombatState(GameState):
 
         combatant.current_ap -= ability.cost
 
-        sequence = effects.sequence_from_effects(combatant, ability.effects)
+        sequence = effects.sequence_from_ability(combatant, ability)
 
         def cleanup():
             self.lock_controls = 0
