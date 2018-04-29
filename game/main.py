@@ -250,3 +250,7 @@ class GameApp(ShowBase):
 
 APP = GameApp()
 APP.run()
+
+# Hack to fix PyLint errors
+#pylint: disable=invalid-name
+base = APP
