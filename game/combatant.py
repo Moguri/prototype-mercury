@@ -53,6 +53,18 @@ class Combatant:
         return self.breed.magical_attack
 
     @property
+    def accuracy(self):
+        return self.breed.accuracy
+
+    @property
+    def evasion(self):
+        return self.breed.evasion
+
+    @property
+    def defense(self):
+        return self.breed.defense
+
+    @property
     def move_cost(self):
         return self.breed.move_cost
 

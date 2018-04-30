@@ -23,19 +23,70 @@ _EFFECT_MAP = {
 }
 
 
-def calculate_hit_chance(_combatant, _target, _ability):
-    return 100
+BP_HITMOD = [
+    [100, 10],
+    [200, 20],
+    [300, 30],
+    [400, 40],
+]
+
+BP_STRFAC = [
+    [100, 400],
+    [200, 800],
+    [300, 1200],
+    [400, 1600],
+]
+
+def _bpsum(diff, bps):
+    tot = 0
+
+    for breakpoint in bps:
+        tot += max(min(diff, breakpoint[0]) / breakpoint[1], 0)
+        diff -= breakpoint[0]
+
+    return tot
 
 
-def calculate_strength(combatant, _target, ability):
-    ab_str = ability.damage_rank * 10
-    cmb_str = (
+def calculate_hit_mod(self_acc, target_eva):
+    diff = abs(self_acc - target_eva)
+    mod = _bpsum(diff, BP_HITMOD)
+
+    return mod if self_acc > target_eva else -mod
+
+
+def calculate_hit_chance(combatant, target, ability):
+    base_chance = ability.hit_rank * 10
+
+    return base_chance + calculate_hit_mod(combatant.accuracy, target.evasion)
+
+
+def calculate_strength_factor(self_stat, opp_stat):
+    diff = abs(self_stat - opp_stat)
+    factor = 1 + _bpsum(diff, BP_STRFAC)
+
+    return factor if self_stat > opp_stat else 1 / factor
+
+
+def calculate_defense_factor(defense):
+    return 1 - (defense / 1000)
+
+
+def calculate_strength(combatant, target, ability):
+    self_stat = (
         combatant.physical_attack
         if ability.type == 'physical'
         else combatant.magical_attack
     )
+    opp_stat = (
+        target.physical_attack
+        if ability.type == 'physical'
+        else target.magical_attack
+    )
+    base_str = (ability.damage_rank * 0.35 - 0.2) * self_stat
+    str_factor = calculate_strength_factor(self_stat, opp_stat)
+    def_factor = calculate_defense_factor(target.defense)
 
-    return ab_str * cmb_str
+    return base_str * str_factor * def_factor
 
 
 def sequence_from_ability(combatant, ability):
