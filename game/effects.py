@@ -86,7 +86,7 @@ def calculate_strength(combatant, target, ability):
     str_factor = calculate_strength_factor(self_stat, opp_stat)
     def_factor = calculate_defense_factor(target.defense)
 
-    return base_str * str_factor * def_factor
+    return round(base_str * str_factor * def_factor)
 
 
 def sequence_from_ability(combatant, ability):
