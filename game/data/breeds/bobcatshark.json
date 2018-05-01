@@ -8,18 +8,11 @@
         "attack": "cg.Attack"
     },
     "hp": 100,
-    "ap": 100,
     "ap_per_second": 5,
     "physical_attack": 100,
     "magical_attack": 100,
     "defense": 100,
     "evasion": 100,
     "accuracy": 100,
-    "move_cost": 5,
-    "abilities": [
-        "punch",
-        "punch",
-        "punch",
-        "punch"
-    ]
+    "move_cost": 5
 }

@@ -34,7 +34,6 @@ class Breed(DataModel):
         'root_node',
         'anim_map',
         'hp',
-        'ap',
         'ap_per_second',
         'physical_attack',
         'magical_attack',
@@ -42,5 +41,4 @@ class Breed(DataModel):
         'evasion',
         'accuracy',
         'move_cost',
-        'abilities',
     ]

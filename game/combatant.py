@@ -15,7 +15,7 @@ class Combatant:
         self.current_ap = 20
 
         self.ability_inputs = ability_inputs
-        self.abilities = [gdb['abilities'][i] for i in self.breed.abilities]
+        self.abilities = [gdb['abilities']['punch'] for i in range(4)]
 
         self.range_index = 0
         self.target = None
@@ -38,7 +38,7 @@ class Combatant:
 
     @property
     def max_ap(self):
-        return self.breed.ap
+        return 100
 
     @property
     def ap_per_second(self):
