@@ -12,6 +12,7 @@ name = "Panda3D"
 panda3d = {version = "==1.10.0.dev1344+inputoverhaul.71", index="Panda3D"}
 cefpanda = "*"
 cefpython3 = "==57.0"
+jsonschema = "*"
 
 [dev-packages]
 pylint = "*"
