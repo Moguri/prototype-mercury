@@ -32,32 +32,42 @@ def _extend_with_default(validator_class):
         validator_class, {"properties" : set_defaults},
     )
 
+
 _VALIDATOR = _extend_with_default(jsonschema.Draft4Validator)
+
+
+VALIDATE_SCHEMA = False
 
 
 class GameDB(collections.UserDict):
     _ptr = None
     data_dir = os.path.join(_APP_ROOT_DIR, 'data')
     top_level_keys = (
-        ('abilities', datamodels.Ability, 'empty.json'),
-        ('breeds', datamodels.Breed, 'empty.json'),
+        ('abilities', datamodels.Ability),
+        ('breeds', datamodels.Breed),
     )
 
     def __init__(self):
         super().__init__({
-            i[0]: self._load_directory(i[1], i[2], os.path.join(self.data_dir, i[0]))
+            i[0]: self._load_directory(*i)
             for i in self.top_level_keys
         })
 
-    def _load_directory(self, data_model, schema_path, dirpath):
-        with open(os.path.join(self.data_dir, 'schemas', schema_path)) as schema_file:
-            schema = _VALIDATOR(json.load(schema_file))
+    def _load_directory(self, dirname, data_model):
+        dirpath = os.path.join(self.data_dir, dirname)
 
         data_list = [
             json.load(open(os.path.join(dirpath, filename)))
             for filename in os.listdir(dirpath)
         ]
-        map(schema.validate, data_list)
+
+        if VALIDATE_SCHEMA:
+            schema_name = '{}.schema.json'.format(dirname)
+            schema_path = os.path.join(self.data_dir, 'schemas', schema_name)
+            with open(schema_path) as schema_file:
+                schema = _VALIDATOR(json.load(schema_file))
+            map(schema.validate, data_list)
+
         return {
             i['id']: data_model(i)
             for i in data_list
