@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+
+    "type": "object",
+    "properties": {
+        "id" : {
+            "type": "string"
+        },
+        "name" : {
+            "type": "string"
+        },
+        "bam_file" : {
+            "type": "string"
+        },
+        "root_node" : {
+            "type": "string"
+        },
+        "anim_map": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+        },
+        "hp": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "ap_per_second": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "physical_attack": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "magical_attack": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "defense": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "evasion": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "accuracy": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "move_cost": {
+            "type": "integer",
+            "minimum": 0
+        }
+    },
+
+    "required": [
+        "id",
+        "name",
+        "bam_file",
+        "root_node",
+        "anim_map",
+        "hp",
+        "ap_per_second",
+        "physical_attack",
+        "magical_attack",
+        "defense",
+        "evasion",
+        "accuracy",
+        "move_cost"
+    ],
+
+    "additionalProperties": false
+}

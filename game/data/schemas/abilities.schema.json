@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "cost": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "range": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+            },
+            "minItems": 1,
+            "maxItems": 4,
+            "uniqueItems": true
+        },
+        "damage_rank": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "hit_rank": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "physical",
+                "magical"
+            ]
+        },
+        "effects": {
+            "type": "array",
+            "items": {}
+        }
+
+    },
+
+    "required": [
+        "id",
+        "name",
+        "cost",
+        "range",
+        "damage_rank",
+        "hit_rank",
+        "effects"
+    ],
+
+    "additionalProperties": false
+}

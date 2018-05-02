@@ -1,7 +1,7 @@
 import gamedb
 
 
-gamedb.VALIDATE_SCHEMA = False
+gamedb.VALIDATE_SCHEMA = True
 
 
 def test_load():
