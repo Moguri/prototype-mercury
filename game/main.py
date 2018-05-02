@@ -197,7 +197,13 @@ class CombatState(GameState):
 
         combat_time = self.combat_timer.get_real_time()
         time_remaining = self.COMBAT_MAX_TIME - combat_time
-        if time_remaining < 0:
+
+        combat_over = (
+            time_remaining < 0 or
+            self.combatants[0].hp <= 0 or
+            self.combatants[1].hp <= 0
+        )
+        if combat_over:
             base.change_state(CombatState)
             return
 
