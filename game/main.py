@@ -93,6 +93,7 @@ class CombatState(GameState):
 
         self.lock_controls = 0
         self.range_index = 0
+        self.combat_over = 0
 
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(self.root_node)
@@ -138,6 +139,12 @@ class CombatState(GameState):
 
         # UI
         base.load_ui('main')
+        self.wintext = p3d.TextNode('win text')
+        self.wintext.set_align(p3d.TextNode.ACenter)
+        self.wintextnp = base.aspect2d.attach_new_node(self.wintext)
+        self.wintextnp.set_pos(0, 0, 0)
+        self.wintextnp.set_scale(0.25)
+        self.wintextnp.hide()
 
         self.cam_controller = CameraController(base.camera, self.combatants)
 
@@ -145,6 +152,7 @@ class CombatState(GameState):
         super().cleanup()
         self.cam_controller.cleanup()
         self.cam_controller = None
+        self.wintextnp.remove_node()
 
         base.taskMgr.remove('Combat State')
 
@@ -195,20 +203,45 @@ class CombatState(GameState):
     def update(self, dt):
         self.cam_controller.update()
 
+        if self.combat_over:
+            return
+
         combat_time = self.combat_timer.get_real_time()
         time_remaining = self.COMBAT_MAX_TIME - combat_time
 
-        combat_over = (
-            time_remaining < 0 or
-            self.combatants[0].hp <= 0 or
-            self.combatants[1].hp <= 0
-        )
-        if combat_over:
-            base.change_state(CombatState)
-            return
-
         for combatant in self.combatants:
             combatant.update(dt, self.range_index)
+
+        end_combat = (
+            time_remaining <= 0 or
+            self.combatants[0].current_hp <= 0 or
+            self.combatants[1].current_hp <= 0
+        )
+        if end_combat:
+            self.lock_controls = 1
+            self.combat_over = 1
+
+            # cleanup UI a little
+            if time_remaining < 0:
+                time_remaining = 0
+            for combatant in self.combatants:
+                if combatant.current_hp < 0:
+                    combatant.current_hp = 0
+
+            # display the results
+            winstring = 'Combatant %s Wins!'
+            if self.combatants[0].current_hp > self.combatants[1].current_hp:
+                winstring = winstring % 'One'
+            elif self.combatants[1].current_hp > self.combatants[0].current_hp:
+                winstring = winstring % 'Two'
+            else:
+                winstring = 'Draw!'
+                self.wintextnp.set_scale(0.5)
+            self.wintext.set_text(winstring)
+            self.wintextnp.show()
+
+            # wait for user input to transition
+            self.accept('accept', base.change_state, [CombatState])
 
         state = {
             'timer': math.floor(time_remaining),
