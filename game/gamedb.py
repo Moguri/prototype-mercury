@@ -66,7 +66,7 @@ class GameDB(collections.UserDict):
             schema_path = os.path.join(self.data_dir, 'schemas', schema_name)
             with open(schema_path) as schema_file:
                 schema = _VALIDATOR(json.load(schema_file))
-            map(schema.validate, data_list)
+            list(map(schema.validate, data_list))
 
         return {
             i['id']: data_model(i)
