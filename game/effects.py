@@ -55,7 +55,7 @@ def calculate_hit_mod(self_acc, target_eva):
 
 
 def calculate_hit_chance(combatant, target, ability):
-    base_chance = ability.hit_rank * 10
+    base_chance = 45 + ability.hit_rank * 10
 
     return base_chance + calculate_hit_mod(combatant.accuracy, target.evasion)
 
