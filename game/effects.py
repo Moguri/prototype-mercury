@@ -1,9 +1,10 @@
 import random
 
+import panda3d.core as p3d
 from direct.interval import IntervalGlobal as intervals
 
 
-def change_stat(_combatant, target, hit, strength, parameters):
+def change_stat(_combatant, target, hit, strength, parameters, _rendernp):
     stat = parameters['stat']
     def func():
         if hit:
@@ -11,7 +12,32 @@ def change_stat(_combatant, target, hit, strength, parameters):
     return intervals.Func(func)
 
 
-def play_animation(combatant, target, _hit, _strength, parameters):
+def show_result(_combatant, target, hit, strength, _parameters, rendernp):
+    textnode = p3d.TextNode('effect result')
+    textnode.set_align(p3d.TextNode.ACenter)
+    textnode.set_text(str(strength) if hit else "Miss")
+
+    textnp = rendernp.attach_new_node(textnode)
+    textnp.set_pos(target.path, 0, 0, 2)
+    textnp.set_billboard_point_eye()
+    textnp.set_bin("fixed", 0)
+    textnp.set_depth_test(False)
+    textnp.set_depth_write(False)
+    textnp.set_scale(0.5)
+    textnp.hide()
+
+    return intervals.Sequence(
+        intervals.Func(textnp.show),
+        intervals.LerpPosInterval(
+            textnp,
+            0.5,
+            textnp.get_pos() + p3d.LVector3(0, 0, 0.5)
+        ),
+        intervals.Func(textnp.remove_node),
+    )
+
+
+def play_animation(combatant, target, _hit, _strength, parameters, _rendernp):
     return target.path.actor_interval(
         combatant.get_anim(parameters['animation_name'])
     )
@@ -20,6 +46,7 @@ def play_animation(combatant, target, _hit, _strength, parameters):
 _EFFECT_MAP = {
     'change_stat': change_stat,
     'play_animation': play_animation,
+    'show_result': show_result,
 }
 
 
@@ -89,8 +116,14 @@ def calculate_strength(combatant, target, ability):
     return round(base_str * str_factor * def_factor)
 
 
-def sequence_from_ability(combatant, ability):
+def sequence_from_ability(rendernp, combatant, ability):
     sequence = intervals.Sequence()
+
+    hit_chance = calculate_hit_chance(combatant, combatant.target, ability)
+    roll = random.randrange(0, 99)
+    hit = hit_chance > roll
+    #print(hit, hit_chance, die)
+    strength = calculate_strength(combatant, combatant.target, ability)
 
     for effect in ability.effects:
         target = effect.get('target', 'other')
@@ -100,15 +133,14 @@ def sequence_from_ability(combatant, ability):
             target = combatant.target
         else:
             raise RuntimeError("Unkown effect target: {}".format(target))
-        hit = calculate_hit_chance(combatant, target, ability) > random.randrange(0, 99)
-        strength = calculate_strength(combatant, target, ability)
-        parameters = effect['parameters']
+
+        parameters = effect.get('parameters', {})
         etype = effect['type']
 
         if etype not in _EFFECT_MAP:
             raise RuntimeError("Unknown effect type: {}".format(etype))
 
-        sequence.append(_EFFECT_MAP[etype](combatant, target, hit, strength, parameters))
+        sequence.append(_EFFECT_MAP[etype](combatant, target, hit, strength, parameters, rendernp))
 
     return sequence
 
@@ -128,7 +160,7 @@ def _test():
         print(ability.name)
         pprint.pprint(ability.effects)
 
-        print(sequence_from_ability(cmb, ability))
+        print(sequence_from_ability(p3d.NodePath(), cmb, ability))
 
 
 if __name__ == '__main__':

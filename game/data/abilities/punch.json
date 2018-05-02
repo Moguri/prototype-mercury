@@ -15,6 +15,9 @@
             }
         },
         {
+            "type": "show_result"
+        },
+        {
             "type": "change_stat",
             "parameters": {
                 "stat": "current_hp"
