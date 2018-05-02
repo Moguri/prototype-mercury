@@ -43,10 +43,21 @@ def play_animation(combatant, target, _hit, _strength, parameters, _rendernp):
     )
 
 
+def template_simple(combatant, target, hit, strength, parameters, rendernp):
+    if 'stat' not in parameters:
+        parameters['stat'] = 'current_hp'
+    return intervals.Sequence(
+        play_animation(combatant, combatant, hit, strength, parameters, rendernp),
+        show_result(combatant, target, hit, strength, parameters, rendernp),
+        change_stat(combatant, target, hit, strength, parameters, rendernp),
+    )
+
+
 _EFFECT_MAP = {
     'change_stat': change_stat,
     'play_animation': play_animation,
     'show_result': show_result,
+    'template_simple': template_simple,
 }
 
 

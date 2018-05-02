@@ -8,19 +8,9 @@
     "type": "physical",
     "effects": [
         {
-            "type": "play_animation",
-            "target": "self",
+            "type": "template_simple",
             "parameters": {
                 "animation_name": "attack"
-            }
-        },
-        {
-            "type": "show_result"
-        },
-        {
-            "type": "change_stat",
-            "parameters": {
-                "stat": "current_hp"
             }
         }
     ]
