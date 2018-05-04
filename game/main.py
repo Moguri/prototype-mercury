@@ -138,7 +138,7 @@ class CombatState(GameState):
         self.combat_timer = p3d.ClockObject()
 
         # UI
-        base.load_ui('main')
+        base.load_ui('combat')
         self.wintext = p3d.TextNode('win text')
         self.wintext.set_align(p3d.TextNode.ACenter)
         self.wintextnp = base.aspect2d.attach_new_node(self.wintext)
