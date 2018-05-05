@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="vue.js"></script>
+        <link rel="stylesheet" href="pure-min.css">
+        <link rel="stylesheet" href="char_sel.css">
+    </head>
+
+    <body>
+        <div id='app' class='pure-g'>
+            <breed-list class='pure-u-1-4' :player='state.players[0]' :breeds='state.breeds'>
+            </breed-list>
+            <breed-info class='pure-u-1-4' :breed='state.breeds[state.players[0].sel_idx]'>
+            </breed-info>
+
+            <breed-info class='pure-u-1-4' :breed='state.breeds[state.players[1].sel_idx]'>
+            </breed-info>
+            <breed-list class='pure-u-1-4' :player='state.players[1]' :breeds='state.breeds'>
+            </breed-list>
+        </div>
+    </body>
+
+    <script type="text/x-template" id="breed-list-tmpl">
+        <div class='breed-list'>
+            <div class='pure-menu'>
+                <span class='custom-menu-heading pure-menu-heading'>{{player.name}}</span>
+                <ul class='pure-menu-list'>
+                    <li v-for='(breed, idx) in breeds' class='custom-menu-item pure-menu-item'
+                        v-bind:class="{'pure-menu-selected': idx == player.sel_idx, 'selection-locked': idx == player.sel_idx && player.is_locked}"
+                    >
+                        <a href='#' class='pure-menu-link'>{{breed.name}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="breed-info-tmpl">
+        <div class='breed-info'>
+            <div class='breed-view'>
+            </div>
+            <div class='breed-stats'>
+                <strong>{{breed.name}}</strong>
+                <div class='pure-g'>
+                    <div class='pure-u-1-2'>
+                        <p>HP: {{breed.hp}}</p>
+                        <p>Phys. Attack: {{breed.physical_attack}}</p>
+                        <p>Mag. Attack: {{breed.magical_attack}}</p>
+                    </div>
+                    <div class='pure-u-1-2'>
+                        <p>Defense: {{breed.defense}}</p>
+                        <p>Evasion: {{breed.evasion}}</p>
+                        <p>Accuracy: {{breed.accuracy}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script>
+        var data = {
+            state: {
+                breeds: [
+                    {
+                        name: 'Bobcatshark',
+                        hp: 100,
+                        physical_attack: 100,
+                        magical_attack: 100,
+                        defense: 100,
+                        evasion: 100,
+                        accuracy: 100,
+                    },
+                    {
+                        name: 'Fooman',
+                        hp: 100,
+                        physical_attack: 100,
+                        magical_attack: 100,
+                        defense: 100,
+                        evasion: 100,
+                        accuracy: 100,
+                    }
+                ],
+                players: [
+                    {
+                        name: 'Player One',
+                        sel_idx: 1,
+                        is_locked: false,
+                    },
+                    {
+                        name: 'Player Two',
+                        sel_idx: 0,
+                        is_locked: true,
+                    },
+                ]
+            }
+        };
+
+        Vue.component('breed-list', {
+            props: ['player', 'breeds'],
+            template: '#breed-list-tmpl'
+        });
+        Vue.component('breed-info', {
+            props: ['breed'],
+            template: '#breed-info-tmpl'
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: data
+        });
+
+        var update_state = function(new_state) {
+            data.state = Object.assign({}, data.state, new_state);
+        }
+    </script>
+</html>

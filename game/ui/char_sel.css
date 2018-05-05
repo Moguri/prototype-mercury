@@ -1,0 +1,56 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#app {
+    height: 100%;
+}
+
+.breed-list {
+    height: 100%;
+}
+
+.breed-list > .pure-menu {
+    height: 100%;
+    margin: 0.1em;
+    box-sizing: border-box;
+    background-color: #ccc;
+    border-radius: 0.2em;
+}
+
+.custom-menu-heading {
+    color: black;
+    text-align: center;
+}
+
+.custom-menu-item {
+    color: grey;
+}
+
+.breed-list .pure-menu-selected {
+    background-color: #5dade2;
+}
+
+.breed-list .selection-locked {
+    background-color: #ff8080;
+}
+
+.breed-info {
+    height: 100%;
+}
+
+.breed-view {
+    height: 66%;
+}
+
+.breed-stats {
+    height: 34%;
+    padding: 0.5em;
+    margin: 0.1em;
+    box-sizing: border-box;
+    background-color: #ccc;
+    border-radius: 0.2em;
+}
