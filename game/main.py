@@ -142,8 +142,6 @@ class CharacterSelectionState(GameState):
 
     def update(self, dt):
         if all((player.selection_locked for player in self.players)):
-            breeds = list(GameDB.get_instance()['breeds'].values())
-
             base.blackboard['breeds'] = [
                 self.breeds_list[player.selection].id
                 for player in self.players
@@ -211,9 +209,6 @@ class CombatState(GameState):
             self.accept(inp, self.use_ability, [self.combatants[1], idx])
         self.accept('p2-move-left', self.move_combatant, [1, -2.0])
         self.accept('p2-move-right', self.move_combatant, [1, 2.0])
-
-        def restart_state():
-            base.change_state(CombatState)
 
         self.combat_timer = p3d.ClockObject()
 
