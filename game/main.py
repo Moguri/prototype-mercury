@@ -84,6 +84,79 @@ class GameState(DirectObject):
         pass
 
 
+class CharacterSelectionState(GameState):
+    class PlayerInfo:
+        def __init__(self, name, max_selection):
+            self.name = name
+            self.max_selection = max_selection
+            self.selection = 0
+            self.selection_locked = False
+
+        def get_state(self):
+            return {
+                'name': self.name,
+                'sel_idx': self.selection,
+                'is_locked': self.selection_locked,
+            }
+
+        def _step_selection(self, step):
+            if not self.selection_locked:
+                self.selection = max(0, min(self.selection + step, self.max_selection))
+
+        def increment_selection(self):
+            self._step_selection(1)
+
+        def decrement_selection(self):
+            self._step_selection(-1)
+
+        def lock_selection(self):
+            self.selection_locked = True
+
+        def unlock_selection(self):
+            self.selection_locked = False
+
+    def __init__(self):
+        super().__init__()
+        gdb = GameDB.get_instance()
+
+        max_selection = len(gdb['breeds']) - 1
+        self.players = [
+            self.PlayerInfo('Player One', max_selection),
+            self.PlayerInfo('Player Two', max_selection),
+        ]
+
+        for idx, player in enumerate(self.players):
+            self.accept('p{}-move-down'.format(idx + 1), player.increment_selection)
+            self.accept('p{}-move-up'.format(idx + 1), player.decrement_selection)
+            self.accept('p{}-accept'.format(idx + 1), player.lock_selection)
+            self.accept('p{}-reject'.format(idx + 1), player.unlock_selection)
+
+        self.breeds_list = sorted(gdb['breeds'].values(), key=lambda x: x.name)
+        base.load_ui('char_sel')
+
+        # only send breeds once
+        state = {
+            'breeds': [i.to_dict() for i in self.breeds_list],
+        }
+        base.ui.execute_js('update_state({})'.format(json.dumps(state)), onload=True)
+
+    def update(self, dt):
+        if all((player.selection_locked for player in self.players)):
+            breeds = list(GameDB.get_instance()['breeds'].values())
+
+            base.blackboard['breeds'] = [
+                self.breeds_list[player.selection].id
+                for player in self.players
+            ]
+            base.change_state(CombatState)
+
+        # update ui
+        state = {
+            'players': [i.get_state() for i in self.players],
+        }
+        base.ui.execute_js('update_state({})'.format(json.dumps(state)), onload=True)
+
+
 class CombatState(GameState):
     COMBAT_MAX_TIME = 60
 
@@ -98,16 +171,24 @@ class CombatState(GameState):
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(self.root_node)
 
-        breeds = list(gdb['breeds'].values())
+        if 'breeds' in base.blackboard:
+            breeds = [gdb['breeds'][i] for i in base.blackboard['breeds']]
+        else:
+            print('No breeds in blackboard, using random')
+            available_breeds = list(gdb['breeds'].values())
+            breeds = [
+                random.choice(available_breeds),
+                random.choice(available_breeds),
+            ]
 
         self.combatants = [
             Combatant(
-                random.choice(breeds),
+                breeds[0],
                 self.arena_model,
                 ['p1-ability{}'.format(i) for i in range(4)]
             ),
             Combatant(
-                random.choice(breeds),
+                breeds[1],
                 self.arena_model,
                 ['p2-ability{}'.format(i) for i in range(4)]
             ),
@@ -133,7 +214,6 @@ class CombatState(GameState):
 
         def restart_state():
             base.change_state(CombatState)
-        self.accept('space', restart_state)
 
         self.combat_timer = p3d.ClockObject()
 
@@ -241,7 +321,15 @@ class CombatState(GameState):
             self.wintextnp.show()
 
             # wait for user input to transition
-            self.accept('accept', base.change_state, [CombatState])
+            def reset():
+                if p3d.ConfigVariableBool('mercury-skip-to-combat', 'False').get_value():
+                    next_state = CombatState
+                else:
+                    next_state = CharacterSelectionState
+                base.change_state(next_state)
+
+            self.accept('p1-accept', reset)
+            self.accept('p2-accept', reset)
 
         state = {
             'timer': math.floor(time_remaining),
@@ -266,13 +354,18 @@ class GameApp(ShowBase):
         self.render.set_shader_auto()
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
 
+        self.blackboard = {}
+
         self.event_mapper = eventmapper.EventMapper()
 
         # UI
         self.ui = cefpanda.CEFPanda()
 
         # Game states
-        self.current_state = CombatState()
+        if p3d.ConfigVariableBool('mercury-skip-to-combat', 'False').get_value():
+            self.current_state = CombatState()
+        else:
+            self.current_state = CharacterSelectionState()
         def update_gamestate(task):
             self.current_state.update(p3d.ClockObject.get_global_clock().get_dt())
             return task.cont
