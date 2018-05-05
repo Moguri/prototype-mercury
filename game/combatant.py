@@ -11,7 +11,7 @@ class Combatant:
         self.breed = breed
 
         self.name = self.breed.name
-        self.current_hp = 100
+        self.current_hp = self.max_hp
         self.current_ap = 20
 
         self.ability_inputs = ability_inputs
