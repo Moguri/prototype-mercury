@@ -14,6 +14,12 @@ class DataModel:
             pprint.pformat(self.__dict__)
         )
 
+    def to_dict(self):
+        return {
+            prop: getattr(self, prop)
+            for prop in self._props
+        }
+
 
 class Ability(DataModel):
     _props = [
