@@ -17,6 +17,7 @@ class DataModel:
 
 class Ability(DataModel):
     _props = [
+        'id',
         'name',
         'cost',
         'range',
@@ -29,6 +30,7 @@ class Ability(DataModel):
 
 class Breed(DataModel):
     _props = [
+        'id',
         'name',
         'bam_file',
         'root_node',
