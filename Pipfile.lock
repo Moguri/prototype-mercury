@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "24d8de7c21f6179902bc3e9a81bcb1115698615898ea580c84fb4731a61363c0"
+            "sha256": "5d0341bdb22ce7a95a3e161c917bba17d5e36d4cc5bb29884632a97fe1b28174"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -49,15 +49,15 @@
         },
         "panda3d": {
             "hashes": [
-                "sha256:48fdd742e01bf41d9c7fceefe3911e3b8815994d5e3110264e9d430662d7924c",
-                "sha256:4ce08defcc2ee8dc06805d69682995d1e35e5e877da921d1b7117242a25aa992",
-                "sha256:74588fdd7fe7e732c9b015cc43c2863b6a659c974e960b7b3fc4bca426dec00f",
-                "sha256:bcfda2aa2cf6c8dedf88c337d56e0474fbb6be20ee337b148b1b94572d472978",
-                "sha256:ee64d2608e5d58667f881a779f43814ccc9bcf4725ee45de67dedfe7e250644b",
-                "sha256:ffdc14e08153df122da691dea68ed7515078dfc3f929fff8e7afa8f6230b19ce"
+                "sha256:546af60d9cc507da2bb751e229890563f3d0d24e4fa5f4ac947727d81e9700bb",
+                "sha256:89eab1ecc0d74a170275666e9af08167e675d09851ac6001c0a414d57825c458",
+                "sha256:b43fd3f5ea0984c5f709a10881b9bf7eb15b6cc99206a6c1b2884c02d1394775",
+                "sha256:bb1026d3cdb8a3d4e46fc6f24f0622df2126cf08c1a88e1f8477a59949991ae9",
+                "sha256:c1ae194b546ada2826b16f44545bd3883494cb5987925efd3a404579907b758f",
+                "sha256:e9264148e1a99c8a68b8253bb4bc4f497f5d8778c86640e82c5a237b375eb126"
             ],
             "index": "Panda3D",
-            "version": "==1.10.0.dev1344+inputoverhaul.71"
+            "version": "==1.10.0.dev1344+inputoverhaul.73"
         }
     },
     "develop": {
@@ -70,10 +70,10 @@
         },
         "attrs": {
             "hashes": [
-                "sha256:1c7960ccfd6a005cd9f7ba884e6316b5e430a3f1a6c37c5f87d8b43f83b54ec9",
-                "sha256:a17a9573a6f475c99b551c0e0a812707ddda1ec9653bed04c13841404ed6f450"
+                "sha256:4b90b09eeeb9b88c35bc642cbac057e45a5fd85367b985bd2809c62b7b939265",
+                "sha256:e0d0eb91441a3b53dab4d9b743eafc1ac44476296a2053b6ca3af0b139faf87b"
             ],
-            "version": "==17.4.0"
+            "version": "==18.1.0"
         },
         "isort": {
             "hashes": [
