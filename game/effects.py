@@ -26,15 +26,18 @@ def show_result(_combatant, target, hit, strength, _parameters, rendernp):
     textnp.set_scale(0.5)
     textnp.hide()
 
-    return intervals.Sequence(
-        intervals.Func(textnp.show),
-        intervals.LerpPosInterval(
-            textnp,
-            0.5,
-            textnp.get_pos() + p3d.LVector3(0, 0, 0.5)
-        ),
-        intervals.Func(textnp.remove_node),
-    )
+    def func():
+        intervals.Sequence(
+            intervals.Func(textnp.show),
+            intervals.LerpPosInterval(
+                textnp,
+                1.0,
+                textnp.get_pos() + p3d.LVector3(0, 0, 0.5)
+            ),
+            intervals.Func(textnp.remove_node),
+        ).start()
+
+    return intervals.Func(func)
 
 
 def play_animation(combatant, target, _hit, _strength, parameters, _rendernp):
