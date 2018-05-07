@@ -265,12 +265,14 @@ class CombatState(GameState):
             self.accept(inp, self.use_ability, [self.combatants[0], idx])
         self.accept('p1-move-left', self.move_combatant, [0, -2.0])
         self.accept('p1-move-right', self.move_combatant, [0, 2.0])
+        self.accept('p1-knockback', self.use_knockback, [self.combatants[0], 1, 2.0])
 
         # Combatant 1 inputs
         for idx, inp in enumerate(self.combatants[1].ability_inputs):
             self.accept(inp, self.use_ability, [self.combatants[1], idx])
         self.accept('p2-move-left', self.move_combatant, [1, -2.0])
         self.accept('p2-move-right', self.move_combatant, [1, 2.0])
+        self.accept('p2-knockback', self.use_knockback, [self.combatants[1], 1, -2.0])
 
         self.combat_timer = p3d.ClockObject()
 
@@ -293,7 +295,7 @@ class CombatState(GameState):
 
         base.taskMgr.remove('Combat State')
 
-    def move_combatant(self, index, delta):
+    def move_combatant(self, index, delta, free_move=False):
         if self.lock_controls:
             return
 
@@ -311,12 +313,23 @@ class CombatState(GameState):
             return
 
         combatant = self.combatants[index]
-        if combatant.current_ap < combatant.move_cost:
+        move_cost = 0 if free_move else combatant.move_cost
+        if combatant.current_ap < move_cost:
             return
 
-        combatant.current_ap -= combatant.move_cost
+        combatant.current_ap -= move_cost
         combatant.path.set_x(combatant.path.get_x() + delta)
         self.range_index = int((distance - 2) // 2)
+
+    def use_knockback(self, combatant, target_index, distance):
+        if self.lock_controls:
+            return
+
+        if combatant.range_index != 0:
+            return
+
+        self.move_combatant(target_index, distance, free_move=True)
+
 
     def use_ability(self, combatant, index):
         if self.lock_controls:
