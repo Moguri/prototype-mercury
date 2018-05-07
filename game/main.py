@@ -11,6 +11,8 @@ from direct.actor.Actor import Actor
 import panda3d.core as p3d
 
 import cefpanda
+
+import ai
 import blenderpanda
 import eventmapper
 import effects
@@ -287,6 +289,12 @@ class CombatState(GameState):
 
         self.combat_timer = p3d.ClockObject()
 
+        # AI controller for player two
+        if base.blackboard['use_ai']:
+            self.ai_controller = ai.Controller(self.combatants[1])
+        else:
+            self.ai_controller = None
+
         # UI
         base.load_ui('combat')
         self.wintext = p3d.TextNode('win text')
@@ -377,6 +385,9 @@ class CombatState(GameState):
         for combatant in self.combatants:
             combatant.update(dt, self.range_index)
 
+        if self.ai_controller:
+            self.ai_controller.update(dt)
+
         end_combat = (
             time_remaining <= 0 or
             self.combatants[0].current_hp <= 0 or
@@ -439,7 +450,9 @@ class GameApp(ShowBase):
         self.render.set_shader_auto()
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
 
-        self.blackboard = {}
+        self.blackboard = {
+            'use_ai': p3d.ConfigVariableBool('mercury-use-ai', 'False'),
+        }
 
         self.event_mapper = eventmapper.EventMapper()
 
