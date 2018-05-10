@@ -1,0 +1,18 @@
+{
+    "id": "blast",
+    "name": "Blast",
+    "cost": 30,
+    "range": [3],
+    "damage_rank": 5,
+    "hit_rank": 1,
+    "type": "magical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "animation_name": "attack"
+            }
+        }
+    ]
+}
+
