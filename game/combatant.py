@@ -1,4 +1,5 @@
 import builtins
+import random
 
 from direct.actor.Actor import Actor
 
@@ -15,7 +16,8 @@ class Combatant:
         self.current_ap = 20
 
         self.ability_inputs = ability_inputs
-        self.abilities = [gdb['abilities']['punch'] for i in range(4)]
+        abilities_list = list(gdb['abilities'].values())
+        self.abilities = [random.choice(abilities_list) for i in range(4)]
 
         self.range_index = 0
         self.target = None
