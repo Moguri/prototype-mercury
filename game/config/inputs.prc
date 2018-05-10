@@ -18,7 +18,7 @@ event-map-item-p2-move-left raw-u gamepad1-dpad_left
 event-map-item-p2-move-right raw-i gamepad1-dpad_right
 event-map-item-p2-move-down raw-u gamepad1-dpad_down
 event-map-item-p2-move-up raw-i gamepad1-dpad_up
-event-map-item-p1-knockback raw-o gamepad0-lshoulder gamepad1-rshoulder
+event-map-item-p2-knockback raw-o gamepad0-lshoulder gamepad1-rshoulder
 event-map-item-p2-ability0 raw-q gamepad1-action_y
 event-map-item-p2-ability1 raw-w gamepad1-action_x
 event-map-item-p2-ability2 raw-e gamepad1-action_b

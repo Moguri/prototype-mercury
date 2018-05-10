@@ -219,6 +219,8 @@ class CharacterSelectionState(GameState):
 
 class CombatState(GameState):
     COMBAT_MAX_TIME = 60
+    ARENA_EDGE = 9
+    KNOCKBACK_DISTANCE = 6.0
 
     def __init__(self):
         super().__init__()
@@ -265,14 +267,22 @@ class CombatState(GameState):
             self.accept(inp, self.use_ability, [self.combatants[0], idx])
         self.accept('p1-move-left', self.move_combatant, [0, -2.0])
         self.accept('p1-move-right', self.move_combatant, [0, 2.0])
-        self.accept('p1-knockback', self.use_knockback, [self.combatants[0], 1, 2.0])
+        self.accept(
+            'p1-knockback',
+            self.use_knockback,
+            [self.combatants[0], 1, self.KNOCKBACK_DISTANCE]
+        )
 
         # Combatant 1 inputs
         for idx, inp in enumerate(self.combatants[1].ability_inputs):
             self.accept(inp, self.use_ability, [self.combatants[1], idx])
         self.accept('p2-move-left', self.move_combatant, [1, -2.0])
         self.accept('p2-move-right', self.move_combatant, [1, 2.0])
-        self.accept('p2-knockback', self.use_knockback, [self.combatants[1], 1, -2.0])
+        self.accept(
+            'p2-knockback',
+            self.use_knockback,
+            [self.combatants[1], 0, -self.KNOCKBACK_DISTANCE]
+        )
 
         self.combat_timer = p3d.ClockObject()
 
@@ -300,13 +310,12 @@ class CombatState(GameState):
             return
 
         new_positions = [combatant.path.get_x() for combatant in self.combatants]
+        new_position = max(-self.ARENA_EDGE, min(new_positions[index] + delta, self.ARENA_EDGE))
 
-        new_position = new_positions[index] + delta
-        if abs(new_position) > 10:
+        if new_positions[index] == new_position:
             return
 
         new_positions[index] = new_position
-
         distance = max(new_positions) - min(new_positions)
 
         if distance > 8 or distance < 2:
@@ -318,7 +327,7 @@ class CombatState(GameState):
             return
 
         combatant.current_ap -= move_cost
-        combatant.path.set_x(combatant.path.get_x() + delta)
+        combatant.path.set_x(new_position)
         self.range_index = int((distance - 2) // 2)
 
     def use_knockback(self, combatant, target_index, distance):
@@ -329,7 +338,6 @@ class CombatState(GameState):
             return
 
         self.move_combatant(target_index, distance, free_move=True)
-
 
     def use_ability(self, combatant, index):
         if self.lock_controls:
