@@ -74,14 +74,16 @@ class SequenceBuilder:
         'change_stat',
         'show_result',
         'play_animation',
+        'move_to_range',
 
         'template_simple',
     ]
 
-    def __init__(self, rendernp, combatant, ability):
+    def __init__(self, rendernp, combatant, ability, combat):
         self.rendernp = rendernp
         self.combatant = combatant
         self.ability = ability
+        self.combat = combat
 
         hit_chance = calculate_hit_chance(combatant, combatant.target, ability)
         roll = random.randrange(0, 99)
@@ -90,6 +92,10 @@ class SequenceBuilder:
         self.strength = calculate_strength(combatant, combatant.target, ability)
 
         self.sequence = intervals.Sequence()
+
+        self.initial_self_position = combatant.range_index
+        self.initial_other_position = combatant.range_index
+        self.initial_position = 0
 
         for effect in ability.effects:
             self.sequence.extend(self.parse_effect(effect))
@@ -163,21 +169,52 @@ class SequenceBuilder:
             target.get_anim(parameters['animation_name'])
         )
 
+    def move_to_range(self, target, parameters):
+        range_index = parameters['range_index']
+        if range_index < 0:
+            range_index = self.initial_position
+
+        def func():
+            delta = range_index - target.range_index
+            if self.combat.combatants.index(target) == 0:
+                delta = -delta
+            self.combat.move_combatant(
+                target,
+                delta,
+                free_move=True,
+                override_lock=True
+            )
+        return intervals.Func(func)
+
     #
     # Template Effects
     #
     def template_simple(self, target, parameters):
+        sequence = intervals.Sequence()
         if 'stat' not in parameters:
             parameters['stat'] = 'current_hp'
-        return intervals.Sequence(
+        if 'start_range' in parameters:
+            parameters['range_index'] = parameters['start_range']
+            sequence.append(self.move_to_range(self.combatant, parameters))
+
+        sequence.extend(intervals.Sequence(
             self.play_animation(self.combatant, parameters),
             self.show_result(target, parameters),
             self.change_stat(target, parameters),
-        )
+        ))
+
+        if 'start_range' in parameters:
+            if 'end_range' in parameters:
+                parameters['range_index'] = parameters['end_range']
+            else:
+                parameters['range_index'] = -1
+            sequence.append(self.move_to_range(self.combatant, parameters))
+
+        return sequence
 
 
-def sequence_from_ability(rendernp, combatant, ability):
-    return SequenceBuilder(rendernp, combatant, ability).as_sequence()
+def sequence_from_ability(rendernp, combatant, ability, combat):
+    return SequenceBuilder(rendernp, combatant, ability, combat).as_sequence()
 
 
 def _test():
@@ -195,7 +232,7 @@ def _test():
         print(ability.name)
         pprint.pprint(ability.effects)
 
-        print(sequence_from_ability(p3d.NodePath(), cmb, ability))
+        print(sequence_from_ability(p3d.NodePath(), cmb, ability, None))
 
 
 if __name__ == '__main__':
