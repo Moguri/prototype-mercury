@@ -220,7 +220,8 @@ class CharacterSelectionState(GameState):
 class CombatState(GameState):
     COMBAT_MAX_TIME = 60
     ARENA_EDGE = 9
-    KNOCKBACK_DISTANCE = 6.0
+    KNOCKBACK_DISTANCE = 3
+    RANGE_WIDTH = 2.0
 
     def __init__(self):
         super().__init__()
@@ -265,23 +266,23 @@ class CombatState(GameState):
         # Combatant 0 inputs
         for idx, inp in enumerate(self.combatants[0].ability_inputs):
             self.accept(inp, self.use_ability, [self.combatants[0], idx])
-        self.accept('p1-move-left', self.move_combatant, [0, -2.0])
-        self.accept('p1-move-right', self.move_combatant, [0, 2.0])
+        self.accept('p1-move-left', self.move_combatant, [self.combatants[0], -1])
+        self.accept('p1-move-right', self.move_combatant, [self.combatants[0], 1])
         self.accept(
             'p1-knockback',
             self.use_knockback,
-            [self.combatants[0], 1, self.KNOCKBACK_DISTANCE]
+            [self.combatants[0], self.combatants[1], 1]
         )
 
         # Combatant 1 inputs
         for idx, inp in enumerate(self.combatants[1].ability_inputs):
             self.accept(inp, self.use_ability, [self.combatants[1], idx])
-        self.accept('p2-move-left', self.move_combatant, [1, -2.0])
-        self.accept('p2-move-right', self.move_combatant, [1, 2.0])
+        self.accept('p2-move-left', self.move_combatant, [self.combatants[1], -1])
+        self.accept('p2-move-right', self.move_combatant, [self.combatants[1], 1])
         self.accept(
             'p2-knockback',
             self.use_knockback,
-            [self.combatants[1], 0, -self.KNOCKBACK_DISTANCE]
+            [self.combatants[1], self.combatants[0], -1]
         )
 
         self.combat_timer = p3d.ClockObject()
@@ -305,9 +306,13 @@ class CombatState(GameState):
 
         base.taskMgr.remove('Combat State')
 
-    def move_combatant(self, index, delta, free_move=False):
-        if self.lock_controls:
+    def move_combatant(self, combatant, delta, free_move=False, override_lock=False):
+        if self.lock_controls and not override_lock:
             return
+
+        delta *= self.RANGE_WIDTH
+
+        index = self.combatants.index(combatant)
 
         new_positions = [combatant.path.get_x() for combatant in self.combatants]
         new_position = max(-self.ARENA_EDGE, min(new_positions[index] + delta, self.ARENA_EDGE))
@@ -321,7 +326,6 @@ class CombatState(GameState):
         if distance > 8 or distance < 2:
             return
 
-        combatant = self.combatants[index]
         move_cost = 0 if free_move else combatant.move_cost
         if combatant.current_ap < move_cost:
             return
@@ -330,14 +334,14 @@ class CombatState(GameState):
         combatant.path.set_x(new_position)
         self.range_index = int((distance - 2) // 2)
 
-    def use_knockback(self, combatant, target_index, distance):
+    def use_knockback(self, combatant, target, direction):
         if self.lock_controls:
             return
 
         if combatant.range_index != 0:
             return
 
-        self.move_combatant(target_index, distance, free_move=True)
+        self.move_combatant(target, direction*self.KNOCKBACK_DISTANCE, free_move=True)
 
     def use_ability(self, combatant, index):
         if self.lock_controls:
@@ -349,7 +353,7 @@ class CombatState(GameState):
 
         combatant.current_ap -= ability.cost
 
-        sequence = effects.sequence_from_ability(self.root_node, combatant, ability)
+        sequence = effects.sequence_from_ability(self.root_node, combatant, ability, self)
 
         def cleanup():
             self.lock_controls = 0
