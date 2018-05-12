@@ -171,10 +171,14 @@ class SequenceBuilder:
 
     def move_to_range(self, target, parameters):
         range_index = parameters['range_index']
+        hit_required = parameters.get('is_hit_dependent', False)
         if range_index < 0:
             range_index = self.initial_position
 
         def func():
+            if hit_required and not self.is_hit:
+                return
+
             delta = range_index - target.range_index
             if self.combat.combatants.index(target) == 0:
                 delta = -delta
