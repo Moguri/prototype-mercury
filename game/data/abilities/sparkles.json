@@ -1,0 +1,18 @@
+{
+    "id": "sparkles",
+    "name": "Sparkles",
+    "cost": 15,
+    "range": [1],
+    "damage_rank": 2,
+    "hit_rank": 4,
+    "type": "magical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "animation_name": "attack"
+            }
+        }
+    ]
+}
+
