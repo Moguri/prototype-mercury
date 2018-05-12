@@ -1,0 +1,26 @@
+{
+    "id": "gust",
+    "name": "Gust",
+    "cost": 15,
+    "range": [0],
+    "damage_rank": 1,
+    "hit_rank": 5,
+    "type": "magical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "animation_name": "attack"
+            }
+        },
+        {
+            "type": "move_to_range",
+            "target": "other",
+            "parameters": {
+                "range_index": 1,
+                "is_hit_dependent": true
+            }
+        }
+    ]
+}
+
