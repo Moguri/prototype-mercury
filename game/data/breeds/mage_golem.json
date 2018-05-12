@@ -1,0 +1,18 @@
+{
+    "id": "mage_golem",
+    "name": "Mage Golem",
+    "bam_file": "clay_golem",
+    "root_node": "ClayGolemArm",
+    "anim_map": {
+        "idle": "cg.Idle",
+        "attack": "cg.Attack"
+    },
+    "hp": 80,
+    "ap_per_second": 5,
+    "physical_attack": 75,
+    "magical_attack": 150,
+    "defense": 60,
+    "evasion": 130,
+    "accuracy": 140,
+    "move_cost": 5
+}
