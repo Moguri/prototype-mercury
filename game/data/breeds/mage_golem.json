@@ -7,6 +7,12 @@
         "idle": "cg.Idle",
         "attack": "cg.Attack"
     },
+    "abilities": [
+        "punch",
+        "gust",
+        "sparkles",
+        "blast"
+    ],
     "hp": 80,
     "ap_per_second": 5,
     "physical_attack": 75,

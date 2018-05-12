@@ -41,6 +41,7 @@ class Breed(DataModel):
         'bam_file',
         'root_node',
         'anim_map',
+        'abilities',
         'hp',
         'ap_per_second',
         'physical_attack',

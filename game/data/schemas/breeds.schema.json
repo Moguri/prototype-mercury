@@ -19,6 +19,15 @@
             "type": "object",
             "additionalProperties": {"type": "string"}
         },
+        "abilities": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 4,
+            "uniqueItems": true
+        },
         "hp": {
             "type": "integer",
             "minimum": 0
@@ -59,6 +68,7 @@
         "bam_file",
         "root_node",
         "anim_map",
+        "abilities",
         "hp",
         "ap_per_second",
         "physical_attack",
