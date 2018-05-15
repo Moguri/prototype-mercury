@@ -347,6 +347,9 @@ class CombatState(GameState):
         if self.lock_controls:
             return
 
+        if len(combatant.abilities)  <= index:
+            return
+
         ability = combatant.abilities[index]
         if not combatant.ability_is_usable(ability):
             return
