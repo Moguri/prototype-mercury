@@ -104,5 +104,9 @@ ENV/
 game/assets
 .pman.user
 
+# Editor files
+.idea
+*.swp
+
 # User config
 game/config/user.prc
