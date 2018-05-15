@@ -21,16 +21,16 @@ from gamedb import GameDB
 if hasattr(sys, 'frozen'):
     APP_ROOT_DIR = os.path.dirname(sys.executable)
 else:
-    APP_ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
+    APP_ROOT_DIR = p3d.Filename.from_os_specific(os.path.abspath(os.path.dirname(__file__)))
 if not APP_ROOT_DIR:
     print('empty app_root_dir')
     sys.exit()
 
 # Load config files before ShowBase is initialized
-CONFIG_DIR = os.path.join(APP_ROOT_DIR, 'config')
-p3d.load_prc_file(os.path.join(CONFIG_DIR, 'game.prc'))
-p3d.load_prc_file(os.path.join(CONFIG_DIR, 'inputs.prc'))
-p3d.load_prc_file(os.path.join(CONFIG_DIR, 'user.prc'))
+CONFIG_DIR = p3d.Filename(APP_ROOT_DIR, 'config')
+p3d.load_prc_file(p3d.Filename(CONFIG_DIR, 'game.prc'))
+p3d.load_prc_file(p3d.Filename(CONFIG_DIR, 'inputs.prc'))
+p3d.load_prc_file(p3d.Filename(CONFIG_DIR, 'user.prc'))
 
 
 class CameraController():
