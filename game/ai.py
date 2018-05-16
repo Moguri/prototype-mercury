@@ -1,6 +1,9 @@
 import random
 
 
+from direct.showbase.MessengerGlobal import messenger
+
+
 class Controller():
     DEFAULT_TIMEOUT = 1.5
 
@@ -15,12 +18,12 @@ class Controller():
             ability = self.combatant.abilities[self.ability_index]
 
             if self.combatant.ability_is_usable(ability):
-                base.messenger.send(self.combatant.ability_inputs[self.ability_index])
+                messenger.send(self.combatant.ability_inputs[self.ability_index])
                 self.decision_timeout = 0
             elif self.combatant.range_index < self.target_range:
-                base.messenger.send('p2-move-right')
+                messenger.send('p2-move-right')
             elif self.combatant.range_index > self.target_range:
-                base.messenger.send('p2-move-left')
+                messenger.send('p2-move-left')
 
         self.decision_timeout -= dt
         if self.decision_timeout <= 0:
