@@ -20,6 +20,8 @@ class Combatant:
         self.range_index = 0
         self.target = None
 
+        self.lock_controls = False
+
         if hasattr(builtins, 'base'):
             model = base.loader.load_model('{}.bam'.format(breed.bam_file))
             self.path = Actor(model.find('**/{}'.format(breed.root_node)))

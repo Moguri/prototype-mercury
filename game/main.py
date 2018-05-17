@@ -229,7 +229,6 @@ class CombatState(GameState):
         super().__init__()
         gdb = GameDB.get_instance()
 
-        self.lock_controls = 0
         self.range_index = 0
         self.combat_over = 0
 
@@ -315,7 +314,7 @@ class CombatState(GameState):
         base.taskMgr.remove('Combat State')
 
     def move_combatant(self, combatant, delta, free_move=False, override_lock=False):
-        if self.lock_controls and not override_lock:
+        if combatant.lock_controls and not override_lock:
             return
 
         delta *= self.RANGE_WIDTH
@@ -343,7 +342,7 @@ class CombatState(GameState):
         self.range_index = int((distance - 2) // 2)
 
     def use_knockback(self, combatant, target, direction):
-        if self.lock_controls:
+        if combatant.lock_controls:
             return
 
         if combatant.range_index != 0:
@@ -352,7 +351,7 @@ class CombatState(GameState):
         self.move_combatant(target, direction*self.KNOCKBACK_DISTANCE, free_move=True)
 
     def use_ability(self, combatant, index):
-        if self.lock_controls:
+        if combatant.lock_controls:
             return
 
         if len(combatant.abilities) <= index:
@@ -367,10 +366,12 @@ class CombatState(GameState):
         sequence = effects.sequence_from_ability(self.root_node, combatant, ability, self)
 
         def cleanup():
-            self.lock_controls = 0
+            for cbt in self.combatants:
+                cbt.lock_controls = 0
             combatant.path.loop(combatant.get_anim('idle'))
         sequence.append(intervals.Func(cleanup))
-        self.lock_controls = 1
+        for cbt in self.combatants:
+            cbt.lock_controls = 1
         sequence.start()
 
     def update(self, dt):
@@ -394,7 +395,8 @@ class CombatState(GameState):
             self.combatants[1].current_hp <= 0
         )
         if end_combat:
-            self.lock_controls = 1
+            for combatant in self.combatants:
+                combatant.lock_controls = 1
             self.combat_over = 1
 
             # cleanup UI a little
