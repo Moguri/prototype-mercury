@@ -36,7 +36,7 @@ def calculate_hit_mod(self_acc, target_eva):
 
 
 def calculate_hit_chance(combatant, target, ability):
-    base_chance = 45 + ability.hit_rank * 10
+    base_chance = 40 + ability.hit_rank * 10
 
     return base_chance + calculate_hit_mod(combatant.accuracy, target.evasion)
 
@@ -63,7 +63,7 @@ def calculate_strength(combatant, target, ability):
         if ability.type == 'physical'
         else target.magical_attack
     )
-    base_str = (ability.damage_rank * 0.35 - 0.2) * self_stat
+    base_str = (ability.damage_rank * 0.25 - 0.2) * self_stat
     str_factor = calculate_strength_factor(self_stat, opp_stat)
     def_factor = calculate_defense_factor(target.defense)
 
