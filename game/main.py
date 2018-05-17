@@ -365,11 +365,16 @@ class CombatState(GameState):
 
         sequence = effects.sequence_from_ability(self.root_node, combatant, ability, self)
 
+        def unlock_combatant():
+            combatant.lock_controls = 0
         def cleanup():
-            for cbt in self.combatants:
-                cbt.lock_controls = 0
+            combatant.target.lock_controls = 0
             combatant.path.loop(combatant.get_anim('idle'))
-        sequence.append(intervals.Func(cleanup))
+        sequence.extend(intervals.Sequence(
+            intervals.Func(cleanup),
+            intervals.Wait(0.25),
+            intervals.Func(unlock_combatant)
+        ))
         for cbt in self.combatants:
             cbt.lock_controls = 1
         sequence.start()
