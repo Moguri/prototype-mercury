@@ -3,67 +3,34 @@ html {
     height: 100%;
 }
 
-#card-bar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+.pure-g > div {
+    box-sizing: border-box;
+}
+
+#timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #timer p {
+    font-size: 4em;
     margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 3em;
-    visibility: visible;
+    -webkit-text-stroke: 0.02em white;
+}
+
+#top-bar {
+    padding: 1em;
 }
 
 .monster-card {
-    padding: 1em;
-    box-sizing: border-box;
-}
-
-.mc-stats {
     padding: 0.5em;
-    box-sizing: border-box;
     background-color: #ccc;
     border-radius: 0.2em;
 }
 
-.mc-disabled {
-    color: grey;
-}
-
-.mc-range {
-    padding: 0.5em;
-    box-sizing: border-box;
-    border-radius: 0.2em;
-    width: 32%;
-    height: 100%;
-}
-
-.mc-range > table {
-    width: 100%;
-    height: 100%;
-    border-collapse: separate;
-    border-spacing: 0px;
-}
-
-.mc-range > table > tr > td {
-    border: 1px solid black;
-}
-
-.mc-range > table > tr > td:not(.mc-range-valid) {
-    background-color: #fff;
-}
-
-.mc-range-valid {
-    background-color: #333;
-}
-
-.mc-range-active {
-    transform: scale(1.2);
+.mc-name {
+    font-size: 1.5em;
 }
 
 progress {
@@ -86,4 +53,49 @@ progress::-webkit-progress-value {
 
 .progress-ap::-webkit-progress-value {
     background: #33a;
+}
+
+#ability-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 1em;
+}
+
+.ability-card {
+    padding: 0.3em;
+}
+
+.ac-input {
+    background-color: #ccc;
+    border-radius: 0.2em;
+    padding: 0.2em;
+    margin: 0.1em;
+    text-align: center;
+}
+
+.ac-input div:not(:first-child) {
+    border-left: 1px solid #999;
+}
+
+.ac-range-indicator {
+    background-color: #ccc;
+    border-radius: 0.2em;
+    padding: 0.2em;
+    border-collapse: collapse;
+}
+
+.ac-range-slot {
+    outline: 1px solid #666;
+    text-align: center;
+    font-size: 1.2em;
+    background-color: #999;
+}
+
+.ac-rs-active {
+    background-color: #ccc;
+}
+
+.ac-rs-disable {
+    color: gray;
 }
