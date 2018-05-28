@@ -76,9 +76,9 @@
 
     <script type="text/x-template" id="ability-input-tmpl">
         <div class='ac-input pure-g'>
-            <div class='pure-u-1-6'>{{ability.input}}</div>
-            <div class='pure-u-1-2'>{{ability.name}}</div>
-            <div class='pure-u-1-6'>{{ability.cost}}</div>
+            <div class='pure-u-1-6'>{{(ability) ? ability.input : '-'}}</div>
+            <div class='pure-u-1-2'>{{(ability) ? ability.name : '-'}}</div>
+            <div class='pure-u-1-6'>{{(ability) ? ability.cost : '-'}}</div>
             <div class='pure-u-1-6'>50%</div>
         </div>
     </script>
@@ -96,24 +96,24 @@
             <div class='pure-g'>
                 <div class='pure-u-1-4'></div>
                 <div class='pure-u-1-2'
-                    v-bind:class="{'ac-rs-disable': !abilities[3].range.includes(slot)}">
+                    v-bind:class="{'ac-rs-disable': !abilities[3] || !abilities[3].range.includes(slot)}">
                     &#x25cf;
                 </div>
             </div>
             <div class='pure-g'>
                 <div class='pure-u-1-2'
-                    v-bind:class="{'ac-rs-disable': !abilities[2].range.includes(slot)}">
+                    v-bind:class="{'ac-rs-disable': !abilities[2] || !abilities[2].range.includes(slot)}">
                     &#x25cf;
                 </div>
                 <div class='pure-u-1-2'
-                    v-bind:class="{'ac-rs-disable': !abilities[1].range.includes(slot)}">
+                    v-bind:class="{'ac-rs-disable': !abilities[1] || !abilities[1].range.includes(slot)}">
                     &#x25cf;
                 </div>
             </div>
             <div class='pure-g'>
                 <div class='pure-u-1-4'></div>
                 <div class='pure-u-1-2'
-                    v-bind:class="{'ac-rs-disable': !abilities[0].range.includes(slot)}">
+                    v-bind:class="{'ac-rs-disable': !abilities[0] || !abilities[0].range.includes(slot)}">
                     &#x25cf;
                 </div>
             </div>
@@ -129,7 +129,6 @@
                         {name: 'stab', input: 'Q', range: [0, 1], cost: 15, usable: true},
                         {name: 'poke', input: 'W', range: [0], cost: 10, usable: true},
                         {name: 'jab', input: 'E', range: [0], cost: 10, usable: true},
-                        {name: 'nuke', input: 'R', range: [3], cost: 25, usable: true},
                     ],
                     hp_current: 123,
                     hp_max: 304,
