@@ -1,12 +1,3 @@
-html {
-    width: 100%;
-    height: 100%;
-}
-
-.pure-g > div {
-    box-sizing: border-box;
-}
-
 #timer {
     display: flex;
     justify-content: center;
