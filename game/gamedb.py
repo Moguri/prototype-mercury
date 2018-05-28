@@ -80,10 +80,18 @@ class GameDB(collections.UserDict):
         return cls._ptr
 
 
-if __name__ == '__main__':
+def get_instance():
+    return GameDB.get_instance()
+
+
+def dump_db():
     print("GameDB:")
-    for key, value in GameDB.get_instance().items():
+    for key, value in get_instance().items():
         print("\t", key)
         for i in value.values():
             for j in repr(i).split('\n'):
                 print("\t\t", j)
+
+
+if __name__ == '__main__':
+    dump_db()
