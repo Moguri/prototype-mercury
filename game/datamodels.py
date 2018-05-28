@@ -5,6 +5,7 @@ class DataModel:
     _props = []
 
     def __init__(self, dict_data):
+        self._props |= {'id', 'name'}
         for prop in self._props:
             setattr(self, prop, dict_data[prop])
 
@@ -22,22 +23,18 @@ class DataModel:
 
 
 class Ability(DataModel):
-    _props = [
-        'id',
-        'name',
+    _props = {
         'cost',
         'range',
         'damage_rank',
         'hit_rank',
         'type',
         'effects',
-    ]
+    }
 
 
 class Breed(DataModel):
-    _props = [
-        'id',
-        'name',
+    _props = {
         'bam_file',
         'root_node',
         'anim_map',
@@ -50,4 +47,4 @@ class Breed(DataModel):
         'evasion',
         'accuracy',
         'move_cost',
-    ]
+    }
