@@ -73,10 +73,16 @@ class GameDB(collections.UserDict):
             for i in data_list
         }
 
+    def _link_models(self):
+        for key in self.top_level_keys:
+            _ = [model.link(self) for model in self[key[0]].values()]
+
     @classmethod
     def get_instance(cls):
         if cls._ptr is None:
             cls._ptr = cls()
+            #pylint: disable=protected-access
+            cls._ptr._link_models()
         return cls._ptr
 
 

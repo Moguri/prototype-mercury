@@ -15,9 +15,15 @@ class DataModel:
             pprint.pformat(self.__dict__)
         )
 
+    def link(self, _gdb):
+        pass
+
     def to_dict(self):
+        def _ga(prop):
+            return getattr(self, prop)
+
         return {
-            prop: getattr(self, prop)
+            prop: _ga(prop).to_dict() if isinstance(_ga(prop), DataModel) else _ga(prop)
             for prop in self._props
         }
 
