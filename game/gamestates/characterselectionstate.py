@@ -1,5 +1,3 @@
-import json
-
 from direct.actor.Actor import Actor
 import panda3d.core as p3d
 
@@ -100,7 +98,7 @@ class CharacterSelectionState(GameState):
             self.accept('p{}-reject'.format(idx + 1), player.unlock_selection)
 
         self.breeds_list = sorted(gdb['breeds'].values(), key=lambda x: x.name)
-        base.load_ui('char_sel')
+        self.load_ui('char_sel')
 
         self.breed_displays = [
             self.BreedDisplay(0.25, 0.5, 0.33, 1),
@@ -108,10 +106,9 @@ class CharacterSelectionState(GameState):
         ]
 
         # only send breeds once
-        state = {
+        self.update_ui({
             'breeds': [i.to_dict() for i in self.breeds_list],
-        }
-        base.ui.execute_js('update_state({})'.format(json.dumps(state)), onload=True)
+        })
 
     def cleanup(self):
         super().cleanup()
@@ -133,7 +130,6 @@ class CharacterSelectionState(GameState):
             self.breed_displays[idx].set_breed(gdb['breeds'][breedid])
 
         # update ui
-        state = {
+        self.update_ui({
             'players': [i.get_state() for i in self.players],
-        }
-        base.ui.execute_js('update_state({})'.format(json.dumps(state)), onload=True)
+        })

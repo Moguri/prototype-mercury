@@ -1,4 +1,3 @@
-import json
 import math
 import random
 
@@ -123,7 +122,7 @@ class CombatState(GameState):
             self.ai_controller = None
 
         # UI
-        base.load_ui('combat')
+        self.load_ui('combat')
         self.wintext = p3d.TextNode('win text')
         self.wintext.set_align(p3d.TextNode.ACenter)
         self.wintextnp = base.aspect2d.attach_new_node(self.wintext)
@@ -258,11 +257,9 @@ class CombatState(GameState):
             self.accept('p1-accept', reset)
             self.accept('p2-accept', reset)
 
-        state = {
+        self.update_ui({
             'timer': math.floor(time_remaining),
             'range': self.range_index,
             'player_monster': self.combatants[0].get_state(),
             'opponent_monster': self.combatants[1].get_state(),
-        }
-
-        base.ui.execute_js('update_state({})'.format(json.dumps(state)), onload=True)
+        })
