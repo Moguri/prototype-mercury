@@ -252,7 +252,7 @@ class CombatState(GameState):
 
             # wait for user input to transition
             def reset():
-                base.change_state('CharacterSelection')
+                base.change_to_previous_state()
 
             self.accept('p1-accept', reset)
             self.accept('p2-accept', reset)

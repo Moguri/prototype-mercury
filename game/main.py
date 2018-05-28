@@ -51,7 +51,9 @@ class GameApp(ShowBase):
 
         # Game states
         initial_state = p3d.ConfigVariableString('mercury-initial-state', 'CharacterSelection')
-        self.current_state = gamestates.states[initial_state.get_value()]()
+        initial_state = initial_state.get_value()
+        self.previous_state_name = self.current_state_name = initial_state
+        self.current_state = gamestates.states[initial_state]()
         def update_gamestate(task):
             self.current_state.update(p3d.ClockObject.get_global_clock().get_dt())
             return task.cont
@@ -59,7 +61,12 @@ class GameApp(ShowBase):
 
     def change_state(self, next_state):
         self.current_state.cleanup()
+        self.previous_state_name = self.current_state_name
+        self.current_state_name = next_state
         self.current_state = gamestates.states[next_state]()
+
+    def change_to_previous_state(self):
+        self.change_state(self.previous_state_name)
 
     def load_ui(self, uiname):
         self.ui.load(os.path.join(APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
