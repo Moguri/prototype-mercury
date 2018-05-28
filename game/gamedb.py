@@ -45,6 +45,7 @@ class GameDB(collections.UserDict):
     top_level_keys = (
         ('abilities', datamodels.Ability),
         ('breeds', datamodels.Breed),
+        ('monsters', datamodels.Monster),
     )
 
     def __init__(self):

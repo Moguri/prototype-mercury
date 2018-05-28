@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "breed": {
+            "type": "string"
+        },
+        "hp_offset": {
+            "type": "integer"
+        },
+        "ap_offset": {
+            "type": "integer"
+        },
+        "physical_attack_offset": {
+            "type": "integer"
+        },
+        "magical_attack_offset": {
+            "type": "integer"
+        },
+        "accuracy_offset": {
+            "type": "integer"
+        },
+        "evasion_offset": {
+            "type": "integer"
+        },
+        "defense_offset": {
+            "type": "integer"
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "breed",
+        "hp_offset",
+        "ap_offset",
+        "physical_attack_offset",
+        "magical_attack_offset",
+        "accuracy_offset",
+        "evasion_offset",
+        "defense_offset"
+    ],
+    "additionalProperties": false
+}
