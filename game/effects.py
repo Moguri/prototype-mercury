@@ -223,10 +223,10 @@ def sequence_from_ability(rendernp, combatant, ability, combat):
 
 def _test():
     import pprint
-    from gamedb import GameDB
+    import gamedb
     from combatant import Combatant
 
-    gdb = GameDB.get_instance()
+    gdb = gamedb.get_instance()
 
     breeds = list(gdb['breeds'].values())
     cmb = Combatant(breeds[0], None, [])

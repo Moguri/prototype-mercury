@@ -7,7 +7,7 @@ import cefpanda
 import blenderpanda
 
 import eventmapper
-from gamedb import GameDB
+import gamedb
 import gamestates
 
 
@@ -31,7 +31,7 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         blenderpanda.init(self)
-        GameDB.get_instance()
+        gamedb.get_instance()
 
         self.win.set_close_request_event('escape')
         self.accept('escape', sys.exit)

@@ -5,4 +5,4 @@ gamedb.VALIDATE_SCHEMA = True
 
 
 def test_load():
-    gamedb.GameDB.get_instance()
+    gamedb.get_instance()

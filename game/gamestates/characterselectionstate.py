@@ -1,7 +1,7 @@
 from direct.actor.Actor import Actor
 import panda3d.core as p3d
 
-from gamedb import GameDB
+import gamedb
 
 from .gamestate import GameState
 
@@ -83,7 +83,7 @@ class CharacterSelectionState(GameState):
 
     def __init__(self):
         super().__init__()
-        gdb = GameDB.get_instance()
+        gdb = gamedb.get_instance()
 
         max_selection = len(gdb['breeds']) - 1
         self.players = [
@@ -116,7 +116,7 @@ class CharacterSelectionState(GameState):
             disp.cleanup()
 
     def update(self, _dt):
-        gdb = GameDB.get_instance()
+        gdb = gamedb.get_instance()
         breed_ids = [
             self.breeds_list[player.selection].id
             for player in self.players

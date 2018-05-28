@@ -2,11 +2,11 @@ import builtins
 
 from direct.actor.Actor import Actor
 
-from gamedb import GameDB
+import gamedb
 
 class Combatant:
     def __init__(self, breed, parent_node, ability_inputs):
-        gdb = GameDB.get_instance()
+        gdb = gamedb.get_instance()
 
         self.breed = breed
 

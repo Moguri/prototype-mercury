@@ -7,7 +7,7 @@ import panda3d.core as p3d
 import ai
 from combatant import Combatant
 import effects
-from gamedb import GameDB
+import gamedb
 
 from .gamestate import GameState
 
@@ -54,7 +54,7 @@ class CombatState(GameState):
 
     def __init__(self):
         super().__init__()
-        gdb = GameDB.get_instance()
+        gdb = gamedb.get_instance()
 
         self.range_index = 0
         self.combat_over = 0
