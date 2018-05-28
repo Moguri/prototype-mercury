@@ -253,11 +253,7 @@ class CombatState(GameState):
 
             # wait for user input to transition
             def reset():
-                if p3d.ConfigVariableBool('mercury-skip-to-combat', 'False').get_value():
-                    next_state = 'Combat'
-                else:
-                    next_state = 'CharacterSelection'
-                base.change_state(next_state)
+                base.change_state('CharacterSelection')
 
             self.accept('p1-accept', reset)
             self.accept('p2-accept', reset)

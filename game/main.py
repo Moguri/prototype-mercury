@@ -50,10 +50,8 @@ class GameApp(ShowBase):
         self.ui = cefpanda.CEFPanda()
 
         # Game states
-        if p3d.ConfigVariableBool('mercury-skip-to-combat', 'False').get_value():
-            self.current_state = gamestates.CombatState()
-        else:
-            self.current_state = gamestates.CharacterSelectionState()
+        initial_state = p3d.ConfigVariableString('mercury-initial-state', 'CharacterSelection')
+        self.current_state = gamestates.states[initial_state.get_value()]()
         def update_gamestate(task):
             self.current_state.update(p3d.ClockObject.get_global_clock().get_dt())
             return task.cont
