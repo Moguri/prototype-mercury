@@ -5,12 +5,13 @@ from direct.actor.Actor import Actor
 import gamedb
 
 class Combatant:
-    def __init__(self, breed, parent_node, ability_inputs):
+    def __init__(self, monster, parent_node, ability_inputs):
         gdb = gamedb.get_instance()
 
-        self.breed = breed
+        self._monster = monster
+        breed = monster.breed
 
-        self.name = self.breed.name
+        self.name = self._monster.name
         self.current_hp = self.max_hp
         self.current_ap = 20
 
@@ -32,43 +33,43 @@ class Combatant:
 
 
     def get_anim(self, anim):
-        return self.breed.anim_map[anim]
+        return self._monster.breed.anim_map[anim]
 
     @property
     def max_hp(self):
-        return self.breed.hp
+        return self._monster.hit_points
 
     @property
     def max_ap(self):
-        return 100
+        return self._monster.ability_points
 
     @property
     def ap_per_second(self):
-        return self.breed.ap_per_second
+        return self._monster.ap_per_second
 
     @property
     def physical_attack(self):
-        return self.breed.physical_attack
+        return self._monster.physical_attack
 
     @property
     def magical_attack(self):
-        return self.breed.magical_attack
+        return self._monster.magical_attack
 
     @property
     def accuracy(self):
-        return self.breed.accuracy
+        return self._monster.accuracy
 
     @property
     def evasion(self):
-        return self.breed.evasion
+        return self._monster.evasion
 
     @property
     def defense(self):
-        return self.breed.defense
+        return self._monster.defense
 
     @property
     def move_cost(self):
-        return self.breed.move_cost
+        return self._monster.move_cost
 
     def update(self, dt, range_index):
         self.range_index = range_index

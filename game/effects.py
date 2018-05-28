@@ -228,8 +228,8 @@ def _test():
 
     gdb = gamedb.get_instance()
 
-    breeds = list(gdb['breeds'].values())
-    cmb = Combatant(breeds[0], None, [])
+    monsters = list(gdb['monsters'].values())
+    cmb = Combatant(monsters[0], None, [])
     cmb.target = cmb
 
     for ability in gdb['abilities'].values():

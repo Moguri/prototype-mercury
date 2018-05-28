@@ -14,7 +14,7 @@ def combatant():
     import combatant
     import gamedb
 
-    breed = gamedb.get_instance()['breeds']['bobcatshark']
+    breed = gamedb.get_instance()['monsters']['bobcatshark']
 
     return combatant.Combatant(breed, p3d.NodePath(''), [])
 

@@ -85,7 +85,7 @@ class CharacterSelectionState(GameState):
         super().__init__()
         gdb = gamedb.get_instance()
 
-        max_selection = len(gdb['breeds']) - 1
+        max_selection = len(gdb['monsters']) - 1
         self.players = [
             self.PlayerInfo('Player One', max_selection),
             self.PlayerInfo('Player Two', max_selection),
@@ -97,7 +97,7 @@ class CharacterSelectionState(GameState):
             self.accept('p{}-accept'.format(idx + 1), player.lock_selection)
             self.accept('p{}-reject'.format(idx + 1), player.unlock_selection)
 
-        self.breeds_list = sorted(gdb['breeds'].values(), key=lambda x: x.name)
+        self.monsters_list = sorted(gdb['monsters'].values(), key=lambda x: x.name)
         self.load_ui('char_sel')
 
         self.breed_displays = [
@@ -107,7 +107,7 @@ class CharacterSelectionState(GameState):
 
         # only send breeds once
         self.update_ui({
-            'breeds': [i.to_dict() for i in self.breeds_list],
+            'breeds': [i.to_dict() for i in self.monsters_list],
         })
 
     def cleanup(self):
@@ -117,17 +117,17 @@ class CharacterSelectionState(GameState):
 
     def update(self, _dt):
         gdb = gamedb.get_instance()
-        breed_ids = [
-            self.breeds_list[player.selection].id
+        monster_ids = [
+            self.monsters_list[player.selection].id
             for player in self.players
         ]
 
         if all((player.selection_locked for player in self.players)):
-            base.blackboard['breeds'] = breed_ids
+            base.blackboard['monsters'] = monster_ids
             base.change_state('Combat')
 
-        for idx, breedid in enumerate(breed_ids):
-            self.breed_displays[idx].set_breed(gdb['breeds'][breedid])
+        for idx, monid in enumerate(monster_ids):
+            self.breed_displays[idx].set_breed(gdb['monsters'][monid].breed)
 
         # update ui
         self.update_ui({

@@ -62,24 +62,24 @@ class CombatState(GameState):
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(self.root_node)
 
-        if 'breeds' in base.blackboard:
-            breeds = [gdb['breeds'][i] for i in base.blackboard['breeds']]
+        if 'monsters' in base.blackboard:
+            monsters = [gdb['monsters'][i] for i in base.blackboard['monsters']]
         else:
-            print('No breeds in blackboard, using random')
-            available_breeds = list(gdb['breeds'].values())
-            breeds = [
-                random.choice(available_breeds),
-                random.choice(available_breeds),
+            print('No monsters in blackboard, using random')
+            available_monsters = list(gdb['monsters'].values())
+            monsters = [
+                random.choice(available_monsters),
+                random.choice(available_monsters),
             ]
 
         self.combatants = [
             Combatant(
-                breeds[0],
+                monsters[0],
                 self.arena_model,
                 ['p1-ability{}'.format(i) for i in range(4)]
             ),
             Combatant(
-                breeds[1],
+                monsters[1],
                 self.arena_model,
                 ['p2-ability{}'.format(i) for i in range(4)]
             ),
