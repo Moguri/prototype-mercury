@@ -26,3 +26,13 @@ def dt():
 def ai_controller(combatant):
     import ai
     return ai.Controller(combatant)
+
+@pytest.fixture
+def player():
+    import playerdata
+    import gamedb
+
+    player = playerdata.PlayerData()
+    player.monster = list(gamedb.get_instance()['monsters'].values())[0]
+
+    return player

@@ -9,6 +9,7 @@ import blenderpanda
 import eventmapper
 import gamedb
 import gamestates
+from playerdata import PlayerData
 
 
 if hasattr(sys, 'frozen'):
@@ -42,6 +43,7 @@ class GameApp(ShowBase):
 
         self.blackboard = {
             'use_ai': p3d.ConfigVariableBool('mercury-use-ai', 'False'),
+            'player': PlayerData(),
         }
 
         self.event_mapper = eventmapper.EventMapper()

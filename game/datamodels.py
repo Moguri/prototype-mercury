@@ -25,7 +25,7 @@ class DataModel:
             return getattr(self, prop)
 
         return {
-            prop: _ga(prop).to_dict() if isinstance(_ga(prop), DataModel) else _ga(prop)
+            prop: _ga(prop).id if isinstance(_ga(prop), DataModel) else _ga(prop)
             for prop in self._props
         }
 
