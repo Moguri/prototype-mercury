@@ -1,3 +1,7 @@
+import random
+
+import gamedb
+
 from .gamestate import GameState
 
 
@@ -5,8 +9,17 @@ class RanchState(GameState):
     def __init__(self):
         super().__init__()
 
+        gdb = gamedb.get_instance()
+
+        self.player = base.blackboard['player']
+        if self.player.monster is None:
+            # Assign a random Monster for now. In the future, we will
+            # present a monster selection screen
+            self.player.monster = random.choice(list(gdb['monsters'].values()))
+            print("Assigned monster: {}".format(self.player.monster.name))
+
         self.menu_items = [
-            ('Combat', base.change_state, ['Combat']),
+            ('Combat', self.enter_combat, []),
         ]
         self.selection_idx = 0
 
@@ -39,3 +52,9 @@ class RanchState(GameState):
     def accept_selection(self):
         selection = self.menu_items[self.selection_idx]
         selection[1](*selection[2])
+
+    def enter_combat(self):
+        base.blackboard['monsters'] = [
+            self.player.monster.id
+        ]
+        base.change_state('Combat')

@@ -62,15 +62,17 @@ class CombatState(GameState):
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(self.root_node)
 
+        # start with random Monsters then override with anything from the
+        # blackboard
+        available_monsters = list(gdb['monsters'].values())
+        monsters = [
+            random.choice(available_monsters),
+            random.choice(available_monsters),
+        ]
+
         if 'monsters' in base.blackboard:
-            monsters = [gdb['monsters'][i] for i in base.blackboard['monsters']]
-        else:
-            print('No monsters in blackboard, using random')
-            available_monsters = list(gdb['monsters'].values())
-            monsters = [
-                random.choice(available_monsters),
-                random.choice(available_monsters),
-            ]
+            for idx, monster in enumerate(base.blackboard['monsters']):
+                monsters[idx] = gdb['monsters'][monster]
 
         self.combatants = [
             Combatant(
