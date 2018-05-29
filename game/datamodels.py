@@ -73,6 +73,24 @@ class Monster(DataModel):
     def link(self, gdb):
         self.breed = gdb['breeds'][self.breed]
 
+    def to_dict(self):
+        data = super().to_dict()
+        extras = [
+            'hit_points',
+            'ability_points',
+            'physical_attack',
+            'magical_attack',
+            'accuracy',
+            'evasion',
+            'defense',
+        ]
+        data.update({
+            prop: getattr(self, prop)
+            for prop in extras
+        })
+
+        return data
+
     @property
     def hit_points(self):
         return self.breed.hp + self.hp_offset
