@@ -8,3 +8,28 @@ body,
 .pure-g > div {
     box-sizing: border-box;
 }
+
+.pure-menu {
+    height: 100%;
+    margin: 0.1em;
+    box-sizing: border-box;
+    background-color: #ccc;
+    border-radius: 0.2em;
+}
+
+.custom-menu-heading {
+    color: black;
+    text-align: center;
+}
+
+.custom-menu-item {
+    color: grey;
+}
+
+.pure-menu-selected {
+    background-color: #5dade2;
+}
+
+.selection-locked {
+    background-color: #ff8080;
+}

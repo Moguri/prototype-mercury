@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="vue.js"></script>
+        <link rel="stylesheet" href="pure-min.css">
+        <link rel="stylesheet" href="common.css">
+        <link rel="stylesheet" href="ranch.css">
+    </head>
+
+    <body>
+        <div id="app">
+            <div id='nav' class='pure-menu'>
+                <span class='custom-menu-heading pure-menu-heading'>Options</span>
+                <ul class='pure-menu-list'>
+                    <li v-for='(item, idx) in state.menu_items' class='custom-menu-item pure-menu-item'
+                        v-bind:class="{'pure-menu-selected': idx == state.selection_index}">
+                        <a href='#' class='pure-menu-link'>{{item}}</a>
+                    </li>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        var data = {
+            state: {
+                menu_items: [
+                    'Combat',
+                    'Train',
+                    'Save',
+                ],
+                selection_index: 0
+            }
+        };
+
+        var app = new Vue({
+            el: '#app',
+            data: data
+        });
+
+        var update_state = function(new_state) {
+            data.state = Object.assign({}, data.state, new_state)
+        }
+    </script>
+</html>
