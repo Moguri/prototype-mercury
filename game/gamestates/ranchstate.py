@@ -1,5 +1,8 @@
 import random
 
+from direct.actor.Actor import Actor
+import panda3d.core as p3d
+
 import gamedb
 
 from .gamestate import GameState
@@ -10,14 +13,35 @@ class RanchState(GameState):
         super().__init__()
 
         gdb = gamedb.get_instance()
-
         self.player = base.blackboard['player']
+
+        # Make sure the player has a monster
         if self.player.monster is None:
             # Assign a random Monster for now. In the future, we will
             # present a monster selection screen
             self.player.monster = random.choice(list(gdb['monsters'].values()))
             print("Assigned monster: {}".format(self.player.monster.name))
 
+        # Load and display the monster model
+        breed = self.player.monster.breed
+        monster_model = base.loader.load_model('{}.bam'.format(breed.bam_file))
+        self.monster_actor = Actor(monster_model.find('**/{}'.format(breed.root_node)))
+        self.monster_actor.set_h(180)
+        self.monster_actor.loop(breed.anim_map['idle'])
+        self.monster_actor.reparent_to(self.root_node)
+
+        # Setup lighting
+        self.light = p3d.DirectionalLight('dlight')
+        self.lightnp = self.root_node.attach_new_node(self.light)
+        self.lightnp.set_pos(2, -4, 4)
+        self.lightnp.look_at(0, 0, 0)
+        self.root_node.set_light(self.lightnp)
+
+        # Setup Camera
+        base.camera.set_pos(-3, -5, 5)
+        base.camera.look_at(0, 0, 1)
+
+        # UI
         self.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
