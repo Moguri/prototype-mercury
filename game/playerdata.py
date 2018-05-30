@@ -1,3 +1,4 @@
+import datetime
 import json
 
 import gamedb
@@ -14,7 +15,9 @@ class PlayerData:
         }
 
     def save(self, file_object):
-        json.dump(self.to_dict(), file_object)
+        data = self.to_dict()
+        data['timestamp'] = datetime.datetime.now().isoformat(),
+        json.dump(data, file_object, sort_keys=True)
 
     @classmethod
     def load(cls, file_object):
