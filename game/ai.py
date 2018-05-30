@@ -28,7 +28,9 @@ class Controller():
         self.decision_timeout -= dt
         if self.decision_timeout <= 0:
             # Pick a new decision
-            self.ability_index = random.choice([0, 1, 2, 3, None, None, None])
+            self.ability_index = random.choice(
+                list(range(0, len(self.combatant.ability_inputs)) + [ None, None, None]
+            )
             self.target_range = None
             self.decision_timeout = self.DEFAULT_TIMEOUT
 
