@@ -55,6 +55,11 @@ class Breed(DataModel):
         'evasion',
         'accuracy',
         'move_cost',
+        'physical_attack_affinity',
+        'magical_attack_affinity',
+        'accuracy_affinity',
+        'evasion_affinity',
+        'defense_affinity',
     }
 
 
