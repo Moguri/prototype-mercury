@@ -106,9 +106,22 @@ class RanchState(GameState):
         })
 
     def train_stat(self, stat):
-        stat_growth = 10
+        stat_growth = 0
+
+        attr = '{}_affinity'.format(stat)
+        affinity = getattr(self.player.monster.breed, attr)
+        success_chance = 60 + 10 * affinity
+        great_chance = 5 + min(100 - success_chance, 0)
+
+        if random.randrange(0, 99) < great_chance:
+            stat_growth = 20
+
+        if random.randrange(0, 99) < success_chance:
+            stat_growth = 10
+
         attr = '{}_offset'.format(stat)
         old_stat = getattr(self.player.monster, attr)
         setattr(self.player.monster, attr, old_stat + stat_growth)
 
+        print('{} grew by {}'.format(stat, stat_growth))
         print(self.player.monster)
