@@ -61,6 +61,9 @@ class RanchState(GameState):
         self.selection_idx = 0
         self.set_menu('base')
 
+        self.message = ""
+        self.message_modal = False
+
         self.accept('p1-move-down', self.increment_selection)
         self.accept('p1-move-up', self.decrement_selection)
         self.accept('p1-accept', self.accept_selection)
@@ -79,16 +82,33 @@ class RanchState(GameState):
         })
 
     def increment_selection(self):
+        if self.message_modal:
+            return
+
         self.selection_idx += 1
         if self.selection_idx >= len(self.menu_items):
             self.selection_idx = 0
 
     def decrement_selection(self):
+        if self.message_modal:
+            return
+
         self.selection_idx -= 1
         if self.selection_idx < 0:
             self.selection_idx = len(self.menu_items) - 1
 
+    def display_message(self, msg, modal=False):
+        self.message = msg
+        self.message_modal = modal
+        self.update_ui({
+            'message': self.message,
+        })
+
     def accept_selection(self):
+        if self.message_modal:
+            self.display_message('')
+            return
+
         selection = self.menu_items[self.selection_idx]
         selection[1](*selection[2])
 
@@ -123,5 +143,7 @@ class RanchState(GameState):
         old_stat = getattr(self.player.monster, attr)
         setattr(self.player.monster, attr, old_stat + stat_growth)
 
-        print('{} grew by {}'.format(stat, stat_growth))
-        print(self.player.monster)
+        stat_display = stat.replace('_', ' ').title()
+        if stat_display == 'Hp':
+            stat_display = 'HP'
+        self.display_message('{} grew by {}'.format(stat_display, stat_growth), modal=True)
