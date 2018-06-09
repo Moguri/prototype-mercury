@@ -4,6 +4,7 @@ from direct.actor.Actor import Actor
 import panda3d.core as p3d
 
 import gamedb
+import datamodels
 
 from .gamestate import GameState
 
@@ -15,20 +16,9 @@ class RanchState(GameState):
         gdb = gamedb.get_instance()
         self.player = base.blackboard['player']
 
-        # Make sure the player has a monster
-        if self.player.monster is None:
-            # Assign a random Monster for now. In the future, we will
-            # present a monster selection screen
-            self.player.monster = random.choice(list(gdb['monsters'].values()))
-            print("Assigned monster: {}".format(self.player.monster.name))
-
         # Load and display the monster model
-        breed = self.player.monster.breed
-        monster_model = base.loader.load_model('{}.bam'.format(breed.bam_file))
-        self.monster_actor = Actor(monster_model.find('**/{}'.format(breed.root_node)))
-        self.monster_actor.set_h(180)
-        self.monster_actor.loop(breed.anim_map['idle'])
-        self.monster_actor.reparent_to(self.root_node)
+        self.monster_actor = None
+        self.load_monster_model()
 
         # Setup lighting
         self.light = p3d.DirectionalLight('dlight')
@@ -56,6 +46,9 @@ class RanchState(GameState):
                 ('Evasion', self.train_stat, ['evasion']),
                 ('Defense', self.train_stat, ['defense']),
             ],
+            'monsters': [
+                (breed.name, self.get_monster, [breed.id]) for breed in gdb['breeds'].values()
+            ],
         }
         self.menu_items = None
         self.selection_idx = 0
@@ -63,6 +56,10 @@ class RanchState(GameState):
 
         self.message = ""
         self.message_modal = False
+
+        if not self.player.monster:
+            self.set_menu('monsters')
+            self.display_message('Select a breed')
 
         self.accept('p1-move-down', self.increment_selection)
         self.accept('p1-move-up', self.decrement_selection)
@@ -73,6 +70,17 @@ class RanchState(GameState):
         self.update_ui({
             'menu_items': [i[0] for i in self.menu_items],
         })
+
+    def load_monster_model(self):
+        if self.player.monster:
+            breed = self.player.monster.breed
+            monster_model = base.loader.load_model('{}.bam'.format(breed.bam_file))
+            self.monster_actor = Actor(monster_model.find('**/{}'.format(breed.root_node)))
+            self.monster_actor.set_h(180)
+            self.monster_actor.loop(breed.anim_map['idle'])
+            self.monster_actor.reparent_to(self.root_node)
+        else:
+            self.monster_actor = None
 
     def update(self, dt):
         super().update(dt)
@@ -147,3 +155,28 @@ class RanchState(GameState):
         if stat_display == 'Hp':
             stat_display = 'HP'
         self.display_message('{} grew by {}'.format(stat_display, stat_growth), modal=True)
+
+    def get_monster(self, breed):
+        gdb = gamedb.get_instance()
+
+        breed = gdb['breeds'][breed]
+        monster = datamodels.Monster({
+            'id': 'player_monster',
+            'name': breed.name,
+            'breed': breed.id,
+            'hp_offset': 0,
+            'ap_offset': 0,
+            'physical_attack_offset': 0,
+            'magical_attack_offset': 0,
+            'accuracy_offset': 0,
+            'evasion_offset': 0,
+            'defense_offset': 0,
+        })
+        monster.link(gdb)
+
+        self.player.monster = monster
+        gdb['monsters']['player_monster'] = monster
+
+        self.display_message('')
+        self.set_menu('base')
+        self.load_monster_model()
