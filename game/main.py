@@ -13,7 +13,7 @@ from playerdata import PlayerData
 
 
 if hasattr(sys, 'frozen'):
-    APP_ROOT_DIR = os.path.dirname(sys.executable)
+    APP_ROOT_DIR = p3d.Filename.from_os_specific(os.path.dirname(sys.executable))
 else:
     APP_ROOT_DIR = p3d.Filename.from_os_specific(os.path.abspath(os.path.dirname(__file__)))
 if not APP_ROOT_DIR:

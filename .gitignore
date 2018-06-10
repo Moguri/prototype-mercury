@@ -110,3 +110,6 @@ game/assets
 
 # User config
 game/config/user.prc
+
+# Generated requirements.txt
+requirements.txt

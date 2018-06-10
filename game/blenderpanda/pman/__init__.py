@@ -42,7 +42,7 @@ class FrozenEnvironmentError(PManException):
         PManException.__init__(self, "Operation not supported in frozen applications")
 
 
-if '__file__' not in globals():
+if hasattr(sys, 'frozen'):
     __IS_FROZEN = True
     __file__ = ''
 else:
@@ -372,6 +372,8 @@ class PMan(object):
 
 
     def _init_hooks(self, hooks_list):
+        if is_frozen():
+            return []
         new_hooks = []
         for hook in hooks_list:
             modparts = hook.split('.')
