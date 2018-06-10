@@ -20,6 +20,7 @@
     "evasion": 70,
     "accuracy": 80,
     "move_cost": 5,
+    "hp_affinity": 1,
     "physical_attack_affinity": 1,
     "magical_attack_affinity": 1,
     "accuracy_affinity": 1,
