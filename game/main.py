@@ -50,6 +50,7 @@ class GameApp(ShowBase):
 
         # UI
         self.ui = cefpanda.CEFPanda()
+        self.ui.use_mouse = False
 
         # Game states
         initial_state = p3d.ConfigVariableString('mercury-initial-state', 'CharacterSelection')
