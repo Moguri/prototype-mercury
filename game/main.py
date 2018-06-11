@@ -53,7 +53,7 @@ class GameApp(ShowBase):
         self.ui.use_mouse = False
 
         # Game states
-        initial_state = p3d.ConfigVariableString('mercury-initial-state', 'CharacterSelection')
+        initial_state = p3d.ConfigVariableString('mercury-initial-state', 'Title')
         initial_state = initial_state.get_value()
         self.previous_state_name = self.current_state_name = initial_state
         self.current_state = gamestates.states[initial_state]()
