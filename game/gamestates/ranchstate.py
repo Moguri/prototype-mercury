@@ -7,6 +7,7 @@ import gamedb
 import datamodels
 
 from .gamestate import GameState
+from .menuhelper import MenuHelper
 
 
 class RanchState(GameState):
@@ -32,13 +33,19 @@ class RanchState(GameState):
         base.camera.look_at(0, 0, 1)
 
         # UI
-        self.menus = {
+        def accept_cb():
+            if self.message_modal:
+                self.display_message('')
+                return True
+            return False
+        self.menu_helper = MenuHelper(self, accept_cb)
+        self.menu_helper.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
-                ('Train', self.set_menu, ['training']),
+                ('Train', self.menu_helper.set_menu, ['training']),
             ],
             'training': [
-                ('Back', self.set_menu, ['base']),
+                ('Back', self.menu_helper.set_menu, ['base']),
                 ('Hit Points', self.train_stat, ['hp']),
                 ('Physical Attack', self.train_stat, ['physical_attack']),
                 ('Magical Attack', self.train_stat, ['magical_attack']),
@@ -50,26 +57,22 @@ class RanchState(GameState):
                 (breed.name, self.get_monster, [breed.id]) for breed in gdb['breeds'].values()
             ],
         }
-        self.menu_items = None
-        self.selection_idx = 0
-        self.set_menu('base')
 
         self.message = ""
         self.message_modal = False
 
-        if not self.player.monster:
-            self.set_menu('monsters')
-            self.display_message('Select a breed')
-
-        self.accept('p1-move-down', self.increment_selection)
-        self.accept('p1-move-up', self.decrement_selection)
-        self.accept('p1-accept', self.accept_selection)
-        self.accept('p1-reject', self.set_menu, ['base'])
-
         self.load_ui('ranch')
-        self.update_ui({
-            'menu_items': [i[0] for i in self.menu_items],
-        })
+
+        if not self.player.monster:
+            self.menu_helper.set_menu('monsters')
+            self.display_message('Select a breed')
+        else:
+            self.menu_helper.set_menu('base')
+
+    def cleanup(self):
+        super().cleanup()
+
+        self.menu_helper.cleanup()
 
     def load_monster_model(self):
         if self.player.monster:
@@ -85,53 +88,21 @@ class RanchState(GameState):
     def update(self, dt):
         super().update(dt)
 
-        self.update_ui({
-            'selection_index': self.selection_idx,
-        })
-
-    def increment_selection(self):
-        if self.message_modal:
-            return
-
-        self.selection_idx += 1
-        if self.selection_idx >= len(self.menu_items):
-            self.selection_idx = 0
-
-    def decrement_selection(self):
-        if self.message_modal:
-            return
-
-        self.selection_idx -= 1
-        if self.selection_idx < 0:
-            self.selection_idx = len(self.menu_items) - 1
+        self.menu_helper.update_ui()
 
     def display_message(self, msg, modal=False):
         self.message = msg
         self.message_modal = modal
+        self.menu_helper.lock = modal
         self.update_ui({
             'message': self.message,
         })
-
-    def accept_selection(self):
-        if self.message_modal:
-            self.display_message('')
-            return
-
-        selection = self.menu_items[self.selection_idx]
-        selection[1](*selection[2])
 
     def enter_combat(self):
         base.blackboard['monsters'] = [
             self.player.monster.id
         ]
         base.change_state('Combat')
-
-    def set_menu(self, new_menu):
-        self.menu_items = self.menus[new_menu]
-        self.selection_idx = 0
-        self.update_ui({
-            'menu_items': [i[0] for i in self.menu_items],
-        })
 
     def train_stat(self, stat):
         stat_growth = 0
@@ -178,5 +149,5 @@ class RanchState(GameState):
         gdb['monsters']['player_monster'] = monster
 
         self.display_message('')
-        self.set_menu('base')
+        self.menu_helper.set_menu('base')
         self.load_monster_model()
