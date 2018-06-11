@@ -1,3 +1,5 @@
+import random
+
 from direct.actor.Actor import Actor
 import panda3d.core as p3d
 
@@ -104,6 +106,11 @@ class CharacterSelectionState(GameState):
             self.BreedDisplay(0.25, 0.5, 0.33, 1),
             self.BreedDisplay(0.5, 0.75, 0.33, 1),
         ]
+
+        if base.blackboard['use_ai']:
+            aiplayer = self.players[1]
+            aiplayer.selection = random.randint(0, aiplayer.max_selection)
+            aiplayer.lock_selection()
 
         # only send breeds once
         self.update_ui({
