@@ -23,6 +23,7 @@ class CameraController():
         self.widget.set_p(-20.0)
         self.widget.set_z(1.0)
         self.camera.set_pos(self.widget, p3d.LVecBase3(0.0, -7.5, 0.0))
+        self.camera.set_hpr(0, 0, 0)
 
     def cleanup(self):
         self.camera.reparent_to(self._old_cam_parent)
