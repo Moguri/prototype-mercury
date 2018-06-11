@@ -42,7 +42,7 @@ class GameApp(ShowBase):
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
 
         self.blackboard = {
-            'use_ai': p3d.ConfigVariableBool('mercury-use-ai', 'False'),
+            'use_ai': p3d.ConfigVariableBool('mercury-use-ai', 'True'),
             'player': PlayerData(),
         }
 
