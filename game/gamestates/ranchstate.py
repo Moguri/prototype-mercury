@@ -96,6 +96,7 @@ class RanchState(GameState):
         self.menu_helper.lock = modal
         self.update_ui({
             'message': self.message,
+            'message_modal': self.message_modal,
         })
 
     def enter_combat(self):
