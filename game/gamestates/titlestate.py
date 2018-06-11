@@ -8,7 +8,7 @@ class TitleState(GameState):
     def __init__(self):
         super().__init__()
 
-        self.menu_helper = MenuHelper(self)
+        self.menu_helper = MenuHelper(self, is_horizontal=True)
         self.menu_helper.menus = {
             'base': [
                 ('New Game', base.change_state, ['Ranch']),

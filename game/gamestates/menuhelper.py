@@ -4,7 +4,7 @@ from direct.showbase.DirectObject import DirectObject
 
 
 class MenuHelper(DirectObject):
-    def __init__(self, state, accept_cb=None, reject_cb=None):
+    def __init__(self, state, accept_cb=None, reject_cb=None, is_horizontal=False):
         super().__init__()
 
         self.state = weakref.proxy(state)
@@ -15,8 +15,15 @@ class MenuHelper(DirectObject):
         self.selection_idx = 0
         self.lock = False
 
-        self.accept('p1-move-down', self.increment_selection)
-        self.accept('p1-move-up', self.decrement_selection)
+        if is_horizontal:
+            incevt = 'p1-move-right'
+            decevt = 'p1-move-left'
+        else:
+            incevt = 'p1-move-down'
+            decevt = 'p1-move-up'
+
+        self.accept(incevt, self.increment_selection)
+        self.accept(decevt, self.decrement_selection)
         self.accept('p1-accept', self.accept_selection)
         self.accept('p1-reject', self.reject_selection)
 
