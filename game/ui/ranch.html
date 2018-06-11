@@ -19,6 +19,7 @@
                         v-bind:class="{'pure-menu-selected': idx == state.selection_index}">
                         <a href='#' class='pure-menu-link'>{{item}}</a>
                     </li>
+                </ul>
             </div>
             <div id='message-bar' v-if='state.message != ""'>
                 <span>{{state.message}}</span>
