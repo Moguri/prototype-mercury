@@ -78,7 +78,7 @@ class Combatant:
 
     def get_state(self):
         ability_labels = [
-            base.event_mapper.get_labels_for_event(inp)[0]
+            base.event_mapper.get_labels_for_event(inp, 'raw--')[0]
             for inp in self.ability_inputs
         ]
 

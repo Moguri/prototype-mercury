@@ -105,7 +105,7 @@ class EventMapper(DirectObject):
 
         return ''
 
-    def get_labels_for_event(self, event):
+    def get_labels_for_event(self, event, default=None):
         inputs = self.get_inputs_for_event(event)
         keymap = base.win.get_keyboard_map() if 'base' in globals() else None
 
@@ -121,10 +121,13 @@ class EventMapper(DirectObject):
             ]
             gamepad_device = devices[gpidx[0]] if gpidx and gpidx[0] < len(devices) else None
 
+        if default is not None:
+            inputs.append(default)
         inputs = filter(
             lambda x: x.startswith('gamepad') == bool(gamepad_device is not None),
             inputs
         )
+
 
         retval = []
         for inp in inputs:
