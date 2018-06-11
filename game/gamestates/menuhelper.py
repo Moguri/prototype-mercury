@@ -70,7 +70,7 @@ class MenuHelper(DirectObject):
         if self.reject_cb:
             self.reject_cb()
 
-    def set_menu(self, new_menu, allow_back=True):
+    def set_menu(self, new_menu):
         if new_menu is '':
             return
 
