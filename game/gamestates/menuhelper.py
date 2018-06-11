@@ -4,14 +4,13 @@ from direct.showbase.DirectObject import DirectObject
 
 
 class MenuHelper(DirectObject):
-    def __init__(self, state, accept_cb=None):
+    def __init__(self, state, accept_cb=None, reject_cb=None):
         super().__init__()
 
         self.state = weakref.proxy(state)
         self.menus = {}
 
-        self.prev_menu = ''
-        self.cur_menu = ''
+        self.current_menu = ''
         self.menu_items = None
         self.selection_idx = 0
         self.lock = False
@@ -19,9 +18,10 @@ class MenuHelper(DirectObject):
         self.accept('p1-move-down', self.increment_selection)
         self.accept('p1-move-up', self.decrement_selection)
         self.accept('p1-accept', self.accept_selection)
-        self.accept('p1-reject', self.set_menu, [self.prev_menu])
+        self.accept('p1-reject', self.reject_selection)
 
         self.accept_cb = accept_cb
+        self.reject_cb = reject_cb
 
     def cleanup(self):
         self.ignoreAll()
@@ -59,12 +59,15 @@ class MenuHelper(DirectObject):
         selection = self.menu_items[self.selection_idx]
         selection[1](*selection[2])
 
-    def set_menu(self, new_menu):
+    def reject_selection(self):
+        if self.reject_cb:
+            self.reject_cb()
+
+    def set_menu(self, new_menu, allow_back=True):
         if new_menu is '':
             return
 
-        self.prev_menu = self.cur_menu
-        self.cur_menu = new_menu
+        self.current_menu = new_menu
         self.menu_items = self.menus[new_menu]
         self.selection_idx = 0
         self.state.update_ui({

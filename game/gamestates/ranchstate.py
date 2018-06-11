@@ -38,7 +38,13 @@ class RanchState(GameState):
                 self.display_message('')
                 return True
             return False
-        self.menu_helper = MenuHelper(self, accept_cb)
+
+        def reject_cb():
+            menu_name = self.menu_helper.current_menu
+            if menu_name is 'training':
+                self.menu_helper.set_menu('base')
+
+        self.menu_helper = MenuHelper(self, accept_cb, reject_cb)
         self.menu_helper.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
