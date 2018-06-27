@@ -9,7 +9,7 @@ verify_ssl = true
 name = "Panda3D"
 
 [packages]
-panda3d = {version = "==1.10.0.dev1344+inputoverhaul.73", index="Panda3D"}
+panda3d = {version = "==1.10.0.dev1636+inputoverhaul.76", index="Panda3D"}
 cefpanda = {git = "https://github.com/Moguri/cefpanda.git", editable=true}
 cefpython3 = "==57.0"
 jsonschema = "*"
