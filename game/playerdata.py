@@ -7,11 +7,13 @@ import datamodels
 
 class PlayerData:
     def __init__(self):
+        self.name = 'FooMan'
         self.monster = None
         self.monster_stash = []
 
     def to_dict(self):
         return {
+            'name': self.name,
             'monster': self.monster.to_dict() if self.monster else '',
             'monster_stash': [i.to_dict() for i in self.monster_stash],
         }
@@ -26,6 +28,8 @@ class PlayerData:
         gdb = gamedb.get_instance()
         player = cls()
         data = json.load(file_object)
+
+        player.name = str(data['name'])
 
         if data['monster']:
             player.monster = datamodels.Monster(data['monster'])

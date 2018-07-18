@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="vue.js"></script>
+        <link rel="stylesheet" href="pure-min.css">
+        <link rel="stylesheet" href="common.css">
+        <link rel="stylesheet" href="new_trainer.css">
+    </head>
+
+    <body>
+        <div id="app">
+            <div id="registration">
+                <form v-on:submit.prevent class="pure-form pure-form-stacked">
+                    <fieldset>
+                        <legend>New Trainer Registration</legend>
+
+                        <label for="trainer_name">Trainer Name</label>
+                        <input v-model.trim="form.name" id="trainer_name" type="text" autofocus>
+
+                        <!--<button type="submit" class="pure-button pure-button-primary">Submit</button>-->
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        var data = {
+            state: {
+            },
+            form: {
+                name: 'FooMan',
+            },
+        };
+
+        var app = new Vue({
+            el: '#app',
+            data: data,
+        });
+
+        console.log('loaded');
+
+        var attempt_submit = function() {
+            if (data.form.name !== '' && typeof submit_form === 'function') {
+                submit_form(data.form);
+            }
+        }
+
+
+        var update_state = function(new_state) {
+            data.state = Object.assign({}, data.state, new_state)
+        }
+    </script>
+</html>

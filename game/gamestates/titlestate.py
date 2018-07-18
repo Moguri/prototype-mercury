@@ -11,7 +11,7 @@ class TitleState(GameState):
         self.menu_helper = MenuHelper(self, is_horizontal=True)
         self.menu_helper.menus = {
             'base': [
-                ('New Game', base.change_state, ['Ranch']),
+                ('New Game', base.change_state, ['NewTrainer']),
                 ('Versus AI', self.versus, [True]),
                 ('Versus Player', self.versus, [False]),
                 ('Quit', self.quit, []),
