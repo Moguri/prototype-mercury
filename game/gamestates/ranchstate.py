@@ -43,12 +43,15 @@ class RanchState(GameState):
             menu_name = self.menu_helper.current_menu
             if menu_name is 'training':
                 self.menu_helper.set_menu('base')
+            elif menu_name in ('monsters_stash', 'monsters_market'):
+                self.menu_helper.set_menu('monsters')
 
         self.menu_helper = MenuHelper(self, accept_cb, reject_cb)
         self.menu_helper.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
                 ('Train', self.menu_helper.set_menu, ['training']),
+                ('Stash Monster', self.stash_monster, []),
             ],
             'training': [
                 ('Back', self.menu_helper.set_menu, ['base']),
@@ -60,20 +63,31 @@ class RanchState(GameState):
                 ('Defense', self.train_stat, ['defense']),
             ],
             'monsters': [
+                ('From Stash', self.menu_helper.set_menu, ['monsters_stash']),
+                ('From Market', self.menu_helper.set_menu, ['monsters_market']),
+            ],
+            'monsters_stash': [
+                ('Back', self.menu_helper.set_menu, ['monsters']),
+            ],
+            'monsters_market': [
+                ('Back', self.menu_helper.set_menu, ['monsters']),
+            ] + [
                 (breed.name, self.get_monster, [breed.id]) for breed in gdb['breeds'].values()
             ],
         }
+        self.monster_menus = [
+            'monsters',
+            'monsters_stash',
+            'monsters_market',
+        ]
+        self.update_monster_stash_ui()
 
         self.message = ""
         self.message_modal = False
 
         self.load_ui('ranch')
 
-        if not self.player.monster:
-            self.menu_helper.set_menu('monsters')
-            self.display_message('Select a breed')
-        else:
-            self.menu_helper.set_menu('base')
+        self.menu_helper.set_menu('base')
 
     def cleanup(self):
         super().cleanup()
@@ -81,6 +95,10 @@ class RanchState(GameState):
         self.menu_helper.cleanup()
 
     def load_monster_model(self):
+        if self.monster_actor:
+            self.monster_actor.cleanup()
+            self.monster_actor.remove_node()
+
         if self.player.monster:
             breed = self.player.monster.breed
             monster_model = base.loader.load_model('{}.bam'.format(breed.bam_file))
@@ -91,8 +109,20 @@ class RanchState(GameState):
         else:
             self.monster_actor = None
 
+    def update_monster_stash_ui(self):
+        del self.menu_helper.menus['monsters_stash'][1:]
+        self.menu_helper.menus['monsters_stash'].extend([
+                (monster.name, self.retrieve_monster, [idx])
+                for idx, monster in enumerate(self.player.monster_stash)
+        ])
+
     def update(self, dt):
         super().update(dt)
+
+        if not self.menu_helper.lock and not self.player.monster and self.menu_helper.current_menu not in self.monster_menus:
+            self.load_monster_model()
+            self.menu_helper.set_menu('monsters')
+            self.display_message('Select a breed')
 
         self.menu_helper.update_ui()
 
@@ -133,6 +163,24 @@ class RanchState(GameState):
         if stat_display == 'Hp':
             stat_display = 'HP'
         self.display_message('{} grew by {}'.format(stat_display, stat_growth), modal=True)
+
+    def stash_monster(self):
+        self.player.monster_stash.append(self.player.monster)
+        self.player.monster = None
+        self.update_monster_stash_ui()
+
+        self.display_message('Monster Stashed!', modal=True)
+
+    def retrieve_monster(self, stashidx):
+        gdb = gamedb.get_instance()
+
+        self.player.monster = self.player.monster_stash.pop(stashidx)
+        self.update_monster_stash_ui()
+        gdb['monsters']['player_monster'] = self.player.monster
+
+        self.display_message('')
+        self.menu_helper.set_menu('base')
+        self.load_monster_model()
 
     def get_monster(self, breed):
         gdb = gamedb.get_instance()
