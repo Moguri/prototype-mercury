@@ -112,14 +112,15 @@ class RanchState(GameState):
     def update_monster_stash_ui(self):
         del self.menu_helper.menus['monsters_stash'][1:]
         self.menu_helper.menus['monsters_stash'].extend([
-                (monster.name, self.retrieve_monster, [idx])
-                for idx, monster in enumerate(self.player.monster_stash)
+            (monster.name, self.retrieve_monster, [idx])
+            for idx, monster in enumerate(self.player.monster_stash)
         ])
 
     def update(self, dt):
         super().update(dt)
 
-        if not self.menu_helper.lock and not self.player.monster and self.menu_helper.current_menu not in self.monster_menus:
+        if (not self.menu_helper.lock and not self.player.monster and
+                self.menu_helper.current_menu not in self.monster_menus):
             self.load_monster_model()
             self.menu_helper.set_menu('monsters')
             self.display_message('Select a breed')
