@@ -1,20 +1,11 @@
 import collections
 import json
 import os
-import sys
 
 import jsonschema
 
 import datamodels
-
-
-if hasattr(sys, 'frozen'):
-    _APP_ROOT_DIR = os.path.dirname(sys.executable)
-else:
-    _APP_ROOT_DIR = os.path.dirname(__file__)
-if not _APP_ROOT_DIR:
-    print('empty app_root_dir')
-    sys.exit()
+import pathutils
 
 
 def _extend_with_default(validator_class):
@@ -41,7 +32,7 @@ VALIDATE_SCHEMA = False
 
 class GameDB(collections.UserDict):
     _ptr = None
-    data_dir = os.path.join(_APP_ROOT_DIR, 'data')
+    data_dir = os.path.join(pathutils.APP_ROOT_DIR, 'data')
     top_level_keys = (
         ('abilities', datamodels.Ability),
         ('breeds', datamodels.Breed),
