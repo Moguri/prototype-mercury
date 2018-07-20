@@ -20,6 +20,15 @@
     border-radius: 0.2em;
 }
 
+#monster-stats {
+    box-sizing: border-box;
+    margin-left: 21%;
+    width: 40%;
+    padding: 0.5em;
+    background-color: #ccc;
+    border-radius: 0.2em;
+}
+
 .modal-indicator {
     animation: blinker 1.25s linear infinite;
     font-size: 2em;

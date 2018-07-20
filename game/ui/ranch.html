@@ -12,7 +12,7 @@
 
     <body>
         <div id="app">
-            <div id='nav' class='pure-menu'>
+            <div id='nav' v-if='!state.show_stats' class='pure-menu'>
                 <span class='custom-menu-heading pure-menu-heading'>Options</span>
                 <ul class='pure-menu-list'>
                     <li v-for='(item, idx) in state.menu_items' class='custom-menu-item pure-menu-item'
@@ -21,6 +21,16 @@
                     </li>
                 </ul>
             </div>
+
+            <div id='monster-stats' v-if='state.show_stats'>
+                <p>HP: {{state.monster.hit_points}}</p>
+                <p>Phys. Attack: {{state.monster.physical_attack}}</p>
+                <p>Mag. Attack: {{state.monster.magical_attack}}</p>
+                <p>Defense: {{state.monster.defense}}</p>
+                <p>Evasion: {{state.monster.evasion}}</p>
+                <p>Accuracy: {{state.monster.accuracy}}</p>
+            </div>
+
             <div id='message-bar' v-if='state.message != ""'>
                 <span>{{state.message}}</span>
                 <span class='modal-indicator' v-if='state.message_modal'>&#x25bc;</span>
@@ -39,6 +49,16 @@
                 selection_index: 0,
                 message: "",
                 message_modal: false,
+                show_stats: true,
+                monster: {
+                    hit_points:100,
+                    ability_points:100,
+                    physical_attack:100,
+                    magical_attack:100,
+                    accuracy:100,
+                    evasion:100,
+                    defense:100,
+                }
             }
         };
 

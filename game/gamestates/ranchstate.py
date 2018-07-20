@@ -45,12 +45,16 @@ class RanchState(GameState):
                 self.menu_helper.set_menu('base')
             elif menu_name in ('monsters_stash', 'monsters_market'):
                 self.menu_helper.set_menu('monsters')
+            elif self._show_stats:
+                self._show_stats = False
+                self.update_ui({'show_stats': False})
 
         self.menu_helper = MenuHelper(self, accept_cb, reject_cb)
         self.menu_helper.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
                 ('Train', self.menu_helper.set_menu, ['training']),
+                ('Monster Stats', self.show_stats, []),
                 ('Stash Monster', self.stash_monster, []),
             ],
             'training': [
@@ -84,6 +88,8 @@ class RanchState(GameState):
 
         self.message = ""
         self.message_modal = False
+
+        self._show_stats = False
 
         self.load_ui('ranch')
 
@@ -164,6 +170,13 @@ class RanchState(GameState):
         if stat_display == 'Hp':
             stat_display = 'HP'
         self.display_message('{} grew by {}'.format(stat_display, stat_growth), modal=True)
+
+    def show_stats(self):
+        self._show_stats = True
+        self.update_ui({
+            'show_stats': True,
+            'monster': self.player.monster.to_dict()
+        })
 
     def stash_monster(self):
         self.player.monster_stash.append(self.player.monster)
