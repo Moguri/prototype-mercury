@@ -37,6 +37,9 @@ class RanchState(GameState):
             if self.message_modal:
                 self.display_message('')
                 return True
+            elif self._show_stats:
+                self._show_stats = False
+                return True
             return False
 
         def reject_cb():
@@ -47,7 +50,6 @@ class RanchState(GameState):
                 self.menu_helper.set_menu('monsters')
             elif self._show_stats:
                 self._show_stats = False
-                self.update_ui({'show_stats': False})
 
         self.menu_helper = MenuHelper(self, accept_cb, reject_cb)
         self.menu_helper.menus = {
@@ -131,6 +133,9 @@ class RanchState(GameState):
             self.menu_helper.set_menu('monsters')
             self.display_message('Select a breed')
 
+        self.update_ui({
+            'show_stats': self._show_stats,
+        })
         self.menu_helper.update_ui()
 
     def display_message(self, msg, modal=False):
@@ -174,7 +179,6 @@ class RanchState(GameState):
     def show_stats(self):
         self._show_stats = True
         self.update_ui({
-            'show_stats': True,
             'monster': self.player.monster.to_dict()
         })
 
