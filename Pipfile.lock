@@ -32,7 +32,7 @@
         "cefpanda": {
             "editable": true,
             "git": "https://github.com/Moguri/cefpanda.git",
-            "ref": "d24c994f88f6f3e2b28c5fdb9c512052eb9b25de"
+            "ref": "d43fb659726739b84b9a9b6128ada1888c7f5450"
         },
         "cefpython3": {
             "hashes": [
