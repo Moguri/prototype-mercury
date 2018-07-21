@@ -11,6 +11,45 @@ from .gamestate import GameState
 from .menuhelper import MenuHelper
 
 
+_BG_VERT = """
+#version 130
+
+out vec2 texcoord;
+
+const vec4 positions[4] = vec4[4](
+    vec4(-1, -1, 0, 1),
+    vec4( 1, -1, 0, 1),
+    vec4(-1,  1, 0, 1),
+    vec4( 1,  1, 0, 1)
+);
+
+const vec2 texcoords[4] = vec2[4](
+    vec2(0, 0),
+    vec2(1, 0),
+    vec2(0, 1),
+    vec2(1, 1)
+);
+
+void main() {
+    gl_Position = positions[gl_VertexID];
+    texcoord = texcoords[gl_VertexID];
+}
+"""
+
+_BG_FRAG = """
+#version 130
+
+uniform sampler2D tex;
+in vec2 texcoord;
+
+out vec4 color;
+
+void main() {
+    color = vec4(texture2D(tex, texcoord).rgb, 1.0);
+}
+"""
+
+
 class RanchState(GameState):
     def __init__(self):
         super().__init__()
@@ -28,6 +67,17 @@ class RanchState(GameState):
         self.lightnp.set_pos(2, -4, 4)
         self.lightnp.look_at(0, 0, 0)
         self.root_node.set_light(self.lightnp)
+
+        # Setup backgrounds
+        self.background_textures = {
+            'base': base.loader.load_texture('ranchbg.png'),
+            'market': base.loader.load_texture('marketbg.png'),
+        }
+        self.background_image = self.root_node.attach_new_node(p3d.CardMaker('bgimg').generate())
+        self.background_image.set_shader(p3d.Shader.make(p3d.Shader.SL_GLSL, _BG_VERT, _BG_FRAG))
+        self.background_image.set_depth_test(False)
+        self.background_image.set_depth_write(False)
+        self.set_background('base')
 
         # Setup Camera
         base.camera.set_pos(-3, -5, 5)
@@ -133,6 +183,9 @@ class RanchState(GameState):
         else:
             self.monster_actor = None
 
+    def set_background(self, bgname):
+        self.background_image.set_shader_input('tex', self.background_textures[bgname])
+
     def update_monster_stash_ui(self):
         del self.menu_helper.menus['monsters_stash'][1:]
         self.menu_helper.menus['monsters_stash'].extend([
@@ -148,6 +201,7 @@ class RanchState(GameState):
             self.load_monster_model()
             self.menu_helper.set_menu('monsters')
             self.display_message('Select a breed')
+            self.set_background('market')
 
         self.update_ui({
             'show_stats': self._show_stats,
@@ -242,3 +296,4 @@ class RanchState(GameState):
         self.display_message('')
         self.menu_helper.set_menu('base')
         self.load_monster_model()
+        self.set_background('base')
