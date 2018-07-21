@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "trainer_name": {
+            "type": "string"
+        },
+        "monster_name": {
+            "type": "string"
+        },
+        "monster_breed_name": {
+            "type": "string"
+        },
+        "last_access_time": {
+            "type": "string",
+            "format": "date-time"
+        }
+    },
+
+    "required": [
+        "id",
+        "trainer_name",
+        "monster_name",
+        "monster_breed_name",
+        "last_access_time"
+    ],
+
+    "additionalProperties": false
+}

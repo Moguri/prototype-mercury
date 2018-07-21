@@ -12,6 +12,7 @@ class TitleState(GameState):
         self.menu_helper.menus = {
             'base': [
                 ('New Game', base.change_state, ['NewTrainer']),
+                ('Load Game', base.change_state, ['Load']),
                 ('Versus AI', self.versus, [True]),
                 ('Versus Player', self.versus, [False]),
                 ('Quit', self.quit, []),
@@ -28,6 +29,9 @@ class TitleState(GameState):
 
     def update(self, dt):
         super().update(dt)
+
+        if base.previous_state_name == 'Load':
+            base.change_state('Ranch')
 
         self.menu_helper.update_ui()
 

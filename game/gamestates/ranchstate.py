@@ -58,6 +58,8 @@ class RanchState(GameState):
                 ('Train', self.menu_helper.set_menu, ['training']),
                 ('Monster Stats', self.show_stats, []),
                 ('Stash Monster', self.stash_monster, []),
+                ('Save Game', base.change_state, ['Save']),
+                ('Load Game', base.change_state, ['Load']),
             ],
             'training': [
                 ('Back', self.menu_helper.set_menu, ['base']),

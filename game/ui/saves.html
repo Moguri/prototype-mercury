@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script src="vue.js"></script>
+        <link rel="stylesheet" href="pure-min.css">
+        <link rel="stylesheet" href="common.css">
+        <link rel="stylesheet" href="saves.css">
+    </head>
+
+    <body>
+        <div id="app">
+            <h1 id='title'>{{state.doing_save ? 'Save' : 'Load'}} Game</h1>
+            <div id='saves'>
+                <ul>
+                    <li v-for='(item, idx) in state.menu_items'
+                        v-bind:class="{'save-selected': idx == state.selection_index}">
+                        <span v-if='!state.saves[item]'>{{item}}</span>
+                        <save-info v-else :saveinfo='state.saves[item]'></save-info>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </body>
+
+    <script type="text/x-template" id="save-tmpl">
+        <div class='saveinfo'>
+            <div class='pure-g'>
+                <span class='pure-u-1-2'>Trainer: {{saveinfo.trainer_name}}</span>
+                <span class='pure-u-1-2'>Last Access: {{saveinfo.last_access_time}}</span>
+            </div>
+
+            <div class='pure-g'>
+                <span class='pure-u-1-2'>Monster: {{saveinfo.monster_name}} ({{saveinfo.monster_breed_name}})</span>
+            </div>
+        </div>
+    </script>
+
+    <script>
+        var data = {
+            state: {
+                menu_items: [
+                    'Back',
+                    '1234',
+                ],
+                selection_index: 1,
+                doing_save: false,
+                saves: {
+                    '1234': {
+                        'id': '1234',
+                        'trainer_name': 'FooMan',
+                        'monster_name': 'BarMon',
+                        'monster_breed_name': 'BobcatShark',
+                        'last_access_time': '2018-07-20T17:41:26.515317',
+                    },
+                }
+            }
+        };
+
+        Vue.component('save-info', {
+            props: ['saveinfo'],
+            template: '#save-tmpl'
+        });
+        var app = new Vue({
+            el: '#app',
+            data: data
+        });
+
+        var update_state = function(new_state) {
+            data.state = Object.assign({}, data.state, new_state)
+        }
+    </script>
+</html>

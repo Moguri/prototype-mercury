@@ -4,6 +4,7 @@ from .characterselectionstate import CharacterSelectionState
 from .ranchstate import RanchState
 from .titlestate import TitleState
 from .newtrainerstate import NewTrainerState
+from .savesstate import SaveState, LoadState
 
 
 __all__ = ['states']
@@ -16,4 +17,6 @@ states = {
     'Ranch': RanchState,
     'Title': TitleState,
     'NewTrainer': NewTrainerState,
+    'Save': SaveState,
+    'Load': LoadState,
 }

@@ -1,5 +1,6 @@
 import datetime
 import json
+import uuid
 
 import gamedb
 import datamodels
@@ -10,6 +11,9 @@ class PlayerData:
         self.name = 'FooMan'
         self.monster = None
         self.monster_stash = []
+        self.saveid = ''
+
+        self.new_saveid()
 
     def to_dict(self):
         return {
@@ -18,9 +22,21 @@ class PlayerData:
             'monster_stash': [i.to_dict() for i in self.monster_stash],
         }
 
+    def to_meta_dict(self):
+        return {
+            'id': self.saveid,
+            'trainer_name': self.name,
+            'monster_name': self.monster.name if self.monster else '',
+            'monster_breed_name': self.monster.breed.name if self.monster else '',
+            'last_access_time': datetime.datetime.now().isoformat(),
+        }
+
+
+    def new_saveid(self):
+        self.saveid = uuid.uuid1().hex
+
     def save(self, file_object):
         data = self.to_dict()
-        data['timestamp'] = datetime.datetime.now().isoformat(),
         json.dump(data, file_object, sort_keys=True)
 
     @classmethod
