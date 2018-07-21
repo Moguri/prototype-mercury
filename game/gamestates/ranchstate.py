@@ -1,6 +1,7 @@
 import random
 
 from direct.actor.Actor import Actor
+from direct.showbase.MessengerGlobal import messenger
 import panda3d.core as p3d
 
 import gamedb
@@ -60,6 +61,7 @@ class RanchState(GameState):
                 ('Stash Monster', self.stash_monster, []),
                 ('Save Game', base.change_state, ['Save']),
                 ('Load Game', base.change_state, ['Load']),
+                ('Quit', self.menu_helper.set_menu, ['quit']),
             ],
             'training': [
                 ('Back', self.menu_helper.set_menu, ['base']),
@@ -82,6 +84,10 @@ class RanchState(GameState):
             ] + [
                 (breed.name, self.get_monster, [breed.id]) for breed in gdb['breeds'].values()
             ],
+            'quit': [
+                ('Exit to Title Menu', base.change_state, ['Title']),
+                ('Exit Game', messenger.send, ['escape']),
+            ],
         }
         self.menu_helper.menu_headings = {
             'base': 'Ranch',
@@ -89,6 +95,7 @@ class RanchState(GameState):
             'monsters': '',
             'monsters_stash': 'Select a Monster',
             'monsters_market': 'Select a Breed',
+            'quit': '',
         }
         self.monster_menus = [
             'monsters',
