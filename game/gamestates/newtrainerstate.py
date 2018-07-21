@@ -9,8 +9,6 @@ class NewTrainerState(GameState):
         self.load_ui('new_trainer')
         base.ui.set_js_function('submit_form', self.new_trainer)
 
-        self.accept('p1-accept', base.ui.execute_js, ['attempt_submit()'])
-
     def new_trainer(self, data):
         player = PlayerData()
         player.name = data['name']
