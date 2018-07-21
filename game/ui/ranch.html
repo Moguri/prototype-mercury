@@ -13,7 +13,7 @@
     <body>
         <div id="app">
             <div id='nav' v-if='!state.show_stats' class='pure-menu'>
-                <span class='custom-menu-heading pure-menu-heading'>Options</span>
+                <span class='custom-menu-heading pure-menu-heading'>{{state.menu_heading}}</span>
                 <ul class='pure-menu-list'>
                     <li v-for='(item, idx) in state.menu_items' class='custom-menu-item pure-menu-item'
                         v-bind:class="{'pure-menu-selected': idx == state.selection_index}">
@@ -41,6 +41,7 @@
     <script>
         var data = {
             state: {
+                menu_heading: 'Select a Breed',
                 menu_items: [
                     'Combat',
                     'Train',
@@ -49,7 +50,7 @@
                 selection_index: 0,
                 message: "",
                 message_modal: false,
-                show_stats: true,
+                show_stats: false,
                 monster: {
                     hit_points:100,
                     ability_points:100,

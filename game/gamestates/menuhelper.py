@@ -9,6 +9,7 @@ class MenuHelper(DirectObject):
 
         self.state = weakref.proxy(state)
         self.menus = {}
+        self.menu_headings = {}
 
         self.current_menu = ''
         self.menu_items = None
@@ -78,5 +79,6 @@ class MenuHelper(DirectObject):
         self.menu_items = self.menus[new_menu]
         self.selection_idx = 0
         self.state.update_ui({
+            'menu_heading': self.menu_headings.get(new_menu, ''),
             'menu_items': [i[0] for i in self.menu_items],
         })

@@ -83,6 +83,13 @@ class RanchState(GameState):
                 (breed.name, self.get_monster, [breed.id]) for breed in gdb['breeds'].values()
             ],
         }
+        self.menu_helper.menu_headings = {
+            'base': 'Ranch',
+            'training': 'Training',
+            'monsters': '',
+            'monsters_stash': 'Select a Monster',
+            'monsters_market': 'Select a Breed',
+        }
         self.monster_menus = [
             'monsters',
             'monsters_stash',
