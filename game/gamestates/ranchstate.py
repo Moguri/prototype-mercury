@@ -187,8 +187,10 @@ class RanchState(GameState):
 
     def show_stats(self):
         self._show_stats = True
+        monsterdict = self.player.monster.to_dict()
+        monsterdict['breed'] = self.player.monster.breed.name
         self.update_ui({
-            'monster': self.player.monster.to_dict()
+            'monster': monsterdict
         })
 
     def stash_monster(self):
