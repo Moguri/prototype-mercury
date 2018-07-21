@@ -18,7 +18,6 @@ appdirs = "*"
 [dev-packages]
 pylint = "*"
 pytest = "*"
-pycodestyle = "*"
 pytest-runner = "*"
 pytest-pylint = "*"
 
