@@ -116,4 +116,4 @@ class LoadState(BaseSavesState):
         player.saveid = saveid
         base.blackboard['player'] = player
 
-        base.change_to_previous_state()
+        base.change_state('Ranch')

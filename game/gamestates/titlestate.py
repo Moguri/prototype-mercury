@@ -30,9 +30,6 @@ class TitleState(GameState):
     def update(self, dt):
         super().update(dt)
 
-        if base.previous_state_name == 'Load':
-            base.change_state('Ranch')
-
         self.menu_helper.update_ui()
 
     def versus(self, use_ai):
