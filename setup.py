@@ -36,6 +36,19 @@ class CustomBuildApps(build_apps):
         # Run regular build_apps
         super().run()
 
+        # Do any post-build fixing/cleanup
+        for platform in self.platforms:
+            build_dir = os.path.join(self.build_base, platform)
+
+            # Remove some CEF files
+            locales_dir = os.path.join(build_dir, 'locales')
+            for i in os.listdir(locales_dir):
+                if i != 'en-US.pak':
+                    os.remove(os.path.join(locales_dir, i))
+            os.remove(os.path.join(build_dir, 'devtools_resources.pak'))
+            os.remove(os.path.join(build_dir, 'cef_extensions.pak'))
+            os.remove(os.path.join(build_dir, 'snapshot_blob.bin'))
+
 
 setup(
     name='mercury',
