@@ -21,9 +21,9 @@ BP_STRFAC = [
 def _bpsum(diff, bps):
     tot = 0
 
-    for breakpoint in bps:
-        tot += max(min(diff, breakpoint[0]) / breakpoint[1], 0)
-        diff -= breakpoint[0]
+    for break_point in bps:
+        tot += max(min(diff, break_point[0]) / break_point[1], 0)
+        diff -= break_point[0]
 
     return tot
 

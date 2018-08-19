@@ -9,9 +9,9 @@ verify_ssl = true
 name = "Panda3D"
 
 [packages]
-panda3d = {version = "==1.10.0.dev1636+inputoverhaul.76", index="Panda3D"}
+panda3d = {version = "==1.10.0.dev1761+inputoverhaul.79", index="Panda3D"}
 cefpanda = {git = "https://github.com/Moguri/cefpanda.git", editable=true}
-cefpython3 = "==57.0"
+cefpython3 = "==66.0"
 jsonschema = "*"
 appdirs = "*"
 
@@ -22,4 +22,4 @@ pytest-runner = "*"
 pytest-pylint = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
