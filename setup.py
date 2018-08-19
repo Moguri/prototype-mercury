@@ -72,6 +72,8 @@ setup(
             },
             'exclude_patterns': [
                 '*.py',
+                'game/config/user.prc',
+                'game/saves/**',
             ],
             'requirements_path': os.path.join(SETUP_DIR, 'requirements.txt'),
             'gui_apps': {
