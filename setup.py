@@ -24,8 +24,10 @@ class CustomBuildApps(build_apps):
             'panda3d',
         ]
 
-        with open(os.path.join(SETUP_DIR, 'requirements.txt'), 'w')  as rfile:
+        reqspath = os.path.join(self.build_base, 'requirements.txt')
+        with open(reqspath, 'w')  as rfile:
             rfile.write('\n'.join(reqs))
+        self.requirements_path = reqspath
 
         super().finalize_options()
 
@@ -75,7 +77,6 @@ setup(
                 'game/config/user.prc',
                 'game/saves/**',
             ],
-            'requirements_path': os.path.join(SETUP_DIR, 'requirements.txt'),
             'gui_apps': {
                 'mercury': 'game/main.py',
             },

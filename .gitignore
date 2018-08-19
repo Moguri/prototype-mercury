@@ -113,6 +113,3 @@ game/config/user.prc
 
 # Default save location
 game/saves/
-
-# Generated requirements.txt
-requirements.txt
