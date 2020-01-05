@@ -1,6 +1,6 @@
 import io
 
-from playerdata import PlayerData
+from game.playerdata import PlayerData
 
 
 def test_save_load_basic(player):

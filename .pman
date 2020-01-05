@@ -6,8 +6,5 @@ renderer = "basic"
 ignore_patterns = ["*.blend1", "*.blend2"]
 converters = [ "blend2bam",]
 
-[run]
-main_file = "game/main.py"
-
 [blend2bam]
 material_mode = "pbr"

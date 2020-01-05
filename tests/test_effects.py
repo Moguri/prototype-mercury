@@ -1,4 +1,4 @@
-import effects
+from game import effects
 
 def test_smoke():
     #pylint: disable=protected-access

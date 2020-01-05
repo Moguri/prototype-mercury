@@ -5,8 +5,8 @@ import os
 import jsonschema
 import panda3d.core as p3d
 
-import pathutils
-from playerdata import PlayerData
+from .. import pathutils
+from ..playerdata import PlayerData
 from .gamestate import GameState
 from .menuhelper import MenuHelper
 

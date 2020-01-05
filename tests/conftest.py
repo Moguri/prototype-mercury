@@ -1,4 +1,4 @@
-#pylint:disable=redefined-outer-name
+#pylint:disable=redefined-outer-name,import-outside-toplevel
 import sys
 import os
 
@@ -11,8 +11,8 @@ sys.path.insert(0, os.path.join(TESTDIR, '..', 'game'))
 @pytest.fixture
 def combatant():
     import panda3d.core as p3d
-    import combatant
-    import gamedb
+    from game import combatant
+    from game import gamedb
 
     breed = gamedb.get_instance()['monsters']['bobcatshark']
 
@@ -24,13 +24,13 @@ def dt():
 
 @pytest.fixture
 def ai_controller(combatant):
-    import ai
+    from game import ai
     return ai.Controller(combatant)
 
 @pytest.fixture
 def player():
-    import playerdata
-    import gamedb
+    from game import playerdata
+    from game import gamedb
 
     player = playerdata.PlayerData()
     player.monster = list(gamedb.get_instance()['monsters'].values())[0]

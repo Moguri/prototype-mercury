@@ -23,22 +23,22 @@ setup(
         'build_apps': {
             'include_patterns': [
                 CONFIG['build']['export_dir']+'/**',
-                'game/**',
+                'config',
+                'data',
+                'ui',
             ],
             'exclude_patterns': [
                 '**/*.py',
                 '__py_cache__/**',
                 'game/config/user.prc',
-                'game/saves/**',
             ],
             'rename_paths': {
                 CONFIG['build']['export_dir']: 'assets/',
-                'game/': './',
             },
             'gui_apps': {
                 APP_NAME: CONFIG['run']['main_file'],
             },
-            'log_filename': '$USER_APPDATA/mercury/mercury.log',
+            'log_filename': '$USER_APPDATA/{0}/{0}.log'.format(APP_NAME),
             'plugins': [
                 'pandagl',
                 'p3openal_audio',

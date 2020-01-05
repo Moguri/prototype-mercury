@@ -2,7 +2,7 @@ import builtins
 
 from direct.actor.Actor import Actor
 
-import gamedb
+from . import gamedb
 
 class Combatant:
     def __init__(self, monster, parent_node, ability_inputs):

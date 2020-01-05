@@ -6,11 +6,11 @@ import panda3d.core as p3d
 import cefpanda
 import pman.shim
 
-import eventmapper
-import gamedb
-import gamestates
-import pathutils
-from playerdata import PlayerData
+from game import eventmapper
+from game import gamedb
+from game import gamestates
+from game import pathutils
+from game.playerdata import PlayerData
 
 
 # Load config files before ShowBase is initialized

@@ -4,10 +4,10 @@ import random
 from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
 
-import ai
-from combatant import Combatant
-import effects
-import gamedb
+from .. import ai
+from ..combatant import Combatant
+from .. import effects
+from .. import gamedb
 
 from .gamestate import GameState
 

@@ -4,8 +4,8 @@ import os
 
 import jsonschema
 
-import datamodels
-import pathutils
+from . import datamodels
+from . import pathutils
 
 
 def _extend_with_default(validator_class):

@@ -3,7 +3,7 @@ import random
 from direct.actor.Actor import Actor
 import panda3d.core as p3d
 
-import gamedb
+from .. import gamedb
 
 from .gamestate import GameState
 

@@ -4,8 +4,8 @@ from direct.actor.Actor import Actor
 from direct.showbase.MessengerGlobal import messenger
 import panda3d.core as p3d
 
-import gamedb
-import datamodels
+from .. import gamedb
+from .. import datamodels
 
 from .gamestate import GameState
 from .menuhelper import MenuHelper

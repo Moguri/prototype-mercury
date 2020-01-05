@@ -1,3 +1,4 @@
+import pprint
 import random
 
 import panda3d.core as p3d
@@ -222,9 +223,8 @@ def sequence_from_ability(rendernp, combatant, ability, combat):
 
 
 def _test():
-    import pprint
-    import gamedb
-    from combatant import Combatant
+    from . import gamedb #pylint: disable=import-outside-toplevel
+    from .combatant import Combatant #pylint: disable=import-outside-toplevel
 
     gdb = gamedb.get_instance()
 

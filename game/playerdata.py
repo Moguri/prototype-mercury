@@ -2,8 +2,8 @@ import datetime
 import json
 import uuid
 
-import gamedb
-import datamodels
+from . import gamedb
+from . import datamodels
 
 
 class PlayerData:

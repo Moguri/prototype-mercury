@@ -1,4 +1,4 @@
-import gamedb
+from game import gamedb
 
 
 gamedb.VALIDATE_SCHEMA = True

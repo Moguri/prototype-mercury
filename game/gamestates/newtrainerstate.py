@@ -1,4 +1,4 @@
-from playerdata import PlayerData
+from ..playerdata import PlayerData
 from .gamestate import GameState
 
 
