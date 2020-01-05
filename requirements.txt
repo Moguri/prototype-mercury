@@ -1,0 +1,7 @@
+panda3d==1.10.4
+cefpanda
+cefpython3==66.0
+jsonschema
+appdirs
+panda3d_pman
+panda3d-blend2bam
