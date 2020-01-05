@@ -5,8 +5,8 @@ from direct.showbase.ShowBase import ShowBase
 import panda3d.core as p3d
 import cefpanda
 import pman.shim
+import eventmapper
 
-from game import eventmapper
 from game import gamedb
 from game import gamestates
 from game import pathutils

@@ -5,3 +5,4 @@ jsonschema
 appdirs
 panda3d_pman
 panda3d-blend2bam
+panda3d-eventmapper
