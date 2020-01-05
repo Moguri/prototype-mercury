@@ -4,7 +4,7 @@ import sys
 from direct.showbase.ShowBase import ShowBase
 import panda3d.core as p3d
 import cefpanda
-import blenderpanda
+import pman.shim
 
 import eventmapper
 import gamedb
@@ -22,7 +22,7 @@ p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'user.prc'))
 class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
-        blenderpanda.init(self)
+        pman.shim.init(self)
         gamedb.get_instance()
 
         self.win.set_close_request_event('escape')
@@ -66,5 +66,9 @@ class GameApp(ShowBase):
         self.ui.load(os.path.join(pathutils.APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
 
 
-APP = GameApp()
-APP.run()
+def main():
+    app = GameApp()
+    app.run()
+
+if __name__ == '__main__':
+    main()

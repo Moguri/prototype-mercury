@@ -113,3 +113,7 @@ game/config/user.prc
 
 # Default save location
 game/saves/
+
+# pman files
+.pman.user
+.built_assets

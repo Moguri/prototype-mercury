@@ -1,14 +1,13 @@
 [general]
-name = "Game"
-render_plugin = ""
+name = "mercury"
+renderer = "basic"
 
 [build]
-asset_dir = "assets_src"
-export_dir = "game/assets/"
-ignore_patterns = [ "*.blend1", "*.blend2",]
-converter_hooks = [ "pman.hooks.converter_blend_bam",]
+ignore_patterns = ["*.blend1", "*.blend2"]
+converters = [ "blend2bam",]
 
 [run]
 main_file = "game/main.py"
-auto_build = true
-auto_save = true
+
+[blend2bam]
+material_mode = "pbr"
