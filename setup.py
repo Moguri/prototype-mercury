@@ -1,26 +1,6 @@
-import os
 from setuptools import setup
 
 import pman.build_apps
-
-
-class CustomBuildApps(pman.build_apps):
-    def run(self):
-        # Run regular build_apps
-        super().run()
-
-        # Do any post-build fixing/cleanup
-        for platform in self.platforms:
-            build_dir = os.path.join(self.build_base, platform)
-
-            # Remove some CEF files
-            locales_dir = os.path.join(build_dir, 'locales')
-            for i in os.listdir(locales_dir):
-                if i != 'en-US.pak':
-                    os.remove(os.path.join(locales_dir, i))
-            os.remove(os.path.join(build_dir, 'devtools_resources.pak'))
-            os.remove(os.path.join(build_dir, 'cef_extensions.pak'))
-            os.remove(os.path.join(build_dir, 'snapshot_blob.bin'))
 
 
 CONFIG = pman.get_config()
@@ -37,7 +17,7 @@ setup(
         'pytest-pylint',
     ],
     cmdclass={
-        'build_apps': CustomBuildApps,
+        'build_apps': pman.build_apps,
     },
     options={
         'build_apps': {
