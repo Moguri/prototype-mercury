@@ -63,7 +63,7 @@ class GameApp(ShowBase):
         self.change_state(self.previous_state_name)
 
     def load_ui(self, uiname):
-        self.ui.load(os.path.join(pathutils.APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
+        self.ui.load_file(os.path.join(pathutils.APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
 
 
 def main():
