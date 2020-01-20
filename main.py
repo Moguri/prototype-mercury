@@ -6,6 +6,7 @@ import panda3d.core as p3d
 import cefpanda
 import pman.shim
 import eventmapper
+import simplepbr
 
 from game import gamedb
 from game import gamestates
@@ -23,6 +24,7 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         pman.shim.init(self)
+        simplepbr.init()
         gamedb.get_instance()
 
         self.win.set_close_request_event('escape')

@@ -1,9 +1,8 @@
 [general]
 name = "mercury"
-renderer = "basic"
 
 [build]
-ignore_patterns = ["*.blend1", "*.blend2"]
+ignore_patterns = [ "*.blend1", "*.blend2",]
 converters = [ "blend2bam",]
 
 [blend2bam]
