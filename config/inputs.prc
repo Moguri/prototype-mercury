@@ -1,5 +1,7 @@
 notify-level-EventMapper info
 
+event-map-item-quit escape
+
 event-map-item-p1-accept raw-space raw-enter gamepad0-action_a
 event-map-item-p1-reject raw-backspace gamepad0-action_b
 event-map-item-p1-move-left raw-arrow_left gamepad0-dpad_left

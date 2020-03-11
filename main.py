@@ -27,8 +27,7 @@ class GameApp(ShowBase):
         simplepbr.init()
         gamedb.get_instance()
 
-        self.win.set_close_request_event('escape')
-        self.accept('escape', sys.exit)
+        self.accept('quit', sys.exit)
 
         self.disable_mouse()
         self.render.set_shader_auto()
