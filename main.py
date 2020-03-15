@@ -72,4 +72,7 @@ def main():
     app.run()
 
 if __name__ == '__main__':
-    main()
+    if '--dumpdb' in sys.argv:
+        print(gamedb.get_instance().to_json())
+    else:
+        main()

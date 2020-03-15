@@ -120,6 +120,14 @@ class GameDB(collections.UserDict):
         for key in self.keys():
             _ = [model.link(self) for model in self[key].values()]
 
+    def to_json(self):
+        return json.dumps({
+            key: {
+                k: v.to_dict() for k, v in value.items()
+            }
+            for key, value in get_instance().items()
+        }, indent=4)
+
     @classmethod
     def get_instance(cls):
         if cls._ptr is None:
@@ -131,16 +139,3 @@ class GameDB(collections.UserDict):
 
 def get_instance():
     return GameDB.get_instance()
-
-
-def dump_db():
-    print("GameDB:")
-    for key, value in get_instance().items():
-        print("\t", key)
-        for i in value.values():
-            for j in repr(i).split('\n'):
-                print("\t\t", j)
-
-
-if __name__ == '__main__':
-    dump_db()
