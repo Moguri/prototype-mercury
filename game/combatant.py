@@ -11,7 +11,6 @@ class Combatant:
         self._monster = monster
         breed = monster.breed
 
-        self.name = self._monster.name
         self.current_hp = self.max_hp
         self.current_ap = 20
 
@@ -31,6 +30,9 @@ class Combatant:
         else:
             self.path = Actor()
 
+    def __getattr__(self, name):
+        return getattr(self._monster, name)
+
     def get_anim(self, anim):
         return self._monster.breed.anim_map[anim]
 
@@ -41,34 +43,6 @@ class Combatant:
     @property
     def max_ap(self):
         return self._monster.ability_points
-
-    @property
-    def ap_per_second(self):
-        return self._monster.ap_per_second
-
-    @property
-    def physical_attack(self):
-        return self._monster.physical_attack
-
-    @property
-    def magical_attack(self):
-        return self._monster.magical_attack
-
-    @property
-    def accuracy(self):
-        return self._monster.accuracy
-
-    @property
-    def evasion(self):
-        return self._monster.evasion
-
-    @property
-    def defense(self):
-        return self._monster.defense
-
-    @property
-    def move_cost(self):
-        return self._monster.move_cost
 
     def update(self, dt, range_index):
         self.range_index = range_index
