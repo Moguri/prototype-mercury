@@ -5,7 +5,6 @@ from direct.showbase.MessengerGlobal import messenger
 import panda3d.core as p3d
 
 from .. import gamedb
-from .. import datamodels
 from ..monster import Monster
 
 from .gamestate import GameState
