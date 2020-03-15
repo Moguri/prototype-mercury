@@ -31,7 +31,6 @@ class Combatant:
         else:
             self.path = Actor()
 
-
     def get_anim(self, anim):
         return self._monster.breed.anim_map[anim]
 

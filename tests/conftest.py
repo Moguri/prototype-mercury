@@ -13,10 +13,11 @@ def combatant():
     import panda3d.core as p3d
     from game import combatant
     from game import gamedb
+    from game.monster import Monster
 
     breed = gamedb.get_instance()['monsters']['bobcatshark']
 
-    return combatant.Combatant(breed, p3d.NodePath(''), [])
+    return combatant.Combatant(Monster(breed), p3d.NodePath(''), [])
 
 @pytest.fixture
 def dt():

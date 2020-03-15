@@ -4,7 +4,6 @@ import os
 
 import jsonschema
 
-from . import datamodels
 from . import pathutils
 
 
@@ -37,25 +36,23 @@ class GameDB(collections.UserDict):
     schema_suffix = '.schema.json'
 
     def __init__(self):
-        schema_to_datamodel = {
-            'monsters': datamodels.Monster,
-        }
+        self.schema_to_datamodel = {}
         top_level_keys = [
             i.replace(self.schema_suffix, '')
             for i in os.listdir(self.schema_dir)
             if i.endswith(self.schema_suffix)
         ]
         for tlk in top_level_keys:
-            if tlk in schema_to_datamodel:
+            if tlk in self.schema_to_datamodel:
                 continue
 
             with open(os.path.join(self.schema_dir, f'{tlk}{self.schema_suffix}')) as schema_file:
                 schema = json.load(schema_file)
                 print(f'{tlk}')
-                schema_to_datamodel[tlk] = datamodels.DataModel.from_schema(schema)
+                self.schema_to_datamodel[tlk] = DataModel.from_schema(schema)
 
         super().__init__({
-            i: self._load_directory(i, schema_to_datamodel[i])
+            i: self._load_directory(i, self.schema_to_datamodel[i])
             for i in top_level_keys
             if os.path.exists(os.path.join(self.data_dir, i))
         })

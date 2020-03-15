@@ -3,7 +3,6 @@ import json
 import uuid
 
 from . import gamedb
-from . import datamodels
 
 
 class PlayerData:
@@ -48,11 +47,11 @@ class PlayerData:
         player.name = str(data['name'])
 
         if data['monster']:
-            player.monster = datamodels.Monster(data['monster'])
+            player.monster = gdb.schema_to_datamodel['monsters'](data['monster'])
             player.monster.link(gdb)
 
         for monster in data['monster_stash']:
-            monster = datamodels.Monster(monster)
+            monster = gdb.schema_to_datamodel['monsters'](monster)
             monster.link(gdb)
             player.monster_stash.append(monster)
 

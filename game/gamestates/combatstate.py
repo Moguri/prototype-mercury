@@ -5,6 +5,7 @@ from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
 
 from .. import ai
+from ..monster import Monster
 from ..combatant import Combatant
 from .. import effects
 from .. import gamedb
@@ -77,12 +78,12 @@ class CombatState(GameState):
 
         self.combatants = [
             Combatant(
-                monsters[0],
+                Monster(monsters[0]),
                 self.arena_model,
                 ['p1-ability{}'.format(i) for i in range(4)]
             ),
             Combatant(
-                monsters[1],
+                Monster(monsters[1]),
                 self.arena_model,
                 ['p2-ability{}'.format(i) for i in range(4)]
             ),

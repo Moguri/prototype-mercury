@@ -6,6 +6,7 @@ import panda3d.core as p3d
 
 from .. import gamedb
 from .. import datamodels
+from ..monster import Monster
 
 from .gamestate import GameState
 from .menuhelper import MenuHelper
@@ -282,7 +283,7 @@ class RanchState(GameState):
         gdb = gamedb.get_instance()
 
         breed = gdb['breeds'][breed]
-        monster = datamodels.Monster({
+        monsterdata = gdb.schema_to_datamodel['monsters']({
             'id': 'player_monster',
             'name': breed.name,
             'breed': breed.id,
@@ -294,10 +295,10 @@ class RanchState(GameState):
             'evasion_offset': 0,
             'defense_offset': 0,
         })
-        monster.link(gdb)
+        monsterdata.link(gdb)
 
-        self.player.monster = monster
-        gdb['monsters']['player_monster'] = monster
+        self.player.monster = Monster(monsterdata)
+        gdb['monsters']['player_monster'] = monsterdata
 
         self.display_message('')
         self.menu_helper.set_menu('base')

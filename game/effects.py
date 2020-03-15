@@ -225,11 +225,12 @@ def sequence_from_ability(rendernp, combatant, ability, combat):
 def _test():
     from . import gamedb #pylint: disable=import-outside-toplevel
     from .combatant import Combatant #pylint: disable=import-outside-toplevel
+    from .monster import Monster #pylint: disable=import-outside-toplevel
 
     gdb = gamedb.get_instance()
 
     monsters = list(gdb['monsters'].values())
-    cmb = Combatant(monsters[0], None, [])
+    cmb = Combatant(Monster(monsters[0]), None, [])
     cmb.target = cmb
 
     for ability in gdb['abilities'].values():
