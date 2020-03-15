@@ -1,9 +1,16 @@
+import pprint
+
+from game import gamedb
 from game import effects
 
-def test_smoke():
-    #pylint: disable=protected-access
-    effects._test()
+import pytest
 
+@pytest.mark.parametrize("ability", gamedb.get_instance()['abilities'].values())
+def test_smoke(combatant, empty_nodepath, ability):
+    combatant.target = combatant
+    print(ability.name)
+    pprint.pprint(ability.effects)
+    effects.sequence_from_ability(empty_nodepath, combatant, ability, None)
 
 def test_calc_hit_mod():
     assert effects.calculate_hit_mod(300, 250) == 5

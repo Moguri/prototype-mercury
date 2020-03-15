@@ -1,4 +1,3 @@
-import pprint
 import random
 
 import panda3d.core as p3d
@@ -220,25 +219,3 @@ class SequenceBuilder:
 
 def sequence_from_ability(rendernp, combatant, ability, combat):
     return SequenceBuilder(rendernp, combatant, ability, combat).as_sequence()
-
-
-def _test():
-    from . import gamedb #pylint: disable=import-outside-toplevel
-    from .combatant import Combatant #pylint: disable=import-outside-toplevel
-    from .monster import Monster #pylint: disable=import-outside-toplevel
-
-    gdb = gamedb.get_instance()
-
-    monsters = list(gdb['monsters'].values())
-    cmb = Combatant(Monster(monsters[0]), None, [])
-    cmb.target = cmb
-
-    for ability in gdb['abilities'].values():
-        print(ability.name)
-        pprint.pprint(ability.effects)
-
-        print(sequence_from_ability(p3d.NodePath(), cmb, ability, None))
-
-
-if __name__ == '__main__':
-    _test()

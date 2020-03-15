@@ -9,15 +9,25 @@ sys.path.insert(0, os.path.join(TESTDIR, '..', 'game'))
 
 
 @pytest.fixture
-def combatant():
-    import panda3d.core as p3d
-    from game import combatant
+def gdb():
     from game import gamedb
+    return gamedb.get_instance()
+
+@pytest.fixture
+def monster(gdb):
     from game.monster import Monster
+    monsterdata = next(iter(gdb['monsters'].values()))
+    return Monster(monsterdata)
 
-    breed = gamedb.get_instance()['monsters']['bobcatshark']
+@pytest.fixture
+def empty_nodepath():
+    import panda3d.core as p3d
+    return p3d.NodePath('empty')
 
-    return combatant.Combatant(Monster(breed), p3d.NodePath(''), [])
+@pytest.fixture
+def combatant(monster, empty_nodepath):
+    from game import combatant
+    return combatant.Combatant(monster, empty_nodepath, [])
 
 @pytest.fixture
 def dt():
@@ -37,8 +47,3 @@ def player():
     player.monster = list(gamedb.get_instance()['monsters'].values())[0]
 
     return player
-
-@pytest.fixture
-def gdb():
-    from game import gamedb
-    return gamedb.get_instance()
