@@ -33,16 +33,31 @@ VALIDATE_SCHEMA = False
 class GameDB(collections.UserDict):
     _ptr = None
     data_dir = os.path.join(pathutils.APP_ROOT_DIR, 'data')
-    top_level_keys = (
-        ('abilities', datamodels.Ability),
-        ('breeds', datamodels.Breed),
-        ('monsters', datamodels.Monster),
-    )
+    schema_dir = os.path.join(data_dir, 'schemas')
+    schema_suffix = '.schema.json'
 
     def __init__(self):
+        schema_to_datamodel = {
+            'monsters': datamodels.Monster,
+        }
+        top_level_keys = [
+            i.replace(self.schema_suffix, '')
+            for i in os.listdir(self.schema_dir)
+            if i.endswith(self.schema_suffix)
+        ]
+        for tlk in top_level_keys:
+            if tlk in schema_to_datamodel:
+                continue
+
+            with open(os.path.join(self.schema_dir, f'{tlk}{self.schema_suffix}')) as schema_file:
+                schema = json.load(schema_file)
+                print(f'{tlk}')
+                schema_to_datamodel[tlk] = datamodels.DataModel.from_schema(schema)
+
         super().__init__({
-            i[0]: self._load_directory(*i)
-            for i in self.top_level_keys
+            i: self._load_directory(i, schema_to_datamodel[i])
+            for i in top_level_keys
+            if os.path.exists(os.path.join(self.data_dir, i))
         })
 
     def _load_directory(self, dirname, data_model):
@@ -66,8 +81,8 @@ class GameDB(collections.UserDict):
         }
 
     def _link_models(self):
-        for key in self.top_level_keys:
-            _ = [model.link(self) for model in self[key[0]].values()]
+        for key in self.keys():
+            _ = [model.link(self) for model in self[key].values()]
 
     @classmethod
     def get_instance(cls):

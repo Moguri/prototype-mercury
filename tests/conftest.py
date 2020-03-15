@@ -36,3 +36,8 @@ def player():
     player.monster = list(gamedb.get_instance()['monsters'].values())[0]
 
     return player
+
+@pytest.fixture
+def gdb():
+    from game import gamedb
+    return gamedb.get_instance()

@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-
+    "title": "Monster",
     "type": "object",
     "properties": {
         "id": {
@@ -46,5 +46,8 @@
         "evasion_offset",
         "defense_offset"
     ],
+    "links": {
+        "breed": "breeds"
+    },
     "additionalProperties": false
 }

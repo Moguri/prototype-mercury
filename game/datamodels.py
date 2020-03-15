@@ -5,6 +5,7 @@ import pprint
 
 class DataModel:
     _props = []
+    _links = {}
 
     def __init__(self, dict_data):
         self._props |= {'id', 'name'}
@@ -17,8 +18,10 @@ class DataModel:
             pprint.pformat(self.__dict__)
         )
 
-    def link(self, _gdb):
-        pass
+    def link(self, gdb):
+        for prop, gdbkey in self._links.items():
+            linkname = getattr(self, prop)
+            setattr(self, prop, gdb[gdbkey][linkname])
 
     def to_dict(self):
         def _ga(prop):
@@ -29,39 +32,14 @@ class DataModel:
             for prop in self._props
         }
 
+    @classmethod
+    def from_schema(cls, schema):
+        model = type(schema['title'], (DataModel,), {
+            '_props': set(schema['properties'].keys()),
+            '_links': schema.get('links', {}),
+        })
 
-class Ability(DataModel):
-    _props = {
-        'cost',
-        'range',
-        'damage_rank',
-        'hit_rank',
-        'type',
-        'effects',
-    }
-
-
-class Breed(DataModel):
-    _props = {
-        'bam_file',
-        'root_node',
-        'anim_map',
-        'abilities',
-        'hp',
-        'ap_per_second',
-        'physical_attack',
-        'magical_attack',
-        'defense',
-        'evasion',
-        'accuracy',
-        'move_cost',
-        'hp_affinity',
-        'physical_attack_affinity',
-        'magical_attack_affinity',
-        'accuracy_affinity',
-        'evasion_affinity',
-        'defense_affinity',
-    }
+        return model
 
 
 class Monster(DataModel):
@@ -76,8 +54,9 @@ class Monster(DataModel):
         'defense_offset',
     }
 
-    def link(self, gdb):
-        self.breed = gdb['breeds'][self.breed]
+    _links = {
+        'breed': 'breeds',
+    }
 
     def to_dict(self):
         data = super().to_dict()
