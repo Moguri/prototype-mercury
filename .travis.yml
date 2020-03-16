@@ -3,12 +3,5 @@ python:
     - "3.7"
 dist: xenial
 sudo: true
-env:
-  global:
-    - PIPENV_VENV_IN_PROJECT=1
-    - PIPENV_IGNORE_VIRTUALENVS=1
-install:
-    - pip install pipenv
-    - pipenv install --dev --three
 script:
-    - pipenv run -- python setup.py test
+    - pman test
