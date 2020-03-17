@@ -17,23 +17,27 @@ setup(
         'pytest-pylint',
     ],
     cmdclass={
-        'build_apps': pman.build_apps,
+        'build_apps': pman.build_apps.BuildApps,
     },
     options={
         'build_apps': {
             'include_patterns': [
                 CONFIG['build']['export_dir']+'/**',
-                'config',
-                'data',
-                'ui',
+                'config/**',
+                'data/**',
+                'ui/**',
             ],
             'exclude_patterns': [
-                '**/*.py',
-                '__py_cache__/**',
-                'game/config/user.prc',
+                'config/user.prc',
             ],
             'rename_paths': {
                 CONFIG['build']['export_dir']: 'assets/',
+            },
+            'package_data_dirs': {
+                'simplepbr': [
+                    ('simplepbr/*.vert', '', {}),
+                    ('simplepbr/*.frag', '', {}),
+                ],
             },
             'gui_apps': {
                 APP_NAME: CONFIG['run']['main_file'],
@@ -43,17 +47,12 @@ setup(
                 'pandagl',
                 'p3openal_audio',
             ],
-            'include_modules': {
-                '*': [
-                    'configparser',
-                    'gamestates.*.*',
-                ],
-            },
             'exclude_modules': {
                 '*': [
                     'cefpython3.cefpython_py27',
                     'cefpython3.cefpython_py34',
                     'cefpython3.cefpython_py35',
+                    'cefpython3.cefpython_py36',
                 ],
             },
             'platforms': [

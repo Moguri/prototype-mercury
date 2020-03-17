@@ -2,7 +2,7 @@ import datetime
 import json
 import os
 
-import jsonschema
+# import jsonschema
 import panda3d.core as p3d
 
 from .. import pathutils
@@ -48,11 +48,11 @@ class BaseSavesState(GameState):
             if filename.endswith('.meta')
         ]
 
-        schema_name = 'savemetadata.schema.json'
-        schema_path = os.path.join(pathutils.APP_ROOT_DIR, 'data', 'schemas', schema_name)
-        with open(schema_path) as schema_file:
-            schema = json.load(schema_file)
-        _ = [jsonschema.validate(i, schema) for i in metadata]
+        # schema_name = 'savemetadata.schema.json'
+        # schema_path = os.path.join(pathutils.APP_ROOT_DIR, 'data', 'schemas', schema_name)
+        # with open(schema_path) as schema_file:
+        #     schema = json.load(schema_file)
+        # _ = [jsonschema.validate(i, schema) for i in metadata]
 
         def sort_access_key(info):
             dtobj = datetime.datetime.strptime(info['last_access_time'], '%Y-%m-%dT%H:%M:%S.%f')
