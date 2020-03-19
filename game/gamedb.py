@@ -3,31 +3,9 @@ import json
 import os
 import pprint
 
-import jsonschema
+import fastjsonschema
 
 from . import pathutils
-
-
-def _extend_with_default(validator_class):
-    validate_properties = validator_class.VALIDATORS["properties"]
-
-    def set_defaults(validator, properties, instance, schema):
-        for prop, subschema in properties.items():
-            if "default" in subschema:
-                instance.setdefault(prop, subschema["default"])
-
-        for error in validate_properties(validator, properties, instance, schema):
-            yield error
-
-    return jsonschema.validators.extend(
-        validator_class, {"properties" : set_defaults},
-    )
-
-
-_VALIDATOR = _extend_with_default(jsonschema.Draft4Validator)
-
-
-VALIDATE_SCHEMA = False
 
 
 class DataModel:
@@ -104,12 +82,11 @@ class GameDB(collections.UserDict):
             for filename in os.listdir(dirpath)
         ]
 
-        if VALIDATE_SCHEMA:
-            schema_name = '{}.schema.json'.format(dirname)
-            schema_path = os.path.join(self.data_dir, 'schemas', schema_name)
-            with open(schema_path) as schema_file:
-                schema = _VALIDATOR(json.load(schema_file))
-            list(map(schema.validate, data_list))
+        schema_name = '{}.schema.json'.format(dirname)
+        schema_path = os.path.join(self.data_dir, 'schemas', schema_name)
+        with open(schema_path) as schema_file:
+            validate = fastjsonschema.compile(json.load(schema_file))
+        list(map(validate, data_list))
 
         return {
             i['id']: data_model(i)
