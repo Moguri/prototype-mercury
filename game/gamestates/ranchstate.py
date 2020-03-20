@@ -63,8 +63,9 @@ class RanchState(GameState):
 
         # Setup lighting
         self.light = p3d.DirectionalLight('dlight')
+        self.light.set_color((3, 3, 3, 1))
         self.lightnp = self.root_node.attach_new_node(self.light)
-        self.lightnp.set_pos(2, -4, 4)
+        self.lightnp.set_pos(-2, -4, 4)
         self.lightnp.look_at(0, 0, 0)
         self.root_node.set_light(self.lightnp)
 
