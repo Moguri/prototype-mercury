@@ -30,7 +30,6 @@ class GameApp(ShowBase):
         self.accept('quit', sys.exit)
 
         self.disable_mouse()
-        self.render.set_shader_auto()
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
 
         self.blackboard = {
