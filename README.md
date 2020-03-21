@@ -1,3 +1,3 @@
-[![Build Status](https://travis-ci.org/Kupoman/prototype-mercury.svg?branch=master)](https://travis-ci.org/Kupoman/prototype-mercury)
+![Run tests](https://github.com/Kupoman/prototype-mercury/workflows/Run%20tests/badge.svg)
 
 # prototype-mercury
