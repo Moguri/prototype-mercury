@@ -100,20 +100,20 @@ ENV/
 # mypy
 .mypy_cache/
 
-# BlenderPanda
-game/assets
-.pman.user
-
 # Editor files
 .idea
 *.swp
 
 # User config
-game/config/user.prc
+config/user.prc
 
 # Default save location
-game/saves/
+saves/
 
 # pman files
 .pman.user
 .built_assets
+
+# Blender files
+*.blend1
+*.blend2
