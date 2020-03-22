@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Job",
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "abilities": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 1,
+            "maxItems": 4,
+            "uniqueItems": true
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "abilities"
+    ],
+    "additionalProperties": false
+}

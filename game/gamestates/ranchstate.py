@@ -287,6 +287,7 @@ class RanchState(GameState):
             'id': 'player_monster',
             'name': breed.name,
             'breed': breed.id,
+            'job': breed.default_job.id,
             'hp_offset': 0,
             'ap_offset': 0,
             'physical_attack_offset': 0,

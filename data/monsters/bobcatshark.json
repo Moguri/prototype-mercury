@@ -2,6 +2,7 @@
     "id": "bobcatshark",
     "name": "BobcatShark",
     "breed": "bobcatshark",
+    "job": "bobcatshark",
     "hp_offset": 0,
     "ap_offset": 0,
     "physical_attack_offset": 0,

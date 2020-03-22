@@ -1,0 +1,9 @@
+{
+    "id": "bruiser",
+    "name": "Bruiser",
+    "abilities": [
+        "punch",
+        "flying_fist",
+        "leap"
+    ]
+}

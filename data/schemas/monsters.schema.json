@@ -12,6 +12,9 @@
         "breed": {
             "type": "string"
         },
+        "job": {
+            "type": "string"
+        },
         "hp_offset": {
             "type": "integer"
         },
@@ -38,6 +41,7 @@
         "id",
         "name",
         "breed",
+        "job",
         "hp_offset",
         "ap_offset",
         "physical_attack_offset",
@@ -47,7 +51,8 @@
         "defense_offset"
     ],
     "links": {
-        "breed": "breeds"
+        "breed": "breeds",
+        "job": "jobs"
     },
     "additionalProperties": false
 }

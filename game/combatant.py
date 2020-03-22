@@ -15,7 +15,7 @@ class Combatant:
         self.current_ap = 20
 
         self.ability_inputs = ability_inputs
-        self.abilities = [gdb['abilities'][ability_id] for ability_id in breed.abilities]
+        self.abilities = [gdb['abilities'][ability_id] for ability_id in monster.job.abilities]
 
         self.range_index = 0
         self.target = None

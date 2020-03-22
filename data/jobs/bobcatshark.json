@@ -1,0 +1,10 @@
+{
+    "id": "bobcatshark",
+    "name": "BobcatShark",
+    "abilities": [
+        "punch",
+        "sparkles",
+        "flying_fist",
+        "gust"
+    ]
+}

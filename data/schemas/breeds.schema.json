@@ -9,6 +9,9 @@
         "name" : {
             "type": "string"
         },
+        "default_job" : {
+            "type": "string"
+        },
         "bam_file" : {
             "type": "string"
         },
@@ -18,15 +21,6 @@
         "anim_map": {
             "type": "object",
             "additionalProperties": {"type": "string"}
-        },
-        "abilities": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            },
-            "minItems": 1,
-            "maxItems": 4,
-            "uniqueItems": true
         },
         "hp": {
             "type": "integer",
@@ -95,10 +89,10 @@
     "required": [
         "id",
         "name",
+        "default_job",
         "bam_file",
         "root_node",
         "anim_map",
-        "abilities",
         "hp",
         "ap_per_second",
         "physical_attack",
@@ -108,6 +102,8 @@
         "accuracy",
         "move_cost"
     ],
-
+    "links": {
+        "default_job": "jobs"
+    },
     "additionalProperties": false
 }

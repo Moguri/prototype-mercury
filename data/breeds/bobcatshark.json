@@ -1,18 +1,13 @@
 {
     "id": "bobcatshark",
     "name": "BobcatShark",
+    "default_job": "bobcatshark",
     "bam_file": "clay_golem",
     "root_node": "ClayGolemArm",
     "anim_map": {
         "idle": "cg.Idle",
         "attack": "cg.Attack"
     },
-    "abilities": [
-        "punch",
-        "sparkles",
-        "flying_fist",
-        "gust"
-    ],
     "hp": 100,
     "ap_per_second": 5,
     "physical_attack": 100,
