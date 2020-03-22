@@ -86,7 +86,12 @@ class GameDB(collections.UserDict):
         schema_path = os.path.join(self.data_dir, 'schemas', schema_name)
         with open(schema_path) as schema_file:
             validate = fastjsonschema.compile(json.load(schema_file))
-        list(map(validate, data_list))
+        for data in data_list:
+            try:
+                validate(data)
+            except fastjsonschema.exceptions.JsonSchemaException:
+                print(f"Failed to load {dirname}: {data['id']}")
+                raise
 
         return {
             i['id']: data_model(i)
