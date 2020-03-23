@@ -12,6 +12,7 @@ from game import gamedb
 from game import gamestates
 from game import pathutils
 from game.playerdata import PlayerData
+from game.monster import Monster
 
 
 # Load config files before ShowBase is initialized
@@ -36,6 +37,8 @@ class GameApp(ShowBase):
             'use_ai': p3d.ConfigVariableBool('mercury-use-ai', 'True'),
             'player': PlayerData(),
         }
+        default_monster = Monster.make_new('player_monster', 'Default', 'bobcatshark')
+        self.blackboard['player'].monster = default_monster
 
         self.event_mapper = eventmapper.EventMapper()
 

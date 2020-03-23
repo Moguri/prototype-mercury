@@ -66,7 +66,7 @@ class CombatState(GameState):
 
         # start with random Monsters then override with anything from the
         # blackboard
-        available_monsters = list(gdb['monsters'].values())
+        available_monsters = [i for i in list(gdb['monsters'].values()) if i.id != 'player_monster']
         monsters = [
             random.choice(available_monsters),
             random.choice(available_monsters),

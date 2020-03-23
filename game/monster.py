@@ -1,3 +1,6 @@
+from . import gamedb
+
+
 class Monster:
     def __init__(self, monsterdata):
         self._monsterdata = monsterdata
@@ -22,6 +25,30 @@ class Monster:
         })
 
         return data
+
+    @classmethod
+    def make_new(cls, monster_id, name, breed_id):
+        gdb = gamedb.get_instance()
+
+        breed = gdb['breeds'][breed_id]
+        monsterdata = gdb.schema_to_datamodel['monsters']({
+            'id': monster_id,
+            'name': name,
+            'breed': breed.id,
+            'job': breed.default_job.id,
+            'hp_offset': 0,
+            'ap_offset': 0,
+            'physical_attack_offset': 0,
+            'magical_attack_offset': 0,
+            'accuracy_offset': 0,
+            'evasion_offset': 0,
+            'defense_offset': 0,
+        })
+        monsterdata.link(gdb)
+        gdb['monsters'][monster_id] = monsterdata
+
+        return cls(monsterdata)
+
 
     @property
     def hit_points(self):

@@ -269,38 +269,16 @@ class RanchState(GameState):
         self.display_message('Monster Stashed!', modal=True)
 
     def retrieve_monster(self, stashidx):
-        gdb = gamedb.get_instance()
-
         self.player.monster = self.player.monster_stash.pop(stashidx)
         self.update_monster_stash_ui()
-        gdb['monsters']['player_monster'] = self.player.monster
-
         self.display_message('')
         self.menu_helper.set_menu('base')
         self.load_monster_model()
 
-    def get_monster(self, breed):
+    def get_monster(self, breedid):
         gdb = gamedb.get_instance()
-
-        breed = gdb['breeds'][breed]
-        monsterdata = gdb.schema_to_datamodel['monsters']({
-            'id': 'player_monster',
-            'name': breed.name,
-            'breed': breed.id,
-            'job': breed.default_job.id,
-            'hp_offset': 0,
-            'ap_offset': 0,
-            'physical_attack_offset': 0,
-            'magical_attack_offset': 0,
-            'accuracy_offset': 0,
-            'evasion_offset': 0,
-            'defense_offset': 0,
-        })
-        monsterdata.link(gdb)
-
-        self.player.monster = Monster(monsterdata)
-        gdb['monsters']['player_monster'] = monsterdata
-
+        breed = gdb['breeds'][breedid]
+        self.player.monster = Monster.make_new('player_monster', breed.name, breed.id)
         self.display_message('')
         self.menu_helper.set_menu('base')
         self.load_monster_model()
