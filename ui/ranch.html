@@ -25,6 +25,7 @@
             <div id='monster-stats' v-if='state.show_stats'>
                 <p>Name: {{state.monster.name}}</p>
                 <p>Breed: {{state.monster.breed}}</p>
+                <p>Job: {{state.monster.job}}</p>
                 <p>HP: {{state.monster.hit_points}}</p>
                 <p>Phys. Attack: {{state.monster.physical_attack}}</p>
                 <p>Mag. Attack: {{state.monster.magical_attack}}</p>
@@ -56,6 +57,7 @@
                 monster: {
                     name: 'Foo',
                     breed: 'Bar',
+                    job: '',
                     hit_points:100,
                     ability_points:100,
                     physical_attack:100,

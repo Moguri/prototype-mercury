@@ -263,6 +263,7 @@ class RanchState(GameState):
         self._show_stats = True
         monsterdict = self.player.monster.to_dict()
         monsterdict['breed'] = self.player.monster.breed.name
+        monsterdict['job'] = self.player.monster.job.name
         self.update_ui({
             'monster': monsterdict
         })
