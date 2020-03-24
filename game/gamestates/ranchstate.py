@@ -115,6 +115,7 @@ class RanchState(GameState):
                 ('Combat', self.enter_combat, []),
                 ('Train', self.menu_helper.set_menu, ['training']),
                 ('Monster Stats', self.show_stats, []),
+                ('Change Job', self.menu_helper.set_menu, ['jobs']),
                 ('Stash Monster', self.stash_monster, []),
                 ('Save Game', base.change_state, ['Save']),
                 ('Load Game', base.change_state, ['Load']),
@@ -140,6 +141,11 @@ class RanchState(GameState):
                 ('Back', self.menu_helper.set_menu, ['monsters']),
             ] + [
                 (breed.name, self.get_monster, [breed.id]) for breed in gdb['breeds'].values()
+            ],
+            'jobs': [
+                ('Back', self.menu_helper.set_menu, ['base']),
+            ] + [
+                (job.name, self.change_job, [job.id]) for job in gdb['jobs'].values()
             ],
             'quit': [
                 ('Exit to Title Menu', base.change_state, ['Title']),
@@ -283,3 +289,10 @@ class RanchState(GameState):
         self.menu_helper.set_menu('base')
         self.load_monster_model()
         self.set_background('base')
+
+    def change_job(self, jobid):
+        gdb = gamedb.get_instance()
+        job = gdb['jobs'][jobid]
+        self.player.monster.job = job
+        self.display_message('')
+        self.menu_helper.set_menu('base')

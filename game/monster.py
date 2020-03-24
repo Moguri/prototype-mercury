@@ -49,6 +49,13 @@ class Monster:
 
         return cls(monsterdata)
 
+    @property
+    def job(self):
+        return self._monsterdata.job
+
+    @job.setter
+    def job(self, value):
+        self._monsterdata.job = value
 
     @property
     def hit_points(self):
