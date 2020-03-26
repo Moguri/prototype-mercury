@@ -29,6 +29,7 @@ class GameApp(ShowBase):
         gamedb.get_instance()
 
         self.accept('quit', sys.exit)
+        self.accept('toggle-buffer-viewer', self.bufferViewer.toggleEnable)
 
         self.disable_mouse()
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
