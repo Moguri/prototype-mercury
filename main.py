@@ -25,8 +25,11 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         pman.shim.init(self)
-        simplepbr.init()
+        pipeline = simplepbr.init()
         gamedb.get_instance()
+
+        if pipeline and hasattr(pipeline, 'enable_shadows'):
+            pipeline.enable_shadows = True
 
         self.accept('quit', sys.exit)
         self.accept('toggle-buffer-viewer', self.bufferViewer.toggleEnable)

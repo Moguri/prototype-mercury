@@ -63,6 +63,11 @@ class CombatState(GameState):
 
         self.arena_model = base.loader.load_model('arena.bam')
         self.arena_model.reparent_to(self.root_node)
+        self.arena_model.clear_light()
+        lightnp = self.arena_model.find('**/+Spotlight')
+        base.render.set_light(lightnp)
+        light = lightnp.node()
+        light.set_shadow_caster(True, 1024, 1024)
 
         # start with random Monsters then override with anything from the
         # blackboard
