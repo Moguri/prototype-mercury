@@ -50,6 +50,8 @@ class DataModel:
 def load_schema(schema_path):
     with open(schema_path) as schema_file:
         schema = json.load(schema_file)
+    schema['$schema'] = 'http://json-schema.org/draft-04/schema#'
+    schema['type'] = 'object'
     schema['required'] = list(schema['properties'].keys())
     schema['additionalProperties'] = False
     return schema
