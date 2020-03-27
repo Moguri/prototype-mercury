@@ -87,6 +87,5 @@
     },
     "links": {
         "default_job": "jobs"
-    },
-    "additionalProperties": false
+    }
 }

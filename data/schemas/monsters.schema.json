@@ -40,6 +40,5 @@
     "links": {
         "breed": "breeds",
         "job": "jobs"
-    },
-    "additionalProperties": false
+    }
 }

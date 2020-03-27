@@ -51,6 +51,7 @@ def load_schema(schema_path):
     with open(schema_path) as schema_file:
         schema = json.load(schema_file)
     schema['required'] = list(schema['properties'].keys())
+    schema['additionalProperties'] = False
     return schema
 
 
