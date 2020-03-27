@@ -10,29 +10,26 @@ class PlayerData:
         self.name = 'FooMan'
         self.monster = None
         self.monster_stash = []
-        self.saveid = ''
-
-        self.new_saveid()
+        self.saveid = uuid.uuid4().hex
+        self.last_access_time = datetime.datetime.now().isoformat()
 
     def to_dict(self):
         return {
             'name': self.name,
+            'saveid': self.saveid,
             'monster': self.monster.to_dict() if self.monster else '',
             'monster_stash': [i.to_dict() for i in self.monster_stash],
+            'last_access_time': self.last_access_time,
         }
 
-    def to_meta_dict(self):
+    def to_metadata_dict(self):
         return {
             'id': self.saveid,
             'trainer_name': self.name,
             'monster_name': self.monster.name if self.monster else '',
             'monster_breed_name': self.monster.breed.name if self.monster else '',
-            'last_access_time': datetime.datetime.now().isoformat(),
+            'last_access_time': self.last_access_time,
         }
-
-
-    def new_saveid(self):
-        self.saveid = uuid.uuid1().hex
 
     def save(self, file_object):
         data = self.to_dict()
