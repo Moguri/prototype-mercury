@@ -20,14 +20,5 @@
             "format": "date-time"
         }
     },
-
-    "required": [
-        "id",
-        "trainer_name",
-        "monster_name",
-        "monster_breed_name",
-        "last_access_time"
-    ],
-
     "additionalProperties": false
 }

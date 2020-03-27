@@ -37,19 +37,6 @@
             "type": "integer"
         }
     },
-    "required": [
-        "id",
-        "name",
-        "breed",
-        "job",
-        "hp_offset",
-        "ap_offset",
-        "physical_attack_offset",
-        "magical_attack_offset",
-        "accuracy_offset",
-        "evasion_offset",
-        "defense_offset"
-    ],
     "links": {
         "breed": "breeds",
         "job": "jobs"

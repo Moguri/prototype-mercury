@@ -47,16 +47,5 @@
         }
 
     },
-
-    "required": [
-        "id",
-        "name",
-        "cost",
-        "range",
-        "damage_rank",
-        "hit_rank",
-        "effects"
-    ],
-
     "additionalProperties": false
 }

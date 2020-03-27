@@ -85,23 +85,6 @@
             "minimum": 0
         }
     },
-
-    "required": [
-        "id",
-        "name",
-        "default_job",
-        "bam_file",
-        "root_node",
-        "anim_map",
-        "hp",
-        "ap_per_second",
-        "physical_attack",
-        "magical_attack",
-        "defense",
-        "evasion",
-        "accuracy",
-        "move_cost"
-    ],
     "links": {
         "default_job": "jobs"
     },

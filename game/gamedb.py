@@ -47,6 +47,13 @@ class DataModel:
         return model
 
 
+def load_schema(schema_path):
+    with open(schema_path) as schema_file:
+        schema = json.load(schema_file)
+    schema['required'] = list(schema['properties'].keys())
+    return schema
+
+
 class GameDB(collections.UserDict):
     _ptr = None
     data_dir = os.path.join(pathutils.APP_ROOT_DIR, 'data')
@@ -64,9 +71,8 @@ class GameDB(collections.UserDict):
             if tlk in self.schema_to_datamodel:
                 continue
 
-            with open(os.path.join(self.schema_dir, f'{tlk}{self.schema_suffix}')) as schema_file:
-                schema = json.load(schema_file)
-                self.schema_to_datamodel[tlk] = DataModel.from_schema(schema)
+            schema = load_schema(os.path.join(self.schema_dir, f'{tlk}{self.schema_suffix}'))
+            self.schema_to_datamodel[tlk] = DataModel.from_schema(schema)
 
         super().__init__({
             i: self._load_directory(i, self.schema_to_datamodel[i])
@@ -84,8 +90,8 @@ class GameDB(collections.UserDict):
 
         schema_name = '{}.schema.json'.format(dirname)
         schema_path = os.path.join(self.data_dir, 'schemas', schema_name)
-        with open(schema_path) as schema_file:
-            validate = fastjsonschema.compile(json.load(schema_file))
+        schema = load_schema(schema_path)
+        validate = fastjsonschema.compile(schema)
         for data in data_list:
             try:
                 validate(data)

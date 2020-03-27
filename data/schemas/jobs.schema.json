@@ -19,10 +19,5 @@
             "uniqueItems": true
         }
     },
-    "required": [
-        "id",
-        "name",
-        "abilities"
-    ],
     "additionalProperties": false
 }
