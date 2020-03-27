@@ -13,8 +13,6 @@ class TitleState(GameState):
             'base': [
                 ('New Game', base.change_state, ['NewTrainer']),
                 ('Load Game', base.change_state, ['Load']),
-                ('Versus AI', self.versus, [True]),
-                ('Versus Player', self.versus, [False]),
                 ('Quit', self.quit, []),
             ],
         }
@@ -31,10 +29,6 @@ class TitleState(GameState):
         super().update(dt)
 
         self.menu_helper.update_ui()
-
-    def versus(self, use_ai):
-        base.blackboard['use_ai'] = use_ai
-        base.change_state('CharacterSelection')
 
     def quit(self):
         messenger.send('escape')

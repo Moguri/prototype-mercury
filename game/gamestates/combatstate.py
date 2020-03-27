@@ -125,10 +125,7 @@ class CombatState(GameState):
         self.combat_timer = p3d.ClockObject()
 
         # AI controller for player two
-        if base.blackboard['use_ai']:
-            self.ai_controller = ai.Controller(self.combatants[1])
-        else:
-            self.ai_controller = None
+        self.ai_controller = ai.Controller(self.combatants[1])
 
         # UI
         self.load_ui('combat')

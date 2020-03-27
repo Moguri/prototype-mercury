@@ -38,7 +38,6 @@ class GameApp(ShowBase):
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
 
         self.blackboard = {
-            'use_ai': p3d.ConfigVariableBool('mercury-use-ai', 'True'),
             'player': PlayerData(),
         }
         default_monster = Monster.make_new('player_monster', 'Default', 'bobcatshark')
