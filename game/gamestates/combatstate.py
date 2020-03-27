@@ -67,7 +67,7 @@ class CombatState(GameState):
         lightnp = self.arena_model.find('**/+Spotlight')
         base.render.set_light(lightnp)
         light = lightnp.node()
-        light.set_shadow_caster(True, 1024, 1024)
+        light.set_shadow_caster(True, 4096, 4096)
 
         # start with random Monsters then override with anything from the
         # blackboard
