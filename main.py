@@ -25,7 +25,7 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         pman.shim.init(self)
-        pipeline = simplepbr.init()
+        pipeline = simplepbr.init() # pylint: disable=assignment-from-no-return
         gamedb.get_instance()
 
         if pipeline and hasattr(pipeline, 'enable_shadows'):
