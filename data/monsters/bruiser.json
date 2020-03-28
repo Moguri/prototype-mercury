@@ -9,5 +9,8 @@
     "magical_attack_offset": -60,
     "accuracy_offset": -20,
     "evasion_offset": -30,
-    "defense_offset": 50
+    "defense_offset": 50,
+    "job_levels": {
+        "bruiser": 1
+    }
 }

@@ -9,5 +9,8 @@
     "magical_attack_offset": 50,
     "accuracy_offset": 40,
     "evasion_offset": 30,
-    "defense_offset": -40
+    "defense_offset": -40,
+    "job_levels": {
+        "mage": 1
+    }
 }

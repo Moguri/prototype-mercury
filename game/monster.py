@@ -43,6 +43,9 @@ class Monster:
             'accuracy_offset': 0,
             'evasion_offset': 0,
             'defense_offset': 0,
+            'job_levels': {
+                breed.default_job.id: 1,
+            }
         })
         monsterdata.link(gdb)
         gdb['monsters'][monster_id] = monsterdata
@@ -92,3 +95,7 @@ class Monster:
     @property
     def move_cost(self):
         return self.breed.move_cost
+
+    @property
+    def level(self):
+        return sum(self.job_levels.values())

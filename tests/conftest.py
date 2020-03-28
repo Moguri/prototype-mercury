@@ -13,11 +13,11 @@ def gdb():
     from game import gamedb
     return gamedb.get_instance()
 
+
 @pytest.fixture
-def monster(gdb):
+def monster():
     from game.monster import Monster
-    monsterdata = next(iter(gdb['monsters'].values()))
-    return Monster(monsterdata)
+    return Monster.make_new('id', 'test', 'bobcatshark')
 
 @pytest.fixture
 def empty_nodepath():
