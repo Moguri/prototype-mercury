@@ -20,12 +20,11 @@
 }
 
 #nav {
-    box-sizing: border-box;
     position: fixed;
-    margin: 0;
-    bottom: 1em;
-    left: 20%;
-    height: auto;
+    bottom: 2em;
     padding: 0.2em;
     width: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
 }
