@@ -2,7 +2,10 @@
 import sys
 import os
 
+from unittest.mock import MagicMock
+
 import pytest
+import panda3d.core as p3d
 
 TESTDIR = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(TESTDIR, '..', 'game'))
@@ -21,7 +24,6 @@ def monster():
 
 @pytest.fixture
 def empty_nodepath():
-    import panda3d.core as p3d
     return p3d.NodePath('empty')
 
 @pytest.fixture
@@ -47,3 +49,40 @@ def player():
     player.monster = list(gamedb.get_instance()['monsters'].values())[0]
 
     return player
+
+@pytest.fixture
+def state_manager():
+    from game.gamestates import StateManager
+    return StateManager('Title')
+
+@pytest.fixture(scope='session')
+def app():
+    from direct.showbase.ShowBase import ShowBase
+    import pman.shim
+    import eventmapper
+    from game import playerdata
+    from game import gamedb
+
+    p3d.load_prc_file_data(
+        '',
+        'window-type offscreen\n'
+        'framebuffer-hardware false\n'
+    )
+    class DummyApp(ShowBase):
+        def __init__(self):
+            super().__init__(self)
+            pman.shim.init(self)
+            player = playerdata.PlayerData()
+            player.monster = list(gamedb.get_instance()['monsters'].values())[0]
+            self.blackboard = {
+                'player': player,
+            }
+            self.ui = MagicMock()
+            self.event_mapper = eventmapper.EventMapper()
+        def change_state(self, next_state):
+            pass
+        def change_to_previous_state(self):
+            pass
+        def load_ui(self, uiname):
+            pass
+    return DummyApp()

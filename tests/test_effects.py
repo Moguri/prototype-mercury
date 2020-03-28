@@ -1,9 +1,9 @@
 import pprint
 
+import pytest
+
 from game import gamedb
 from game import effects
-
-import pytest
 
 @pytest.mark.parametrize("ability", gamedb.get_instance()['abilities'].values())
 def test_smoke(combatant, empty_nodepath, ability):
