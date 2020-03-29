@@ -14,6 +14,7 @@ class GameState(DirectObject):
         self.ignoreAll()
         self.root_node.remove_node()
         self.root_node = None
+        base.render.clear_light()
 
     def load_ui(self, name):
         base.load_ui(name)
