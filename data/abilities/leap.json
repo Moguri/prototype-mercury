@@ -2,7 +2,8 @@
     "id": "leap",
     "name": "Leap",
     "cost": 20,
-    "range": [3,2],
+    "range_min": 2,
+    "range_max": 3,
     "damage_rank": 1,
     "hit_rank": 5,
     "type": "physical",
@@ -11,9 +12,12 @@
             "type": "template_simple",
             "parameters": {
                 "animation_name": "attack",
-                "start_range": 0,
-                "end_range": 0
+                "start_range": 1
             }
+        },
+        {
+            "type": "move_to_start",
+            "target": "self"
         }
     ]
 }

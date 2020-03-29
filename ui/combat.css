@@ -1,92 +1,35 @@
-#timer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#timer p {
-    font-size: 4em;
-    margin: 0;
-    -webkit-text-stroke: 0.02em white;
-}
-
-#top-bar {
+#app {
     padding: 1em;
+    box-sizing: border-box;
+    width: 100%;
 }
 
-.monster-card {
+#nav {
+    width: 20%;
+    min-width: 250px;
+}
+
+#message-bar {
+    position: fixed;
+    bottom: 0;
+    width: 60%;
+    height: 5em;
+    margin: 1em 20%;
     padding: 0.5em;
     background-color: #ccc;
     border-radius: 0.2em;
 }
 
-.mc-name {
-    font-size: 1.5em;
-}
-
-progress {
-    -webkit-appearance: none;
-    width: 100%;
-}
-
-progress:after {
-    content: attr(value)'/'attr(max);
-}
-
-progress::-webkit-progress-bar,
-progress::-webkit-progress-value {
-    border-radius: 0.2em;
-}
-
-.progress-hp::-webkit-progress-value {
-    background: #a33;
-}
-
-.progress-ap::-webkit-progress-value {
-    background: #33a;
-}
-
-#ability-bar {
+.modal-indicator {
+    animation: blinker 1.25s linear infinite;
+    font-size: 2em;
     position: fixed;
     bottom: 0;
-    width: 100%;
-    padding: 1em;
+    left: 50%;
 }
 
-.ability-card {
-    padding: 0.3em;
-}
-
-.ac-input {
-    background-color: #ccc;
-    border-radius: 0.2em;
-    padding: 0.2em;
-    margin: 0.1em;
-    text-align: center;
-}
-
-.ac-input div:not(:first-child) {
-    border-left: 1px solid #999;
-}
-
-.ac-range-indicator {
-    background-color: #ccc;
-    border-radius: 0.2em;
-    padding: 0.2em;
-    border-collapse: collapse;
-}
-
-.ac-range-slot {
-    outline: 1px solid #666;
-    text-align: center;
-    font-size: 1.2em;
-    background-color: #999;
-}
-
-.ac-rs-active {
-    background-color: #ccc;
-}
-
-.ac-rs-disable {
-    color: gray;
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }

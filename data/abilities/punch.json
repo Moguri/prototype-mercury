@@ -2,7 +2,6 @@
     "id": "punch",
     "name": "Punch",
     "cost": 10,
-    "range": [0],
     "damage_rank": 1,
     "hit_rank": 5,
     "type": "physical",

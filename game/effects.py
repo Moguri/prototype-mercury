@@ -75,6 +75,7 @@ class SequenceBuilder:
         'show_result',
         'play_animation',
         'move_to_range',
+        'move_to_start',
 
         'template_simple',
     ]
@@ -93,9 +94,9 @@ class SequenceBuilder:
 
         self.sequence = intervals.Sequence()
 
-        self.initial_self_position = combatant.range_index
-        self.initial_other_position = combatant.range_index
-        self.initial_position = 0
+        self.initial_self_position = combatant.tile_position
+        self.initial_other_position = combatant.target.tile_position
+        self.initial_position = None
 
         for effect in ability.effects:
             self.sequence.extend(self.parse_effect(effect))
@@ -147,7 +148,7 @@ class SequenceBuilder:
         textnp.set_bin("fixed", 0)
         textnp.set_depth_test(False)
         textnp.set_depth_write(False)
-        textnp.set_scale(0.5)
+        textnp.set_shader_auto(True)
         textnp.hide()
 
         def func():
@@ -170,23 +171,27 @@ class SequenceBuilder:
         )
 
     def move_to_range(self, target, parameters):
-        range_index = parameters['range_index']
+        target_range = parameters['range']
         hit_required = parameters.get('is_hit_dependent', False)
-        if range_index < 0:
-            range_index = self.initial_position
+
+        if hit_required and not self.is_hit:
+            return intervals.Sequence()
 
         def func():
-            if hit_required and not self.is_hit:
-                return
-
-            delta = range_index - target.range_index
-            if self.combat.combatants.index(target) == 0:
-                delta = -delta
-            self.combat.move_combatant(
+            self.combat.move_combatant_to_range(
                 target,
-                delta,
-                free_move=True,
-                override_lock=True
+                target.target,
+                target_range
+            )
+
+        return intervals.Func(func)
+
+    def move_to_start(self, target, _parameters):
+        target_pos = self.initial_position
+        def func():
+            self.combat.move_combatant_to_tile(
+                target,
+                target_pos
             )
         return intervals.Func(func)
 
@@ -198,7 +203,7 @@ class SequenceBuilder:
         if 'stat' not in parameters:
             parameters['stat'] = 'current_hp'
         if 'start_range' in parameters:
-            parameters['range_index'] = parameters['start_range']
+            parameters['range'] = parameters['start_range']
             sequence.append(self.move_to_range(self.combatant, parameters))
 
         sequence.extend(intervals.Sequence(

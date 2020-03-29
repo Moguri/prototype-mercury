@@ -2,7 +2,8 @@
     "id": "flying_fist",
     "name": "Flying Fist",
     "cost": 25,
-    "range": [1],
+    "range_min": 2,
+    "range_max": 2,
     "damage_rank": 3,
     "hit_rank": 3,
     "type": "physical",
@@ -11,7 +12,7 @@
             "type": "template_simple",
             "parameters": {
                 "animation_name": "attack",
-                "start_range": 0
+                "start_range": 1
             }
         }
     ]

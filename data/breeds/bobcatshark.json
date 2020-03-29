@@ -6,7 +6,8 @@
     "root_node": "ClayGolemArm",
     "anim_map": {
         "idle": "cg.Idle",
-        "attack": "cg.Attack"
+        "attack": "cg.Attack",
+        "death": "cg.Death"
     },
     "hp": 100,
     "ap_per_second": 5,

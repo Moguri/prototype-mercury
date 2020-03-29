@@ -52,7 +52,11 @@ def load_schema(schema_path):
         schema = json.load(schema_file)
     schema['$schema'] = 'http://json-schema.org/draft-04/schema#'
     schema['type'] = 'object'
-    schema['required'] = list(schema['properties'].keys())
+    schema['required'] = list(
+        key
+        for key, value in schema['properties'].items()
+        if 'default' not in value
+    )
     schema['additionalProperties'] = False
     return schema
 

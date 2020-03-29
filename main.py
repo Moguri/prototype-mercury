@@ -33,9 +33,9 @@ class GameApp(ShowBase):
 
         self.accept('quit', sys.exit)
         self.accept('toggle-buffer-viewer', self.bufferViewer.toggleEnable)
+        self.accept('toggle-oobe', self.oobe)
 
         self.disable_mouse()
-        self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
 
         self.blackboard = {
             'player': PlayerData(),

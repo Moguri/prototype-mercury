@@ -15,17 +15,29 @@ class MenuHelper(DirectObject):
         self.menu_items = None
         self.selection_idx = 0
         self.lock = False
+        self._show = True
 
-        self.accept('p1-move-down', self.increment_selection)
-        self.accept('p1-move-up', self.decrement_selection)
+        self.accept('move-down', self.increment_selection)
+        self.accept('move-up', self.decrement_selection)
         if is_horizontal:
-            self.accept('p1-move-right', self.increment_selection)
-            self.accept('p1-move-left', self.decrement_selection)
-        self.accept('p1-accept', self.accept_selection)
-        self.accept('p1-reject', self.reject_selection)
+            self.accept('move-right', self.increment_selection)
+            self.accept('move-left', self.decrement_selection)
+        self.accept('accept', self.accept_selection)
+        self.accept('reject', self.reject_selection)
 
         self.accept_cb = accept_cb
         self.reject_cb = reject_cb
+
+    @property
+    def show(self):
+        return self._show
+
+    @show.setter
+    def show(self, value):
+        self._show = bool(value)
+        self.state.update_ui({
+            'show_menu': self._show,
+        })
 
     def cleanup(self):
         self.ignoreAll()

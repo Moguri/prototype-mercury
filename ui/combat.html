@@ -12,168 +12,50 @@
 
     <body>
         <div id="app">
-            <div id='top-bar' class="pure-g">
-                <monster-card class="pure-u-1-3" :monster="state.player_monster"></monster-card>
-                <div id='timer' class="pure-u-1-3"><p>{{state.timer}}</p></div>
-                <monster-card class="pure-u-1-3" :monster="state.opponent_monster"></monster-card>
+            <div id='nav' v-if='state.show_menu' class='pure-menu'>
+                <span class='custom-menu-heading pure-menu-heading'>{{state.menu_heading}}</span>
+                <ul class='pure-menu-list'>
+                    <li v-for='(item, idx) in state.menu_items' class='custom-menu-item pure-menu-item'
+                        v-bind:class="{'pure-menu-selected': idx == state.selection_index}">
+                        <a href='#' class='pure-menu-link'>{{item}}</a>
+                    </li>
+                </ul>
             </div>
-            <div id='ability-bar'>
-                <div class='pure-g'>
-                    <div class='ability-card pure-u-5-12'>
-                        <ability-inputs :abilities="state.player_monster.abilities"></ability-inputs>
-                        <range-indicator
-                            :abilities="state.player_monster.abilities"
-                            :range="state.range"
-                            :flip="false">
-                        </range-indicator>
-                    </div>
-                    <div class='pure-u-1-6'></div>
-                    <div class='ability-card pure-u-5-12'>
-                        <ability-inputs :abilities="state.opponent_monster.abilities"></ability-inputs>
-                        <range-indicator
-                            :abilities="state.opponent_monster.abilities"
-                            :range="state.range"
-                            :flip="true">
-                        </range-indicator>
-                        </range-indicator>
-                    </div>
-                </div>
+
+            <div id='message-bar' v-if='state.message != ""'>
+                <span>{{state.message}}</span>
+                <span class='modal-indicator' v-if='state.message_modal'>&#x25bc;</span>
             </div>
         </div>
     </body>
 
-    <script type="text/x-template" id="card-tmpl">
-        <div class='monster-card'>
-            <span class='mc-name'>{{monster.name}}</span>
-            <progress class='progress-hp' :value='monster.hp_current' :max='monster.hp_max'></progress>
-            <progress class='progress-ap' :value='monster.ap_current' :max='monster.ap_max'></progress>
-        </div>
-    </script>
-
-    <script type="text/x-template" id="ability-inputs-tmpl">
-        <div class='ac-inputs'>
-            <div class='pure-g'>
-                <div class='pure-u-1-4'></div>
-                <div class='pure-u-1-2'>
-                    <ability-input :ability="abilities[3]"></ability-input>
-                </div>
-            </div>
-            <div class='pure-g'>
-                <div class='pure-u-1-2'>
-                    <ability-input :ability="abilities[2]"></ability-input>
-                </div>
-                <div class='pure-u-1-2'>
-                    <ability-input :ability="abilities[1]"></ability-input>
-                </div>
-            </div>
-            <div class='pure-g'>
-                <div class='pure-u-1-4'></div>
-                <div class='pure-u-1-2'>
-                    <ability-input :ability="abilities[0]"></ability-input>
-                </div>
-            </div>
-        </div>
-    </script>
-
-    <script type="text/x-template" id="ability-input-tmpl">
-        <div class='ac-input pure-g'>
-            <div class='pure-u-1-6'>{{(ability) ? ability.input : '-'}}</div>
-            <div class='pure-u-1-2'>{{(ability) ? ability.name : '-'}}</div>
-            <div class='pure-u-1-6'>{{(ability) ? ability.cost : '-'}}</div>
-            <div class='pure-u-1-6'>50%</div>
-        </div>
-    </script>
-
-    <script type="text/x-template" id="range-ind-tmpl">
-        <div class='ac-range-indicator pure-g'>
-            <div class='pure-u-1-4' v-for='i in (flip) ? [0, 1, 2, 3] : [3, 2, 1, 0]'>
-                <range-slot :abilities='abilities' :slot='i' :range='range'></range-slot>
-            </div>
-        </div>
-    </script>
-
-    <script type="text/x-template" id="range-slot-tmpl">
-        <div class='ac-range-slot' v-bind:class="{'ac-rs-active': slot == range}">
-            <div class='pure-g'>
-                <div class='pure-u-1-4'></div>
-                <div class='pure-u-1-2'
-                    v-bind:class="{'ac-rs-disable': !abilities[3] || !abilities[3].range.includes(slot)}">
-                    &#x25cf;
-                </div>
-            </div>
-            <div class='pure-g'>
-                <div class='pure-u-1-2'
-                    v-bind:class="{'ac-rs-disable': !abilities[2] || !abilities[2].range.includes(slot)}">
-                    &#x25cf;
-                </div>
-                <div class='pure-u-1-2'
-                    v-bind:class="{'ac-rs-disable': !abilities[1] || !abilities[1].range.includes(slot)}">
-                    &#x25cf;
-                </div>
-            </div>
-            <div class='pure-g'>
-                <div class='pure-u-1-4'></div>
-                <div class='pure-u-1-2'
-                    v-bind:class="{'ac-rs-disable': !abilities[0] || !abilities[0].range.includes(slot)}">
-                    &#x25cf;
-                </div>
-            </div>
-        </div>
-    </script>
-
     <script>
         var data = {
             state: {
-                player_monster: {
-                    name: 'foo',
-                    abilities: [
-                        {name: 'stab', input: 'Q', range: [0, 1], cost: 15, usable: true},
-                        {name: 'poke', input: 'W', range: [0], cost: 10, usable: true},
-                        {name: 'jab', input: 'E', range: [0], cost: 10, usable: true},
-                    ],
-                    hp_current: 123,
-                    hp_max: 304,
-                    ap_current: 24,
-                    ap_max: 100,
-                },
-                opponent_monster: {
-                    name: '!foo',
-                    abilities: [
-                        {name: 'stab', input: 'Q', range: [0, 1], cost: 15, usable: true},
-                        {name: 'poke', input: 'W', range: [0], cost: 10, usable: true},
-                        {name: 'jab', input: 'E', range: [0], cost: 10, usable: true},
-                        {name: 'nuke', input: 'R', range: [3], cost: 25, usable: false},
-                    ],
-                    hp_current: 70,
-                    hp_max: 100,
-                    ap_current: 66,
-                    ap_max: 100,
-                },
-                range: Math.floor(Math.random() * 4),
-                timer: 60,
+                show_menu: false,
+                menu_heading: 'Action',
+                menu_items: [
+                    'Move',
+                    'Fight',
+                ],
+                selection_index: 0,
+                message: "",
+                message_modal: false,
+                monster: {
+                    name: 'Foo',
+                    breed: 'Bar',
+                    job: '',
+                    hit_points:100,
+                    ability_points:100,
+                    physical_attack:100,
+                    magical_attack:100,
+                    accuracy:100,
+                    evasion:100,
+                    defense:100,
+                }
             }
         };
 
-        Vue.component('monster-card', {
-            props: ['monster', 'range', 'flip'],
-            template: '#card-tmpl'
-        });
-        Vue.component('ability-inputs', {
-            props: ['abilities'],
-            template: '#ability-inputs-tmpl'
-        });
-        Vue.component('ability-input', {
-            props: ['ability'],
-            template: '#ability-input-tmpl'
-        });
-        Vue.component('range-indicator', {
-            props: ['abilities', 'range', 'flip'],
-            template: '#range-ind-tmpl'
-        });
-        Vue.component('range-slot', {
-            props: ['abilities', 'range', 'slot'],
-            template: '#range-slot-tmpl'
-        });
         var app = new Vue({
             el: '#app',
             data: data
