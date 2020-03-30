@@ -117,3 +117,8 @@ saves/
 # Blender files
 *.blend1
 *.blend2
+
+# CEF
+blob_storage/
+VideoDecodeStats/
+webrtc_event_logs/
