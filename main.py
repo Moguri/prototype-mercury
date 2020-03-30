@@ -25,25 +25,30 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         pman.shim.init(self)
-        pipeline = simplepbr.init() # pylint: disable=assignment-from-no-return
         gamedb.get_instance()
 
+        # Render pipeline
+        self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
+        # pylint: disable=assignment-from-no-return
+        pipeline = simplepbr.init(
+            msaa_samples=p3d.ConfigVariableInt('msaa-samples', 4).get_value()
+        )
         if pipeline and hasattr(pipeline, 'enable_shadows'):
-            pipeline.enable_shadows = True
+            pipeline.enable_shadows = p3d.ConfigVariableBool('enable-shadows', True).get_value()
 
+        # Controls
+        self.event_mapper = eventmapper.EventMapper()
+        self.disable_mouse()
         self.accept('quit', sys.exit)
         self.accept('toggle-buffer-viewer', self.bufferViewer.toggleEnable)
         self.accept('toggle-oobe', self.oobe)
 
-        self.disable_mouse()
-
+        # Global storage
         self.blackboard = {
             'player': PlayerData(),
         }
         default_monster = Monster.make_new('player_monster', 'Default', 'bobcatshark')
         self.blackboard['player'].monster = default_monster
-
-        self.event_mapper = eventmapper.EventMapper()
 
         # UI
         self.ui = cefpanda.CEFPanda()
