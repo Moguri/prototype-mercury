@@ -27,21 +27,11 @@
         </div>
     </body>
 
+    <script src='common.js'></script>
     <script>
-        var data = {
-            state: {
-            },
-            form: {
-                name: 'FooMan',
-            },
+        data.form = {
+            name: 'Foo Man',
         };
-
-        var app = new Vue({
-            el: '#app',
-            data: data,
-        });
-
-        console.log('loaded');
 
         var attempt_submit = function() {
             if (data.form.name !== '' && typeof submit_form === 'function') {
@@ -49,9 +39,6 @@
             }
         }
 
-
-        var update_state = function(new_state) {
-            data.state = Object.assign({}, data.state, new_state)
-        }
+        setup_ui({});
     </script>
 </html>

@@ -38,38 +38,23 @@
         </div>
     </script>
 
+    <script src='common.js'></script>
     <script>
-        var data = {
-            state: {
-                menu_items: [
-                    'Back',
-                    '1234',
-                ],
-                selection_index: 1,
-                doing_save: false,
-                saves: {
-                    '1234': {
-                        'id': '1234',
-                        'trainer_name': 'FooMan',
-                        'monster_name': 'BarMon',
-                        'monster_breed_name': 'BobcatShark',
-                        'last_access_time': '2018-07-20T17:41:26.515317',
-                    },
-                }
-            }
-        };
-
         Vue.component('save-info', {
             props: ['saveinfo'],
             template: '#save-tmpl'
         });
-        var app = new Vue({
-            el: '#app',
-            data: data
+        setup_ui({
+            doing_save: false,
+            saves: {
+                '1234': {
+                    'id': '1234',
+                    'trainer_name': 'FooMan',
+                    'monster_name': 'BarMon',
+                    'monster_breed_name': 'BobcatShark',
+                    'last_access_time': '2018-07-20T17:41:26.515317',
+                },
+            }
         });
-
-        var update_state = function(new_state) {
-            data.state = Object.assign({}, data.state, new_state)
-        }
     </script>
 </html>

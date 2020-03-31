@@ -28,40 +28,21 @@
         </div>
     </body>
 
+    <script src='common.js'></script>
     <script>
-        var data = {
-            state: {
-                show_menu: false,
-                menu_heading: 'Action',
-                menu_items: [
-                    'Move',
-                    'Fight',
-                ],
-                selection_index: 0,
-                message: "",
-                message_modal: false,
-                monster: {
-                    name: 'Foo',
-                    breed: 'Bar',
-                    job: '',
-                    hit_points:100,
-                    ability_points:100,
-                    physical_attack:100,
-                    magical_attack:100,
-                    accuracy:100,
-                    evasion:100,
-                    defense:100,
-                }
+        setup_ui({
+            monster: {
+                name: 'Foo',
+                breed: 'Bar',
+                job: '',
+                hit_points:100,
+                ability_points:100,
+                physical_attack:100,
+                magical_attack:100,
+                accuracy:100,
+                evasion:100,
+                defense:100,
             }
-        };
-
-        var app = new Vue({
-            el: '#app',
-            data: data
         });
-
-        var update_state = function(new_state) {
-            data.state = Object.assign({}, data.state, new_state)
-        }
     </script>
 </html>

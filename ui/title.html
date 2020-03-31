@@ -28,26 +28,8 @@
         </div>
     </body>
 
+    <script src='common.js'></script>
     <script>
-        var data = {
-            state: {
-                menu_items: [
-                    'New Game',
-                    'Versus AI',
-                    'Versus Player',
-                    'Quit',
-                ],
-                selection_index: 0,
-            }
-        };
-
-        var app = new Vue({
-            el: '#app',
-            data: data
-        });
-
-        var update_state = function(new_state) {
-            data.state = Object.assign({}, data.state, new_state)
-        }
+        setup_ui({});
     </script>
 </html>
