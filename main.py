@@ -18,6 +18,7 @@ from game.monster import Monster
 # Load config files before ShowBase is initialized
 p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'game.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'inputs.prc'))
+p3d.load_prc_file(p3d.Filename(pathutils.USER_CONFIG_DIR, 'user.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'user.prc'))
 
 
