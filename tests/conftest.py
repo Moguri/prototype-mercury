@@ -4,8 +4,8 @@ import os
 
 from unittest.mock import MagicMock
 
-import pytest
 import panda3d.core as p3d
+import pytest
 
 TESTDIR = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(TESTDIR, '..', 'game'))
@@ -62,9 +62,6 @@ def app():
     import eventmapper
     from game import playerdata
     from game import gamedb
-
-    if os.environ.get('SKIP_APP_TESTS', False):
-        pytest.skip()
 
     p3d.load_prc_file_data(
         '',
