@@ -65,7 +65,7 @@ def app():
 
     p3d.load_prc_file_data(
         '',
-        'window-type offscreen\n'
+        'window-type none\n'
         'framebuffer-hardware false\n'
     )
     class DummyApp(ShowBase):
@@ -79,6 +79,8 @@ def app():
             }
             self.ui = MagicMock()
             self.event_mapper = eventmapper.EventMapper()
+
+            self.camera = p3d.NodePath('camera')
         def change_state(self, next_state):
             pass
         def change_to_previous_state(self):
