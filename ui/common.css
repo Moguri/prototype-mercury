@@ -2,7 +2,6 @@ html,
 body,
 #app {
     width: 100%;
-    height: 100%;
     font-size: calc(0.75em + 1vmin);
 }
 
@@ -32,4 +31,37 @@ body,
 
 .selection-locked {
     background-color: #ff8080;
+}
+
+#nav {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+    width: 20%;
+    min-width: 250px;
+}
+
+#message-bar {
+    position: fixed;
+    bottom: 0;
+    width: 60%;
+    height: 5em;
+    margin: 1em 20%;
+    padding: 0.5em;
+    background-color: #ccc;
+    border-radius: 0.2em;
+}
+
+.modal-indicator {
+    animation: blinker 1.25s linear infinite;
+    font-size: 2em;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
 }

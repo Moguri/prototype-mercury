@@ -1,7 +1,3 @@
-#app {
-    width: 100%;
-}
-
 #bgvid {
     position: fixed;
     width: 100%;
@@ -19,7 +15,7 @@
     -webkit-text-stroke: 0.02em #999;
 }
 
-#nav {
+#title-nav {
     position: fixed;
     bottom: 2em;
     padding: 0.2em;
