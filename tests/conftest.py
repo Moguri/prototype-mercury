@@ -63,6 +63,9 @@ def app():
     from game import playerdata
     from game import gamedb
 
+    if os.environ.get('SKIP_APP_TESTS', False):
+        pytest.skip()
+
     p3d.load_prc_file_data(
         '',
         'window-type none\n'
