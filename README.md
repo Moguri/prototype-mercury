@@ -1,4 +1,4 @@
-![Run tests](https://github.com/Kupoman/prototype-mercury/workflows/Run%20tests/badge.svg)
+![CI](https://github.com/Kupoman/prototype-mercury/workflows/CI/badge.svg)
 
 # Mercury
 
