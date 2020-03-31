@@ -3,13 +3,13 @@ import json
 import uuid
 
 from . import gamedb
+from .monster import Monster
 
 
 class PlayerData:
     def __init__(self):
-        self.name = 'FooMan'
-        self.monster = None
-        self.monster_stash = []
+        self.name = 'Foo Man'
+        self.monsters = []
         self.saveid = uuid.uuid4().hex
         self.last_access_time = datetime.datetime.now().isoformat()
 
@@ -17,8 +17,7 @@ class PlayerData:
         return {
             'name': self.name,
             'saveid': self.saveid,
-            'monster': self.monster.to_dict() if self.monster else '',
-            'monster_stash': [i.to_dict() for i in self.monster_stash],
+            'monsters': [i.to_dict() for i in self.monsters],
             'last_access_time': self.last_access_time,
         }
 
@@ -26,8 +25,6 @@ class PlayerData:
         return {
             'id': self.saveid,
             'trainer_name': self.name,
-            'monster_name': self.monster.name if self.monster else '',
-            'monster_breed_name': self.monster.breed.name if self.monster else '',
             'last_access_time': self.last_access_time,
         }
 
@@ -42,14 +39,9 @@ class PlayerData:
         data = json.load(file_object)
 
         player.name = str(data['name'])
-
-        if data['monster']:
-            player.monster = gdb.schema_to_datamodel['monsters'](data['monster'])
-            player.monster.link(gdb)
-
-        for monster in data['monster_stash']:
-            monster = gdb.schema_to_datamodel['monsters'](monster)
+        for monster_data in data['monsters']:
+            monster = gdb.schema_to_datamodel['monsters'](monster_data)
             monster.link(gdb)
-            player.monster_stash.append(monster)
+            player.monsters.append(Monster(monster))
 
         return player

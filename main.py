@@ -48,7 +48,7 @@ class GameApp(ShowBase):
             'player': PlayerData(),
         }
         default_monster = Monster.make_new('player_monster', 'Default', 'bobcatshark')
-        self.blackboard['player'].monster = default_monster
+        self.blackboard['player'].monsters = [default_monster]
 
         # UI
         self.ui = cefpanda.CEFPanda()

@@ -168,8 +168,8 @@ class RanchState(GameState):
             self.monster_actor.cleanup()
             self.monster_actor.remove_node()
 
-        if self.player.monster:
-            breed = self.player.monster.breed
+        if self.player.monsters:
+            breed = self.player.monsters[0].breed
             monster_model = base.loader.load_model('{}.bam'.format(breed.bam_file))
             self.monster_actor = Actor(monster_model.find('**/{}'.format(breed.root_node)))
             self.monster_actor.set_h(180)
@@ -184,7 +184,7 @@ class RanchState(GameState):
     def update(self, dt):
         super().update(dt)
 
-        if (not self.menu_helper.lock and not self.player.monster and
+        if (not self.menu_helper.lock and not self.player.monsters and
                 self.menu_helper.current_menu != 'monsters_market'):
             self.load_monster_model()
             self.menu_helper.set_menu('monsters_market')
@@ -207,7 +207,7 @@ class RanchState(GameState):
 
     def enter_combat(self):
         base.blackboard['monsters'] = [
-            self.player.monster.id
+            self.player.monsters[0].id
         ]
         base.change_state('Combat')
 
@@ -215,7 +215,7 @@ class RanchState(GameState):
         stat_growth = 0
 
         attr = '{}_affinity'.format(stat)
-        affinity = getattr(self.player.monster.breed, attr)
+        affinity = getattr(self.player.monsters[0].breed, attr)
         success_chance = 60 + 10 * affinity
         great_chance = 5 + min(100 - success_chance, 0)
 
@@ -226,8 +226,8 @@ class RanchState(GameState):
             stat_growth = 10
 
         attr = '{}_offset'.format(stat)
-        old_stat = getattr(self.player.monster, attr)
-        setattr(self.player.monster, attr, old_stat + stat_growth)
+        old_stat = getattr(self.player.monsters[0], attr)
+        setattr(self.player.monsters[0], attr, old_stat + stat_growth)
 
         stat_display = stat.replace('_', ' ').title()
         if stat_display == 'Hp':
@@ -236,9 +236,9 @@ class RanchState(GameState):
 
     def show_stats(self):
         self._show_stats = True
-        monsterdict = self.player.monster.to_dict()
-        monsterdict['breed'] = self.player.monster.breed.name
-        monsterdict['job'] = self.player.monster.job.name
+        monsterdict = self.player.monsters[0].to_dict()
+        monsterdict['breed'] = self.player.monsters[0].breed.name
+        monsterdict['job'] = self.player.monsters[0].job.name
         self.update_ui({
             'monster': monsterdict
         })
@@ -246,7 +246,9 @@ class RanchState(GameState):
     def get_monster(self, breedid):
         gdb = gamedb.get_instance()
         breed = gdb['breeds'][breedid]
-        self.player.monster = Monster.make_new('player_monster', breed.name, breed.id)
+        self.player.monsters.append(
+            Monster.make_new('player.monster', breed.name, breed.id)
+        )
         self.display_message('')
         self.menu_helper.set_menu('base')
         self.load_monster_model()
@@ -255,6 +257,6 @@ class RanchState(GameState):
     def change_job(self, jobid):
         gdb = gamedb.get_instance()
         job = gdb['jobs'][jobid]
-        self.player.monster.job = job
+        self.player.monsters[0].job = job
         self.display_message('')
         self.menu_helper.set_menu('base')
