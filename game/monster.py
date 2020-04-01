@@ -2,10 +2,22 @@ from . import gamedb
 
 
 class Monster:
+    BASE_STATS = [
+        'hp',
+        'physical_attack',
+        'magical_attack',
+        'accuracy',
+        'evasion',
+        'defense',
+    ]
     def __init__(self, monsterdata):
         self._monsterdata = monsterdata
 
     def __getattr__(self, name):
+        if name == 'hit_points':
+            name = 'hp'
+        if name in self.BASE_STATS:
+            return getattr(self.breed, name) + getattr(self._monsterdata, f'{name}_offset')
         return getattr(self._monsterdata, name)
 
     def to_dict(self, skip_extras=False):
@@ -16,12 +28,7 @@ class Monster:
         extras = [
             'hit_points',
             'ability_points',
-            'physical_attack',
-            'magical_attack',
-            'accuracy',
-            'evasion',
-            'defense',
-        ]
+        ] + self.BASE_STATS
         data.update({
             prop: getattr(self, prop)
             for prop in extras
@@ -57,36 +64,12 @@ class Monster:
         self._monsterdata.job = value
 
     @property
-    def hit_points(self):
-        return self.breed.hp + self._monsterdata.hp_offset
-
-    @property
     def ability_points(self):
         return 100
 
     @property
     def ap_per_second(self):
         return self.breed.ap_per_second
-
-    @property
-    def physical_attack(self):
-        return self.breed.physical_attack + self._monsterdata.physical_attack_offset
-
-    @property
-    def magical_attack(self):
-        return self.breed.magical_attack + self._monsterdata.magical_attack_offset
-
-    @property
-    def accuracy(self):
-        return self.breed.accuracy + self._monsterdata.accuracy_offset
-
-    @property
-    def evasion(self):
-        return self.breed.evasion + self._monsterdata.evasion_offset
-
-    @property
-    def defense(self):
-        return self.breed.defense + self._monsterdata.defense_offset
 
     @property
     def move_cost(self):
