@@ -14,28 +14,39 @@
             "type": "string"
         },
         "hp_offset": {
-            "type": "integer"
+            "type": "integer",
+            "default": 0
         },
         "ap_offset": {
-            "type": "integer"
+            "type": "integer",
+            "default": 0
         },
         "physical_attack_offset": {
-            "type": "integer"
+            "type": "integer",
+            "default": 0
         },
         "magical_attack_offset": {
-            "type": "integer"
+            "type": "integer",
+            "default": 0
         },
         "accuracy_offset": {
-            "type": "integer"
+            "type": "integer",
+            "default": 0
         },
         "evasion_offset": {
-            "type": "integer"
+            "type": "integer",
+            "default": 0
         },
         "defense_offset": {
-            "type": "integer"
+            "type": "integer",
+            "default": 0
         },
         "job_levels": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {
+                "type": "integer"
+            },
+            "minProperties": 1
         }
     },
     "links": {

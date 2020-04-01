@@ -39,13 +39,6 @@ class Monster:
             'name': name,
             'breed': breed.id,
             'job': breed.default_job.id,
-            'hp_offset': 0,
-            'ap_offset': 0,
-            'physical_attack_offset': 0,
-            'magical_attack_offset': 0,
-            'accuracy_offset': 0,
-            'evasion_offset': 0,
-            'defense_offset': 0,
             'job_levels': {
                 breed.default_job.id: 1,
             }
