@@ -1,5 +1,3 @@
-import random
-
 from direct.actor.Actor import Actor
 from direct.showbase.MessengerGlobal import messenger
 import panda3d.core as p3d
@@ -102,7 +100,7 @@ class RanchState(GameState):
 
         def reject_cb():
             menu_name = self.menu_helper.current_menu
-            if menu_name is ('training', 'monsters_market'):
+            if menu_name in ('monsters_market',):
                 self.menu_helper.set_menu('base')
             elif self._show_stats:
                 self._show_stats = False
@@ -111,21 +109,11 @@ class RanchState(GameState):
         self.menu_helper.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
-                ('Train', self.menu_helper.set_menu, ['training']),
                 ('Monster Stats', self.show_stats, []),
                 ('Change Job', self.menu_helper.set_menu, ['jobs']),
                 ('Save Game', base.change_state, ['Save']),
                 ('Load Game', base.change_state, ['Load']),
                 ('Quit', self.menu_helper.set_menu, ['quit']),
-            ],
-            'training': [
-                ('Back', self.menu_helper.set_menu, ['base']),
-                ('Hit Points', self.train_stat, ['hp']),
-                ('Physical Attack', self.train_stat, ['physical_attack']),
-                ('Magical Attack', self.train_stat, ['magical_attack']),
-                ('Accuracy', self.train_stat, ['accuracy']),
-                ('Evasion', self.train_stat, ['evasion']),
-                ('Defense', self.train_stat, ['defense']),
             ],
             'monsters_market': [
                 ('Back', self.menu_helper.set_menu, ['base']),
@@ -144,7 +132,6 @@ class RanchState(GameState):
         }
         self.menu_helper.menu_headings = {
             'base': 'Ranch',
-            'training': 'Training',
             'monsters_market': 'Select a Breed',
             'quit': '',
         }
@@ -210,29 +197,6 @@ class RanchState(GameState):
             self.player.monsters[0].id
         ]
         base.change_state('Combat')
-
-    def train_stat(self, stat):
-        stat_growth = 0
-
-        attr = '{}_affinity'.format(stat)
-        affinity = getattr(self.player.monsters[0].breed, attr)
-        success_chance = 60 + 10 * affinity
-        great_chance = 5 + min(100 - success_chance, 0)
-
-        if random.randrange(0, 99) < great_chance:
-            stat_growth = 20
-
-        if random.randrange(0, 99) < success_chance:
-            stat_growth = 10
-
-        attr = '{}_offset'.format(stat)
-        old_stat = getattr(self.player.monsters[0], attr)
-        setattr(self.player.monsters[0], attr, old_stat + stat_growth)
-
-        stat_display = stat.replace('_', ' ').title()
-        if stat_display == 'Hp':
-            stat_display = 'HP'
-        self.display_message('{} grew by {}'.format(stat_display, stat_growth), modal=True)
 
     def show_stats(self):
         self._show_stats = True
