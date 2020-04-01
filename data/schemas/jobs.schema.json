@@ -15,6 +15,14 @@
             "minItems": 1,
             "maxItems": 4,
             "uniqueItems": true
+        },
+        "required_tags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "default": []
         }
     }
 }

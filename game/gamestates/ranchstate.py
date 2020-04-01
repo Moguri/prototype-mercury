@@ -122,8 +122,6 @@ class RanchState(GameState):
             ],
             'jobs': [
                 ('Back', self.menu_helper.set_menu, ['base']),
-            ] + [
-                (job.name, self.change_job, [job.id]) for job in gdb['jobs'].values()
             ],
             'quit': [
                 ('Exit to Title Menu', base.change_state, ['Title']),
@@ -171,6 +169,8 @@ class RanchState(GameState):
     def update(self, dt):
         super().update(dt)
 
+        gdb = gamedb.get_instance()
+
         if (not self.menu_helper.lock and not self.player.monsters and
                 self.menu_helper.current_menu != 'monsters_market'):
             self.load_monster_model()
@@ -178,6 +178,14 @@ class RanchState(GameState):
             self.display_message('Select a breed')
             self.set_background('market')
 
+        if self.player.monsters:
+            self.menu_helper.menus['jobs'] = [
+                ('Back', self.menu_helper.set_menu, ['base']),
+            ] + [
+                (job.name, self.change_job, [job.id])
+                for job in gdb['jobs'].values()
+                if self.player.monsters[0].can_use_job(job)
+            ]
         self.update_ui({
             'show_stats': self._show_stats,
         })

@@ -11,6 +11,7 @@
     "evasion_offset": -30,
     "defense_offset": 50,
     "job_levels": {
+        "bobcatshark": 2,
         "bruiser": 1
     }
 }

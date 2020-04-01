@@ -36,6 +36,9 @@ class Monster:
 
         return data
 
+    def can_use_job(self, job):
+        return set(job.required_tags).issubset(self.tags)
+
     @classmethod
     def make_new(cls, monster_id, name, breed_id):
         gdb = gamedb.get_instance()
@@ -61,6 +64,8 @@ class Monster:
 
     @job.setter
     def job(self, value):
+        if not self.can_use_job(value):
+            raise RuntimeError(f'tag requirements unsatisfied: {value.required_tags}')
         self._monsterdata.job = value
 
     @property
