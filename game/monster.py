@@ -8,8 +8,11 @@ class Monster:
     def __getattr__(self, name):
         return getattr(self._monsterdata, name)
 
-    def to_dict(self):
+    def to_dict(self, skip_extras=False):
         data = self._monsterdata.to_dict()
+        if skip_extras:
+            return data
+
         extras = [
             'hit_points',
             'ability_points',

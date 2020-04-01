@@ -17,7 +17,7 @@ class PlayerData:
         return {
             'name': self.name,
             'saveid': self.saveid,
-            'monsters': [i.to_dict() for i in self.monsters],
+            'monsters': [i.to_dict(skip_extras=True) for i in self.monsters],
             'last_access_time': self.last_access_time,
         }
 

@@ -2,6 +2,7 @@ import collections
 import json
 import os
 import pprint
+import sys
 
 import fastjsonschema
 
@@ -11,8 +12,10 @@ from . import pathutils
 class DataModel:
     _props = []
     _links = {}
+    _schema = {}
 
     def __init__(self, dict_data):
+        self.validate(dict_data)
         self._props |= {'id', 'name'}
         for prop in self._props:
             setattr(self, prop, dict_data[prop])
@@ -38,10 +41,24 @@ class DataModel:
         }
 
     @classmethod
+    def validate(cls, _data):
+        return True
+
+    @classmethod
     def from_schema(cls, schema):
+        validate_func = fastjsonschema.compile(schema)
+        def validate(cls, data):
+            try:
+                validate_func(data)
+            except fastjsonschema.exceptions.JsonSchemaException:
+                print(f"Failed to load {schema['title']}", file=sys.stderr)
+                pprint.pprint(schema)
+                raise
         model = type(schema['title'] + 'Model', (DataModel,), {
             '_props': set(schema['properties'].keys()),
             '_links': schema.get('links', {}),
+            '_schema': schema,
+            'validate': classmethod(validate),
         })
 
         return model
@@ -95,13 +112,9 @@ class GameDB(collections.UserDict):
             for filename in os.listdir(dirpath)
         ]
 
-        schema_name = '{}.schema.json'.format(dirname)
-        schema_path = os.path.join(self.data_dir, 'schemas', schema_name)
-        schema = load_schema(schema_path)
-        validate = fastjsonschema.compile(schema)
         for data in data_list:
             try:
-                validate(data)
+                data_model.validate(data)
             except fastjsonschema.exceptions.JsonSchemaException:
                 print(f"Failed to load {dirname}: {data['id']}")
                 raise
