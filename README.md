@@ -6,6 +6,7 @@ An open-source monster raising and combat game
 
 ## Dependencies
 
+* Python 3.7
 * Python packages in `requirements.txt`
 * Blender 2.8+ (preferably on the system PATH)
 
