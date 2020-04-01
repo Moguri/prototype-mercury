@@ -21,3 +21,7 @@ def test_stats(monster):
 
     for key, value in stats.items():
         assert getattr(monster, key) == value
+
+def test_tags(monster):
+    assert 'breed_bobcatshark' in monster.tags
+    assert 'job_bobcatshark_1' in monster.tags

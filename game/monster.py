@@ -78,3 +78,12 @@ class Monster:
     @property
     def level(self):
         return sum(self.job_levels.values())
+
+    @property
+    def tags(self):
+        return {
+            f'breed_{self.breed.id}',
+        } | {
+            f'job_{jobname}_{joblevel}'
+            for jobname, joblevel in self.job_levels.items()
+        }
