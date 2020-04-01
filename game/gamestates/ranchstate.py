@@ -99,11 +99,8 @@ class RanchState(GameState):
             return False
 
         def reject_cb():
-            menu_name = self.menu_helper.current_menu
-            if menu_name in ('monsters_market',):
-                self.menu_helper.set_menu('base')
-            elif self._show_stats:
-                self._show_stats = False
+            self.menu_helper.set_menu('base')
+            self._show_stats = False
 
         self.menu_helper = MenuHelper(self, accept_cb, reject_cb)
         self.menu_helper.menus = {
