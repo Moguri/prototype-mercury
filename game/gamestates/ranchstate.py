@@ -110,6 +110,7 @@ class RanchState(GameState):
             'base': [
                 ('Combat', self.enter_combat, []),
                 ('Monster Stats', self.show_stats, []),
+                ('Train', self.train, []),
                 ('Change Job', self.menu_helper.set_menu, ['jobs']),
                 ('Save Game', base.change_state, ['Save']),
                 ('Load Game', base.change_state, ['Load']),
@@ -232,3 +233,15 @@ class RanchState(GameState):
         self.player.monsters[0].job = job
         self.display_message('')
         self.menu_helper.set_menu('base')
+
+    def train(self):
+        if not self.player.monsters:
+            return
+
+        monster = self.player.monsters[0]
+        job = monster.job
+        monster.job_levels[job.id] += 1
+        self.display_message(
+            f'{job.name} raised to level  {monster.job_levels[job.id]}',
+            modal=True
+        )

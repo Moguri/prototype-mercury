@@ -67,6 +67,8 @@ class Monster:
         if not self.can_use_job(value):
             raise RuntimeError(f'tag requirements unsatisfied: {value.required_tags}')
         self._monsterdata.job = value
+        if value.id not in self.job_levels:
+            self.job_levels[value.id] = 1
 
     @property
     def ability_points(self):

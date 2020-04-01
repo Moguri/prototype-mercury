@@ -37,3 +37,4 @@ def test_job_assignment(monster, gdb):
     monster.job_levels['bobcatshark'] = 2
     assert monster.can_use_job(job)
     monster.job = job
+    assert monster.job_levels[job.id] == 1
