@@ -23,6 +23,36 @@
             },
             "uniqueItems": true,
             "default": []
+        },
+        "hp_affinity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "physical_attack_affinity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "magical_attack_affinity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "defense_affinity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "evasion_affinity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "accuracy_affinity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
         }
     }
 }

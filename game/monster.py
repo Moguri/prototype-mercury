@@ -14,10 +14,17 @@ class Monster:
         self._monsterdata = monsterdata
 
     def __getattr__(self, name):
+        gdb = gamedb.get_instance()
         if name == 'hit_points':
             name = 'hp'
         if name in self.BASE_STATS:
-            return getattr(self.breed, name)
+            base_stat = getattr(self.breed, name)
+            breed_contrib = getattr(self.breed, f'{name}_affinity') * self.level * 5
+            job_contrib = 0
+            for job, level in self.job_levels.items():
+                job = gdb['jobs'][job]
+                job_contrib += getattr(job, f'{name}_affinity') * level * 5
+            return base_stat + breed_contrib + job_contrib
         return getattr(self._monsterdata, name)
 
     def to_dict(self, skip_extras=False):

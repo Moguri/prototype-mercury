@@ -12,12 +12,12 @@ def test_level(monster):
 
 def test_stats(monster):
     stats = {
-        'hit_points': 100,
-        "physical_attack": 100,
-        "magical_attack": 100,
-        "defense": 100,
-        "evasion": 100,
-        "accuracy": 100,
+        'hit_points': 115,
+        "physical_attack": 115,
+        "magical_attack": 110,
+        "defense": 110,
+        "evasion": 115,
+        "accuracy": 110,
     }
 
     for key, value in stats.items():
