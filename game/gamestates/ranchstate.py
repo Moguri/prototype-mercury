@@ -38,12 +38,65 @@ _BG_FRAG = """
 #version 130
 
 uniform sampler2D tex;
+uniform float exposure_inv;
 in vec2 texcoord;
 
 out vec4 color;
 
 void main() {
-    color = vec4(texture2D(tex, texcoord).rgb, 1.0);
+    color = vec4(texture2D(tex, texcoord).rgb, 1.0) * exposure_inv;
+}
+"""
+
+SHADOW_CATCH_V = """
+#version 130
+
+#define MAX_LIGHTS 8
+
+uniform struct p3d_LightSourceParameters {
+    sampler2DShadow shadowMap;
+    mat4 shadowViewMatrix;
+} p3d_LightSource[MAX_LIGHTS];
+
+uniform mat4 p3d_ModelViewProjectionMatrix;
+uniform mat4 p3d_ModelViewMatrix;
+uniform mat3 p3d_NormalMatrix;
+
+in vec4 p3d_Vertex;
+
+out vec4 v_shadow_pos[MAX_LIGHTS];
+
+void main() {
+    vec4 vert_pos4 = p3d_ModelViewMatrix * p3d_Vertex;
+    for (int i = 0; i < p3d_LightSource.length(); ++i) {
+        v_shadow_pos[i] = p3d_LightSource[i].shadowViewMatrix * vert_pos4;
+    }
+    gl_Position = p3d_ModelViewProjectionMatrix * p3d_Vertex;
+}
+"""
+
+SHADOW_CATCH_F = """
+#version 130
+
+#define MAX_LIGHTS 8
+
+uniform struct p3d_LightSourceParameters {
+    sampler2DShadow shadowMap;
+    mat4 shadowViewMatrix;
+} p3d_LightSource[MAX_LIGHTS];
+
+in vec4 v_shadow_pos[MAX_LIGHTS];
+out vec4 color;
+
+void main() {
+    color = vec4(1.0, 1.0, 1.0, 0.5);
+    for (int i = 0; i < p3d_LightSource.length(); ++i) {
+        float shadow = shadow2DProj(p3d_LightSource[i].shadowMap, v_shadow_pos[i]).r;
+        color.rgb *= shadow;
+    }
+    if (color.r > 0.0) {
+        discard;
+    }
 }
 """
 
@@ -60,12 +113,49 @@ class RanchState(GameState):
         self.load_monster_model()
 
         # Setup lighting
-        self.light = p3d.DirectionalLight('dlight')
-        self.light.set_color((3, 3, 3, 1))
-        self.lightnp = self.root_node.attach_new_node(self.light)
-        self.lightnp.set_pos(-2, -4, 4)
-        self.lightnp.look_at(0, 0, 0)
-        self.root_node.set_light(self.lightnp)
+        key_light = p3d.DirectionalLight('sun')
+        key_light.color_temperature = 6000
+        key_lightnp = self.root_node.attach_new_node(key_light)
+        key_lightnp.set_pos(0, -15, 15)
+        key_lightnp.look_at(0, 0, 0)
+        base.render.set_light(key_lightnp)
+
+        fill_light = p3d.DirectionalLight('fill light')
+        fill_light.color_temperature = 4800
+        fill_light.color = key_light.color * 0.5
+        fill_lightnp = self.root_node.attach_new_node(fill_light)
+        fill_lightnp.set_pos(-20, 0, 10)
+        fill_lightnp.look_at(0, 0, 0)
+        base.render.set_light(fill_lightnp)
+
+        back_light = p3d.DirectionalLight('fill light')
+        back_light.color_temperature = 4800
+        back_light.color = key_light.color * 0.25
+        back_lightnp = self.root_node.attach_new_node(back_light)
+        back_lightnp.set_pos(20, 20, 0)
+        back_lightnp.look_at(0, 0, 0)
+        base.render.set_light(back_lightnp)
+
+        # Setup shadows
+        key_light.set_shadow_caster(True, 4096, 4096)
+        light_lens = key_light.get_lens()
+        light_lens.set_film_size(15, 15)
+        light_lens.far = 40
+
+        # Setup plane to catch shadows
+        if p3d.ConfigVariableBool('enable-shadows').get_value():
+            shadow_catcher = p3d.CardMaker('shadow_catcher').generate()
+            shadow_catcher = self.root_node.attach_new_node(shadow_catcher)
+            shadow_catcher.set_p(-90)
+            shadow_catcher.set_scale(30)
+            shadow_catcher.set_pos(-15, -15, 0)
+            shadow_catcher.flatten_strong()
+            shadow_catcher.set_transparency(p3d.TransparencyAttrib.M_alpha)
+            shadow_catcher.set_shader(p3d.Shader.make(
+                p3d.Shader.SL_GLSL,
+                SHADOW_CATCH_V,
+                SHADOW_CATCH_F
+            ))
 
         # Setup backgrounds
         self.background_textures = {
@@ -79,6 +169,7 @@ class RanchState(GameState):
                 tex.set_format(p3d.Texture.F_srgb)
         self.background_image = self.root_node.attach_new_node(p3d.CardMaker('bgimg').generate())
         self.background_image.set_shader(p3d.Shader.make(p3d.Shader.SL_GLSL, _BG_VERT, _BG_FRAG))
+        self.background_image.set_shader_input('exposure_inv', 1.0 / 6.0)
         self.background_image.set_bin('background', 0)
         self.background_image.set_depth_test(False)
         self.background_image.set_depth_write(False)
