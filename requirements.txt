@@ -6,4 +6,4 @@ appdirs
 panda3d_pman
 panda3d-blend2bam
 panda3d-eventmapper
-panda3d-simplepbr
+panda3d-simplepbr~=0.5

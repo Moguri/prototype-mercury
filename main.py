@@ -30,13 +30,11 @@ class GameApp(ShowBase):
 
         # Render pipeline
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
-        # pylint: disable=assignment-from-no-return
-        pipeline = simplepbr.init(
+        simplepbr.init(
             msaa_samples=p3d.ConfigVariableInt('msaa-samples', 4).get_value(),
+            enable_shadows=p3d.ConfigVariableBool('enable_shadows', True).get_value(),
             exposure=6,
         )
-        if pipeline and hasattr(pipeline, 'enable_shadows'):
-            pipeline.enable_shadows = p3d.ConfigVariableBool('enable-shadows', True).get_value()
 
         # Controls
         self.event_mapper = eventmapper.EventMapper()
