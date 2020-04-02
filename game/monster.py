@@ -17,7 +17,7 @@ class Monster:
         if name == 'hit_points':
             name = 'hp'
         if name in self.BASE_STATS:
-            return getattr(self.breed, name) + getattr(self._monsterdata, f'{name}_offset')
+            return getattr(self.breed, name)
         return getattr(self._monsterdata, name)
 
     def to_dict(self, skip_extras=False):

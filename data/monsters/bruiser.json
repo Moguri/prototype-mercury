@@ -3,13 +3,6 @@
     "name": "Bruiser",
     "breed": "bobcatshark",
     "job": "bruiser",
-    "hp_offset": 100,
-    "ap_offset": 0,
-    "physical_attack_offset": 75,
-    "magical_attack_offset": -60,
-    "accuracy_offset": -20,
-    "evasion_offset": -30,
-    "defense_offset": 50,
     "job_levels": {
         "bobcatshark": 2,
         "bruiser": 1

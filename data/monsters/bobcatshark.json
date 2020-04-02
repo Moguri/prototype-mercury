@@ -3,13 +3,6 @@
     "name": "BobcatShark",
     "breed": "bobcatshark",
     "job": "bobcatshark",
-    "hp_offset": 0,
-    "ap_offset": 0,
-    "physical_attack_offset": 0,
-    "magical_attack_offset": 0,
-    "accuracy_offset": 0,
-    "evasion_offset": 0,
-    "defense_offset": 0,
     "job_levels": {
         "bobcatshark": 1
     }
