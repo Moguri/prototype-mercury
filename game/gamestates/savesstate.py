@@ -6,7 +6,6 @@ import panda3d.core as p3d
 from .. import pathutils
 from ..playerdata import PlayerData
 from .gamestate import GameState
-from .menuhelper import MenuHelper
 
 
 class BaseSavesState(GameState):
@@ -16,8 +15,6 @@ class BaseSavesState(GameState):
         confvar = p3d.ConfigVariableString('mercury-saves-dir', '$MAIN_DIR/saves')
         self.saves_dir = pathutils.parse_path(confvar.get_value())
         os.makedirs(self.saves_dir, exist_ok=True)
-
-        self.menu_helper = MenuHelper(self)
 
         self.saves = [
             PlayerData.load(open(os.path.join(self.saves_dir, filename)))
@@ -36,17 +33,6 @@ class BaseSavesState(GameState):
                 for i in sorted(self.saves, key=sort_access_key)
             }
         })
-
-    def cleanup(self):
-        super().cleanup()
-
-        self.menu_helper.cleanup()
-
-    def update(self, dt):
-        super().update(dt)
-
-        self.menu_helper.update_ui()
-
 
 class SaveState(BaseSavesState):
     def __init__(self):
