@@ -11,7 +11,7 @@ class GameState(DirectObject):
         super().__init__()
         self.root_node = p3d.NodePath('State Root')
         self.root_node.reparent_to(base.render)
-        self.menu_helper = MenuHelper(self)
+        self.menu_helper = MenuHelper(self.update_ui)
         self._input_state = None
 
     def cleanup(self):
@@ -45,4 +45,4 @@ class GameState(DirectObject):
         self.set_input_state(value)
 
     def update(self, _dt):
-        self.menu_helper.update_ui()
+        pass

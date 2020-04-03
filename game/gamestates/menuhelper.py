@@ -1,13 +1,11 @@
-import weakref
-
 from direct.showbase.DirectObject import DirectObject
 
 
 class MenuHelper(DirectObject):
-    def __init__(self, state, accept_cb=None, reject_cb=None):
+    def __init__(self, update_ui_fn, accept_cb=None, reject_cb=None):
         super().__init__()
 
-        self.state = weakref.proxy(state)
+        self.update_ui = update_ui_fn
         self.menus = {}
         self.menu_headings = {}
 
@@ -35,7 +33,7 @@ class MenuHelper(DirectObject):
     @show.setter
     def show(self, value):
         self._show = bool(value)
-        self.state.update_ui({
+        self.update_ui({
             'show_menu': self._show,
         })
 
@@ -45,11 +43,6 @@ class MenuHelper(DirectObject):
 
     def cleanup(self):
         self.ignoreAll()
-
-    def update_ui(self):
-        self.state.update_ui({
-            'selection_index': self.selection_idx,
-        })
 
     def move_selection(self, delta):
         if self.lock:
@@ -61,6 +54,10 @@ class MenuHelper(DirectObject):
             self.selection_idx = len(self.menu_items) - 1
         elif self.selection_idx >= len(self.menu_items):
             self.selection_idx = 0
+
+        self.update_ui({
+            'selection_index': self.selection_idx,
+        })
 
         if self.selection_change_cb is not None:
             # pylint: disable=not-callable
@@ -95,7 +92,7 @@ class MenuHelper(DirectObject):
         self.current_menu = new_menu
         self.menu_items = self.menus[new_menu]
         self.selection_idx = 0
-        self.state.update_ui({
+        self.update_ui({
             'menu_heading': self.menu_headings.get(new_menu, ''),
             'menu_items': [i[0] for i in self.menu_items],
         })
