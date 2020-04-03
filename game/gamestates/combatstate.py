@@ -11,7 +11,6 @@ from ..monster import Monster
 from ..combatant import Combatant
 
 from .gamestate import GameState
-from .menuhelper import MenuHelper
 from .commonlighting import CommonLighting
 
 class CombatState(GameState):
@@ -98,20 +97,11 @@ class CombatState(GameState):
         def reject_cb():
             if self.input_state == 'ACTION':
                 self.input_state = 'SELECT'
-        self.menu_helper = MenuHelper(self, None, reject_cb)
-        self.menu_helper.menus = {
-        }
-        self.menu_helper.menu_headings = {
-        }
-        self.menu_helper.show = False
+        self.menu_helper.reject_cb = reject_cb
         self.load_ui('combat')
 
         # Set initial input state
         self.input_state = 'SELECT'
-
-    def cleanup(self):
-        super().cleanup()
-        self.menu_helper.cleanup()
 
     @property
     def combatants(self):
@@ -345,8 +335,6 @@ class CombatState(GameState):
 
     def update(self, dt):
         super().update(dt)
-
-        self.menu_helper.update_ui()
 
         # Check for end condition
         if not self.get_remaining_player_combatants() or not self.get_remaining_enemy_combatants():

@@ -6,7 +6,6 @@ from .. import gamedb
 from ..monster import Monster
 
 from .gamestate import GameState
-from .menuhelper import MenuHelper
 from .commonlighting import CommonLighting
 
 
@@ -167,7 +166,8 @@ class RanchState(GameState):
             self.menu_helper.set_menu('base')
             self._show_stats = False
 
-        self.menu_helper = MenuHelper(self, accept_cb, reject_cb)
+        self.menu_helper.accept_cb = accept_cb
+        self.menu_helper.reject_cb = reject_cb
         self.menu_helper.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
@@ -205,11 +205,6 @@ class RanchState(GameState):
         self.load_ui('ranch')
 
         self.menu_helper.set_menu('base')
-
-    def cleanup(self):
-        super().cleanup()
-
-        self.menu_helper.cleanup()
 
     def load_monster_model(self):
         if self.monster_actor:
@@ -253,7 +248,6 @@ class RanchState(GameState):
         self.update_ui({
             'show_stats': self._show_stats,
         })
-        self.menu_helper.update_ui()
 
     def display_message(self, msg, modal=False):
         self.message = msg
