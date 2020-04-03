@@ -41,12 +41,12 @@ def ai_controller(combatant):
     return ai.Controller(combatant)
 
 @pytest.fixture
-def player():
+def player(monster):
     from game import playerdata
-    from game import gamedb
 
     player = playerdata.PlayerData()
-    player.monster = list(gamedb.get_instance()['monsters'].values())[0]
+    player.personal_tags.add('in_test')
+    player.monsters.append(monster)
 
     return player
 

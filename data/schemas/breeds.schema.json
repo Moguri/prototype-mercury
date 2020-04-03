@@ -7,6 +7,14 @@
         "name" : {
             "type": "string"
         },
+        "required_tags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "default": []
+        },
         "default_job" : {
             "type": "string"
         },

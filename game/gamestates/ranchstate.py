@@ -169,8 +169,6 @@ class RanchState(GameState):
             ],
             'monsters_market': [
                 ('Back', self.set_input_state, ['MAIN']),
-            ] + [
-                (breed.name, self.get_monster, [breed.id]) for breed in gdb['breeds'].values()
             ],
             'jobs': [
                 ('Back', self.set_input_state, ['MAIN']),
@@ -215,9 +213,23 @@ class RanchState(GameState):
             show_menu('base')
             self.set_background('base')
         elif next_state == 'MARKET':
-            show_menu('monsters_market')
+            def get_monster(breedid):
+                breed = gdb['breeds'][breedid]
+                self.player.monsters.append(
+                    Monster.make_new('player.monster', breed.name, breed.id)
+                )
+                self.load_monster_model()
+                back_to_main()
+            self.menu_helper.menus['monsters_market'] = [
+                ('Back', back_to_main, []),
+            ] + [
+                (breed.name, get_monster, [breed.id])
+                for breed in gdb['breeds'].values()
+                if self.player.can_use_breed(breed)
+            ]
             self.display_message('Select a breed')
             self.set_background('market')
+            show_menu('monsters_market')
         elif next_state == 'STATS':
             self.update_ui({
                 'show_stats': True,
@@ -247,7 +259,7 @@ class RanchState(GameState):
                 self.display_message('')
                 back_to_main()
             self.menu_helper.menus['jobs'] = [
-                ('Back', back_to_main),
+                ('Back', back_to_main, []),
             ] + [
                 (job.name, change_job, [job.id])
                 for job in gdb['jobs'].values()
@@ -292,12 +304,3 @@ class RanchState(GameState):
             self.player.monsters[0].id
         ]
         base.change_state('Combat')
-
-    def get_monster(self, breedid):
-        gdb = gamedb.get_instance()
-        breed = gdb['breeds'][breedid]
-        self.player.monsters.append(
-            Monster.make_new('player.monster', breed.name, breed.id)
-        )
-        self.load_monster_model()
-        self.input_state = 'MAIN'

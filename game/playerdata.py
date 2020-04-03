@@ -12,6 +12,7 @@ class PlayerData:
         self.monsters = []
         self.saveid = uuid.uuid4().hex
         self.last_access_time = datetime.datetime.now().isoformat()
+        self.personal_tags = set()
 
     def to_dict(self):
         return {
@@ -26,6 +27,15 @@ class PlayerData:
             'id': self.saveid,
             'trainer_name': self.name,
             'last_access_time': self.last_access_time,
+        }
+
+    def can_use_breed(self, breed):
+        return set(breed.required_tags).issubset(self.tags)
+
+    @property
+    def tags(self):
+        return self.personal_tags | {
+            tag for monster in self.monsters for tag in monster.tags
         }
 
     def save(self, file_object):

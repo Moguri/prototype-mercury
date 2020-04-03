@@ -1,6 +1,9 @@
 {
     "id": "bobcatshark",
     "name": "BobcatShark",
+    "required_tags": [
+        "in_test"
+    ],
     "default_job": "bobcatshark",
     "bam_file": "clay_golem",
     "root_node": "ClayGolemArm",
