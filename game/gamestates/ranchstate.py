@@ -237,12 +237,14 @@ class RanchState(GameState):
                 self.player.monsters[0].job = job
                 self.display_message('')
                 back_to_main()
+
+            playermon = self.player.monsters[0]
             self.menu_helper.set_menu('Select a Job', [
                 ('Back', back_to_main, []),
             ] + [
                 (job.name, change_job, [job.id])
                 for job in gdb['jobs'].values()
-                if self.player.monsters[0].can_use_job(job)
+                if playermon.job.id != job.id and playermon.can_use_job(job)
             ])
         elif next_state == 'COMBAT':
             base.blackboard['monsters'] = [
