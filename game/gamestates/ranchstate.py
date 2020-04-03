@@ -193,19 +193,22 @@ class RanchState(GameState):
                 )
                 self.load_monster_model()
                 back_to_main()
-            self.menu_helper.set_menu('Select a Breed', [
-                ('Back', back_to_main, []),
-            ] + [
+            menu_items = [
                 (breed.name, get_monster, [breed.id])
                 for breed in gdb['breeds'].values()
                 if self.player.can_use_breed(breed)
-            ])
+            ]
+            if self.player.monsters:
+                menu_items.insert(0, ('Back', back_to_main, []))
+            self.menu_helper.set_menu('Select a Breed', menu_items)
 
-            def show_breed(_idx):
-                if self.menu_helper.selection_idx == 0:
+            def show_breed(_idx=None):
+                selection = self.menu_helper.current_selection
+                if selection[0] == 'Back':
                     return
-                breed = gdb['breeds'][self.menu_helper.current_selection[2][0]]
+                breed = gdb['breeds'][selection[2][0]]
                 self.load_monster_model(breed)
+            show_breed()
             self.menu_helper.selection_change_cb = show_breed
             self.display_message('Select a breed')
             self.set_background('market')
