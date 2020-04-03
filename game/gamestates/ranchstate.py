@@ -153,7 +153,7 @@ class RanchState(GameState):
         # UI
         self.menu_helper.menus = {
             'base': [
-                ('Combat', self.enter_combat, []),
+                ('Combat', self.set_input_state, ['COMBAT']),
                 ('Monster Stats', self.set_input_state, ['STATS']),
                 ('Train', self.set_input_state, ['TRAIN']),
                 ('Change Job', self.set_input_state, ['JOBS']),
@@ -263,6 +263,11 @@ class RanchState(GameState):
                 if self.player.monsters[0].can_use_job(job)
             ]
             show_menu('jobs')
+        elif next_state == 'COMBAT':
+            base.blackboard['monsters'] = [
+                self.player.monsters[0].id
+            ]
+            base.change_state('Combat')
         else:
             raise RuntimeError(f'Unknown state {next_state}')
 
@@ -295,9 +300,3 @@ class RanchState(GameState):
             'message': self.message,
             'message_modal': self.message_modal,
         })
-
-    def enter_combat(self):
-        base.blackboard['monsters'] = [
-            self.player.monsters[0].id
-        ]
-        base.change_state('Combat')
