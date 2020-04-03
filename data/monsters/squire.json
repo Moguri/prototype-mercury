@@ -1,0 +1,9 @@
+{
+    "id": "squire",
+    "name": "Squire",
+    "breed": "claygolem",
+    "job": "squire",
+    "job_levels": {
+        "squire": 1
+    }
+}
