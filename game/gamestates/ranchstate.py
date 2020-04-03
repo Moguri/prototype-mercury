@@ -302,19 +302,35 @@ class RanchState(GameState):
 
         if breeds is None:
             breeds = [i.breed for i in self.player.monsters]
+            labels = [i.name for i in self.player.monsters]
+        else:
+            labels = ['' * len(breeds)]
 
 
         stride = 2
         offset = 0
-        for breed in breeds:
+        for breed, labelstr in zip(breeds, labels):
             model = base.loader.load_model('{}.bam'.format(breed.bam_file))
             actor = Actor(model.find('**/{}'.format(breed.root_node)))
             actor.set_h(-135)
             actor.set_pos(self.monsters_root, p3d.LVector3(offset, 0, 0))
             actor.loop(breed.anim_map['idle'])
             actor.reparent_to(self.monsters_root)
-            offset += stride
             self.monster_actors.append(actor)
+
+            label = p3d.TextNode('monster label')
+            label.set_align(p3d.TextNode.ACenter)
+            label.set_text(labelstr)
+            labelnp = actor.attach_new_node(label)
+            labelnp.set_pos(0, 0, 2.3)
+            labelnp.set_scale(0.2)
+            labelnp.set_billboard_point_eye()
+            labelnp.set_bin("fixed", 0)
+            labelnp.set_depth_test(False)
+            labelnp.set_depth_write(False)
+            labelnp.set_shader_auto(True)
+
+            offset += stride
         self.lighting.recalc_bounds(self.monsters_root)
 
     def set_background(self, bgname):
