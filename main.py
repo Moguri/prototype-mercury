@@ -42,6 +42,7 @@ class GameApp(ShowBase):
         self.accept('quit', sys.exit)
         self.accept('toggle-buffer-viewer', self.bufferViewer.toggleEnable)
         self.accept('toggle-oobe', self.oobe)
+        self.accept('save-screenshot', self.screenshot)
 
         # Global storage
         self.blackboard = {

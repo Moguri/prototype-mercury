@@ -3,6 +3,7 @@
 event-map-item-quit escape
 event-map-item-toggle-buffer-viewer f1
 event-map-item-toggle-oobe f2
+event-map-item-save-screenshot f3
 
 event-map-item-accept raw-space raw-enter gamepad0-action_a
 event-map-item-reject raw-backspace gamepad0-action_b
