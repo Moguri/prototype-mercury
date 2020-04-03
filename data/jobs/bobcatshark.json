@@ -7,6 +7,9 @@
         "flying_fist",
         "gust"
     ],
+    "required_tags": [
+        "breed_bobcatshark"
+    ],
     "hp_affinity": 2,
     "physical_attack_affinity": 2,
     "magical_attack_affinity": 1,
