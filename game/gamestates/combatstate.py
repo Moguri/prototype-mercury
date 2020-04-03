@@ -96,10 +96,6 @@ class CombatState(GameState):
         base.camera.look_at(self.tile_coord_to_world(*arena_center))
 
         # Setup UI
-        def reject_cb():
-            if self.input_state == 'ACTION':
-                self.input_state = 'SELECT'
-        self.menu_helper.reject_cb = reject_cb
         self.load_ui('combat')
 
         # Set initial input state
@@ -116,6 +112,10 @@ class CombatState(GameState):
     def set_input_state(self, next_state):
         self.display_message('')
         super().set_input_state(next_state)
+        def mh_reject_cb():
+            if self.input_state == 'ACTION':
+                self.input_state = 'SELECT'
+        self.menu_helper.reject_cb = mh_reject_cb
         def show_menu(menu):
             self.menu_helper.set_menu(menu)
             self.menu_helper.lock = False

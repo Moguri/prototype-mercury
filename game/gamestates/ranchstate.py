@@ -205,7 +205,6 @@ class RanchState(GameState):
         def back_to_main():
             self.input_state = 'MAIN'
         self.menu_helper.reject_cb = back_to_main
-        self.menu_helper.selection_change_cb = None
 
         if next_state == 'MAIN':
             show_menu('base')

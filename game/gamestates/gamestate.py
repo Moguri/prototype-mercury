@@ -32,6 +32,9 @@ class GameState(DirectObject):
         self.menu_helper.show = False
         self.menu_helper.lock = True
         self.menu_helper.selection_idx = 0
+        self.menu_helper.accept_cb = None
+        self.menu_helper.reject_cb = None
+        self.menu_helper.selection_change_cb = None
 
     @property
     def input_state(self):
