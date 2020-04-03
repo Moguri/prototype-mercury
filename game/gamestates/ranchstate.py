@@ -185,7 +185,10 @@ class RanchState(GameState):
         self.load_ui('ranch')
 
         # Set initial input state
-        self.input_state = 'MAIN'
+        if self.player.monsters:
+            self.input_state = 'MAIN'
+        else:
+            self.input_state = 'MARKET'
 
     def set_input_state(self, next_state):
         self.display_message('')
