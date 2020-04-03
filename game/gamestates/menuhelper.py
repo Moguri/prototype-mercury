@@ -17,15 +17,16 @@ class MenuHelper(DirectObject):
         self.lock = False
         self._show = True
 
-        self.accept('move-down', self.increment_selection)
-        self.accept('move-up', self.decrement_selection)
-        self.accept('move-right', self.increment_selection)
-        self.accept('move-left', self.decrement_selection)
+        self.accept('move-down', self.move_selection, [1])
+        self.accept('move-up', self.move_selection, [-1])
+        self.accept('move-right', self.move_selection, [1])
+        self.accept('move-left', self.move_selection, [-1])
         self.accept('accept', self.accept_selection)
         self.accept('reject', self.reject_selection)
 
         self.accept_cb = accept_cb
         self.reject_cb = reject_cb
+        self.selection_change_cb = None
 
     @property
     def show(self):
@@ -38,6 +39,10 @@ class MenuHelper(DirectObject):
             'show_menu': self._show,
         })
 
+    @property
+    def current_selection(self):
+        return self.menu_items[self.selection_idx]
+
     def cleanup(self):
         self.ignoreAll()
 
@@ -46,21 +51,20 @@ class MenuHelper(DirectObject):
             'selection_index': self.selection_idx,
         })
 
-    def increment_selection(self):
+    def move_selection(self, delta):
         if self.lock:
             return
 
-        self.selection_idx += 1
-        if self.selection_idx >= len(self.menu_items):
-            self.selection_idx = 0
+        self.selection_idx += delta
 
-    def decrement_selection(self):
-        if self.lock:
-            return
-
-        self.selection_idx -= 1
         if self.selection_idx < 0:
             self.selection_idx = len(self.menu_items) - 1
+        elif self.selection_idx >= len(self.menu_items):
+            self.selection_idx = 0
+
+        if self.selection_change_cb is not None:
+            # pylint: disable=not-callable
+            self.selection_change_cb(self.selection_idx)
 
     def accept_selection(self):
         if not self.menu_items:
