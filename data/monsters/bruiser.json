@@ -1,7 +1,7 @@
 {
     "id": "bruiser",
     "name": "Bruiser",
-    "breed": "bobcatshark",
+    "breed": "claygolem",
     "job": "bruiser",
     "job_levels": {
         "bobcatshark": 2,
