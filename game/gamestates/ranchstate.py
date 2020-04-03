@@ -169,7 +169,7 @@ class RanchState(GameState):
                 tex.set_format(p3d.Texture.F_srgb)
         self.background_image = self.root_node.attach_new_node(p3d.CardMaker('bgimg').generate())
         self.background_image.set_shader(p3d.Shader.make(p3d.Shader.SL_GLSL, _BG_VERT, _BG_FRAG))
-        self.background_image.set_shader_input('exposure_inv', 1.0 / 6.0)
+        self.background_image.set_shader_input('exposure_inv', 1.0 / base.render_pipeline.exposure)
         self.background_image.set_bin('background', 0)
         self.background_image.set_depth_test(False)
         self.background_image.set_depth_write(False)

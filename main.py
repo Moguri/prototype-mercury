@@ -30,7 +30,7 @@ class GameApp(ShowBase):
 
         # Render pipeline
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
-        simplepbr.init(
+        self.render_pipeline = simplepbr.init(
             msaa_samples=p3d.ConfigVariableInt('msaa-samples', 4).get_value(),
             enable_shadows=p3d.ConfigVariableBool('enable-shadows', True).get_value(),
             exposure=6,

@@ -59,7 +59,6 @@ def state_manager():
 def app():
     from direct.showbase.ShowBase import ShowBase
     import pman.shim
-    import eventmapper
     from game import playerdata
     from game import gamedb
 
@@ -77,10 +76,15 @@ def app():
             self.blackboard = {
                 'player': player,
             }
-            self.ui = MagicMock()
-            self.event_mapper = eventmapper.EventMapper()
-
             self.camera = p3d.NodePath('camera')
+            class Pipeline:
+                def __init__(self):
+                    self.exposure = 6
+            self.render_pipeline = Pipeline()
+
+            self.ui = MagicMock()
+            self.event_mapper = MagicMock()
+
         def change_state(self, next_state):
             pass
         def change_to_previous_state(self):
