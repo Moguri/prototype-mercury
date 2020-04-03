@@ -106,13 +106,17 @@ class RanchState(GameState):
         super().__init__()
 
         self.player = base.blackboard['player']
+        self.monster_selection = 0
 
         # Setup lighting
-        self.lighting = CommonLighting(self.root_node, calc_shadow_bounds=False)
+        self.lights_root = self.root_node.attach_new_node('light root')
+        self.lighting = CommonLighting(self.lights_root, calc_shadow_bounds=False)
+        self.lights_root.set_h(45)
 
         # Load and display the monster model
-        self.monster_actor = None
-        self.load_monster_model()
+        self.monster_actors = []
+        self.monsters_root = self.root_node.attach_new_node('monsters')
+        self.load_monster_models()
 
         # Setup plane to catch shadows
         if p3d.ConfigVariableBool('enable-shadows').get_value():
@@ -147,7 +151,7 @@ class RanchState(GameState):
         self.background_image.set_depth_write(False)
 
         # Setup Camera
-        base.camera.set_pos(-3, -5, 5)
+        base.camera.set_pos(0, -5, 5)
         base.camera.look_at(0, 0, 1)
 
         # UI
@@ -191,7 +195,7 @@ class RanchState(GameState):
                 self.player.monsters.append(
                     Monster.make_new('player.monster', breed.name, breed.id)
                 )
-                self.load_monster_model()
+                self.load_monster_models()
                 back_to_main()
             menu_items = [
                 (breed.name, get_monster, [breed.id])
@@ -207,7 +211,7 @@ class RanchState(GameState):
                 if selection[0] == 'Back':
                     return
                 breed = gdb['breeds'][selection[2][0]]
-                self.load_monster_model(breed)
+                self.load_monster_models([breed])
             show_breed()
             self.menu_helper.selection_change_cb = show_breed
             self.display_message('Select a breed')
@@ -216,15 +220,15 @@ class RanchState(GameState):
             self.update_ui({
                 'show_stats': True,
             })
-            monsterdict = self.player.monsters[0].to_dict()
-            monsterdict['breed'] = self.player.monsters[0].breed.name
-            monsterdict['job'] = self.player.monsters[0].job.name
+            monsterdict = self.current_monster.to_dict()
+            monsterdict['breed'] = self.current_monster.breed.name
+            monsterdict['job'] = self.current_monster.job.name
             self.update_ui({
                 'monster': monsterdict
             })
             self.accept('accept', back_to_main)
         elif next_state == 'TRAIN':
-            monster = self.player.monsters[0]
+            monster = self.current_monster
             job = monster.job
             monster.job_levels[job.id] += 1
             self.display_message(
@@ -237,21 +241,20 @@ class RanchState(GameState):
             def change_job(jobid):
                 gdb = gamedb.get_instance()
                 job = gdb['jobs'][jobid]
-                self.player.monsters[0].job = job
+                self.current_monster.job = job
                 self.display_message('')
                 back_to_main()
 
-            playermon = self.player.monsters[0]
             self.menu_helper.set_menu('Select a Job', [
                 ('Back', back_to_main, []),
             ] + [
                 (job.name, change_job, [job.id])
                 for job in gdb['jobs'].values()
-                if playermon.job.id != job.id and playermon.can_use_job(job)
+                if self.current_monster.job.id != job.id and self.current_monster.can_use_job(job)
             ])
         elif next_state == 'COMBAT':
             base.blackboard['monsters'] = [
-                self.player.monsters[0].id
+                self.current_monster.id
             ]
             base.change_state('Combat')
         elif next_state == 'QUIT':
@@ -265,24 +268,28 @@ class RanchState(GameState):
 
         self._input_state = next_state
 
-    def load_monster_model(self, breed=None):
-        if self.monster_actor:
-            self.monster_actor.cleanup()
-            self.monster_actor.remove_node()
-        self.monster_actor = None
+    def load_monster_models(self, breeds=None):
+        for monact in self.monster_actors:
+            monact.cleanup()
+            monact.remove_node()
+        self.monster_actors = []
 
-        if breed is None and self.player.monsters:
-            breed = self.player.monsters[0].breed
+        if breeds is None:
+            breeds = [i.breed for i in self.player.monsters]
 
-        if breed is None:
-            return
 
-        monster_model = base.loader.load_model('{}.bam'.format(breed.bam_file))
-        self.monster_actor = Actor(monster_model.find('**/{}'.format(breed.root_node)))
-        self.monster_actor.set_h(180)
-        self.monster_actor.loop(breed.anim_map['idle'])
-        self.monster_actor.reparent_to(self.root_node)
-        self.lighting.recalc_bounds(self.monster_actor)
+        stride = 2
+        offset = 0
+        for breed in breeds:
+            model = base.loader.load_model('{}.bam'.format(breed.bam_file))
+            actor = Actor(model.find('**/{}'.format(breed.root_node)))
+            actor.set_h(-135)
+            actor.set_pos(self.monsters_root, p3d.LVector3(offset, 0, 0))
+            actor.loop(breed.anim_map['idle'])
+            actor.reparent_to(self.monsters_root)
+            offset += stride
+            self.monster_actors.append(actor)
+        self.lighting.recalc_bounds(self.monsters_root)
 
     def set_background(self, bgname):
         self.background_image.set_shader_input('tex', self.background_textures[bgname])
@@ -295,3 +302,9 @@ class RanchState(GameState):
             'message': self.message,
             'message_modal': self.message_modal,
         })
+
+    @property
+    def current_monster(self):
+        if not self.player.monsters:
+            return None
+        return self.player.monsters[self.monster_selection]
