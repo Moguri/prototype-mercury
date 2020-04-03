@@ -49,7 +49,11 @@ class CombatState(GameState):
         self.range_tiles = []
 
         # Combatants
-        available_monsters = [i for i in list(gdb['monsters'].values()) if i.id != 'player_monster']
+        available_monsters = [
+            i
+            for i in list(gdb['monsters'].values())
+            if i.id not in ('player_monster', 'bobcatshark')
+        ]
         monsters = [
             random.choice(available_monsters),
             random.choice(available_monsters),

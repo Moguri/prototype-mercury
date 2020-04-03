@@ -48,7 +48,7 @@ class GameApp(ShowBase):
         self.blackboard = {
             'player': PlayerData(),
         }
-        default_monster = Monster.make_new('player_monster', 'Default', 'bobcatshark')
+        default_monster = Monster.make_new('player_monster', 'Default', 'claygolem')
         self.blackboard['player'].monsters = [default_monster]
 
         # UI
