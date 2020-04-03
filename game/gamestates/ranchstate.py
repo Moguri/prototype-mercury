@@ -151,34 +151,6 @@ class RanchState(GameState):
         base.camera.look_at(0, 0, 1)
 
         # UI
-        self.menu_helper.menus = {
-            'base': [
-                ('Combat', self.set_input_state, ['COMBAT']),
-                ('Monster Stats', self.set_input_state, ['STATS']),
-                ('Train', self.set_input_state, ['TRAIN']),
-                ('Change Job', self.set_input_state, ['JOBS']),
-                ('Save Game', base.change_state, ['Save']),
-                ('Load Game', base.change_state, ['Load']),
-                ('Quit', self.menu_helper.set_menu, ['quit']),
-            ],
-            'monsters_market': [
-                ('Back', self.set_input_state, ['MAIN']),
-            ],
-            'jobs': [
-                ('Back', self.set_input_state, ['MAIN']),
-            ],
-            'quit': [
-                ('Back', self.set_input_state, ['MAIN']),
-                ('Exit to Title Menu', base.change_state, ['Title']),
-                ('Exit Game', messenger.send, ['escape']),
-            ],
-        }
-        self.menu_helper.menu_headings = {
-            'base': 'Ranch',
-            'monsters_market': 'Select a Breed',
-            'quit': '',
-        }
-
         self.message = ""
         self.message_modal = False
 
@@ -197,17 +169,21 @@ class RanchState(GameState):
         self.update_ui({
             'show_stats': False,
         })
-        def show_menu(menu):
-            self.menu_helper.set_menu(menu)
-            self.menu_helper.lock = False
-            self.menu_helper.show = True
 
         def back_to_main():
             self.input_state = 'MAIN'
         self.menu_helper.reject_cb = back_to_main
 
         if next_state == 'MAIN':
-            show_menu('base')
+            self.menu_helper.set_menu('Ranch', [
+                ('Combat', self.set_input_state, ['COMBAT']),
+                ('Monster Stats', self.set_input_state, ['STATS']),
+                ('Train', self.set_input_state, ['TRAIN']),
+                ('Change Job', self.set_input_state, ['JOBS']),
+                ('Save Game', base.change_state, ['Save']),
+                ('Load Game', base.change_state, ['Load']),
+                ('Quit', self.set_input_state, ['QUIT']),
+            ])
             self.set_background('base')
         elif next_state == 'MARKET':
             def get_monster(breedid):
@@ -217,13 +193,13 @@ class RanchState(GameState):
                 )
                 self.load_monster_model()
                 back_to_main()
-            self.menu_helper.menus['monsters_market'] = [
+            self.menu_helper.set_menu('Select a Breed', [
                 ('Back', back_to_main, []),
             ] + [
                 (breed.name, get_monster, [breed.id])
                 for breed in gdb['breeds'].values()
                 if self.player.can_use_breed(breed)
-            ]
+            ])
 
             def show_breed(_idx):
                 if self.menu_helper.selection_idx == 0:
@@ -233,7 +209,6 @@ class RanchState(GameState):
             self.menu_helper.selection_change_cb = show_breed
             self.display_message('Select a breed')
             self.set_background('market')
-            show_menu('monsters_market')
         elif next_state == 'STATS':
             self.update_ui({
                 'show_stats': True,
@@ -262,19 +237,24 @@ class RanchState(GameState):
                 self.player.monsters[0].job = job
                 self.display_message('')
                 back_to_main()
-            self.menu_helper.menus['jobs'] = [
+            self.menu_helper.set_menu('Select a Job', [
                 ('Back', back_to_main, []),
             ] + [
                 (job.name, change_job, [job.id])
                 for job in gdb['jobs'].values()
                 if self.player.monsters[0].can_use_job(job)
-            ]
-            show_menu('jobs')
+            ])
         elif next_state == 'COMBAT':
             base.blackboard['monsters'] = [
                 self.player.monsters[0].id
             ]
             base.change_state('Combat')
+        elif next_state == 'QUIT':
+            self.menu_helper.set_menu('', [
+                ('Back', self.set_input_state, ['MAIN']),
+                ('Exit to Title Menu', base.change_state, ['Title']),
+                ('Exit Game', messenger.send, ['escape']),
+            ])
         else:
             raise RuntimeError(f'Unknown state {next_state}')
 

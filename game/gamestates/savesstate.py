@@ -40,15 +40,12 @@ class SaveState(BaseSavesState):
 
         self.player = base.blackboard.get('player', PlayerData())
 
-        self.menu_helper.menus = {
-            'base': [
-                ('Back', base.change_to_previous_state, []),
-                ('New Save', self.do_save, [self.player]),
-            ] + [
-                (i.saveid, self.do_save, [i]) for i in self.saves
-            ],
-        }
-        self.menu_helper.set_menu('base')
+        self.menu_helper.set_menu('', [
+            ('Back', base.change_to_previous_state, []),
+            ('New Save', self.do_save, [self.player]),
+        ] + [
+            (i.saveid, self.do_save, [i]) for i in self.saves
+        ])
 
     def do_save(self, save):
         savename = '{}-{}'.format(save.name, save.saveid)
@@ -63,14 +60,11 @@ class LoadState(BaseSavesState):
     def __init__(self):
         super().__init__(False)
 
-        self.menu_helper.menus = {
-            'base': [
-                ('Back', base.change_to_previous_state, []),
-            ] + [
-                (i.saveid, self.do_load, [i]) for i in self.saves
-            ],
-        }
-        self.menu_helper.set_menu('base')
+        self.menu_helper.set_menu('', [
+            ('Back', base.change_to_previous_state, []),
+        ] + [
+            (i.saveid, self.do_load, [i]) for i in self.saves
+        ])
 
     def do_load(self, save):
         base.blackboard['player'] = save

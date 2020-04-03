@@ -112,14 +112,7 @@ class CombatState(GameState):
     def set_input_state(self, next_state):
         self.display_message('')
         super().set_input_state(next_state)
-        def mh_reject_cb():
-            if self.input_state == 'ACTION':
-                self.input_state = 'SELECT'
-        self.menu_helper.reject_cb = mh_reject_cb
-        def show_menu(menu):
-            self.menu_helper.set_menu(menu)
-            self.menu_helper.lock = False
-            self.menu_helper.show = True
+
         def setup_selection(accept_cb, reject_cb=None):
             self.accept('move-up', self.move_selection, [(0, 1)])
             self.accept('move-left', self.move_selection, [(-1, 0)])
@@ -145,20 +138,21 @@ class CombatState(GameState):
             def use_ability(ability):
                 self.input_state = 'TARGET'
                 self.selected_ability = ability
-            self.menu_helper.menus['action'] = [
+            self.menu_helper.set_menu('Select an Action', [
                 ('Move', self.set_input_state, ['MOVE']),
             ] + [
                 (ability.name, use_ability, [ability])
                 for ability in self.selected_combatant.abilities
-            ]
+            ])
             def update_ability(idx):
                 if idx == 0:
                     self.selected_ability = None
                 else:
                     self.selected_ability = self.selected_combatant.abilities[idx - 1]
             self.menu_helper.selection_change_cb = update_ability
-            show_menu('action')
-            self.display_message('Select an action')
+            def action_reject():
+                self.input_state = 'SELECT'
+            self.menu_helper.reject_cb = action_reject
         elif next_state == 'MOVE':
             def accept_move():
                 selection = self.combatant_in_tile(self.selected_tile)
