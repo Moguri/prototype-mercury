@@ -377,7 +377,8 @@ class RanchState(GameState):
 
             offset += stride
 
-        self.lighting.recalc_bounds(self.monsters_root)
+        if self.monster_actors:
+            self.lighting.recalc_bounds(self.monsters_root)
 
     def set_background(self, bgname):
         self.background_image.set_shader_input('tex', self.background_textures[bgname])
