@@ -12,6 +12,7 @@ class GameState(DirectObject):
         self.root_node = p3d.NodePath('State Root')
         self.root_node.reparent_to(base.render)
         self.menu_helper = MenuHelper(self)
+        self._input_state = None
 
     def cleanup(self):
         self.ignoreAll()
@@ -25,6 +26,20 @@ class GameState(DirectObject):
 
     def update_ui(self, state_data):
         base.ui.execute_js('update_state({})'.format(json.dumps(state_data)), onload=True)
+
+    def set_input_state(self, _next_state):
+        self.ignore_all()
+        self.menu_helper.show = False
+        self.menu_helper.lock = True
+        self.menu_helper.selection_idx = 0
+
+    @property
+    def input_state(self):
+        return self._input_state
+
+    @input_state.setter
+    def input_state(self, value):
+        self.set_input_state(value)
 
     def update(self, _dt):
         self.menu_helper.update_ui()

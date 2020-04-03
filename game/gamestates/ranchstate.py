@@ -206,6 +206,10 @@ class RanchState(GameState):
 
         self.menu_helper.set_menu('base')
 
+    def set_input_state(self, next_state):
+        super().set_input_state(next_state)
+        pass
+
     def load_monster_model(self):
         if self.monster_actor:
             self.monster_actor.cleanup()

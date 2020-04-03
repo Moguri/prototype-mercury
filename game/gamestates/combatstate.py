@@ -22,8 +22,6 @@ class CombatState(GameState):
 
         gdb = gamedb.get_instance()
 
-        self._input_state = None
-
         # Arena
         arena_tiles = base.loader.load_model('arena_tiles.bam')
         self.tile_model = arena_tiles.find('**/ArenaTile')
@@ -111,17 +109,9 @@ class CombatState(GameState):
             if not i.is_dead
         )
 
-    @property
-    def input_state(self):
-        return self._input_state
-
-    @input_state.setter
-    def input_state(self, value):
-        self.ignore_all()
-        self.menu_helper.show = False
-        self.menu_helper.lock = True
-        self.menu_helper.selection_idx = 0
+    def set_input_state(self, next_state):
         self.display_message('')
+        super().set_input_state(next_state)
         def show_menu(menu):
             self.menu_helper.set_menu(menu)
             self.menu_helper.lock = False
@@ -139,7 +129,7 @@ class CombatState(GameState):
             if reject_cb is not None:
                 self.accept('reject', reject_cb)
 
-        if value == 'SELECT':
+        if next_state == 'SELECT':
             def accept_selection():
                 selection = self.combatant_in_tile(self.selected_tile)
                 if selection:
@@ -147,21 +137,19 @@ class CombatState(GameState):
                     self.input_state = 'ACTION'
             setup_selection(accept_selection)
             self.display_message('Select a combatant')
-        elif value == 'ACTION':
-            def set_input_state(state):
-                self.input_state = state
+        elif next_state == 'ACTION':
             def use_ability(ability):
                 self.input_state = 'TARGET'
                 self.selected_ability = ability
             self.menu_helper.menus['action'] = [
-                ('Move', set_input_state, ['MOVE']),
+                ('Move', self.set_input_state, ['MOVE']),
             ] + [
                 (ability.name, use_ability, [ability])
                 for ability in self.selected_combatant.abilities
             ]
             show_menu('action')
             self.display_message('Select an action')
-        elif value == 'MOVE':
+        elif next_state == 'MOVE':
             def accept_move():
                 selection = self.combatant_in_tile(self.selected_tile)
                 if selection is None:
@@ -177,7 +165,7 @@ class CombatState(GameState):
 
             setup_selection(accept_move, reject_move)
             self.display_message('Select new location')
-        elif value == 'TARGET':
+        elif next_state == 'TARGET':
             def accept_target():
                 selection = self.combatant_in_tile(self.selected_tile)
                 in_range = self.tile_in_range(
@@ -217,7 +205,7 @@ class CombatState(GameState):
 
             setup_selection(accept_target, reject_target)
             self.display_message('Select a target')
-        elif value == 'END':
+        elif next_state == 'END':
             if not self.get_remaining_enemy_combatants():
                 self.display_message('Victory!')
             else:
@@ -226,9 +214,9 @@ class CombatState(GameState):
             self.accept('accept', base.change_to_previous_state)
             self.accept('reject', base.change_to_previous_state)
         else:
-            raise RuntimeError(f'Unknown state {value}')
+            raise RuntimeError(f'Unknown state {next_state}')
 
-        self._input_state = value
+        self._input_state = next_state
 
     def vec_to_tile_coord(self, vec):
         return tuple(int(i) for i in vec)
