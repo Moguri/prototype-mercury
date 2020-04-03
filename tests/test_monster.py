@@ -34,7 +34,7 @@ def test_job_assignment(monster, gdb):
     with pytest.raises(RuntimeError, match=r'tag requirements unsatisfied'):
         monster.job = job
 
-    monster.job_levels['bobcatshark'] = 2
+    monster.job_levels['squire'] = 2
     assert monster.can_use_job(job)
     monster.job = job
     assert monster.job_levels[job.id] == 1

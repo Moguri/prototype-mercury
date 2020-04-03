@@ -1,7 +1,7 @@
 {
     "id": "claygolem",
     "name": "Clay Golem",
-    "default_job": "bobcatshark",
+    "default_job": "squire",
     "bam_file": "clay_golem",
     "root_node": "ClayGolemArm",
     "anim_map": {
