@@ -151,6 +151,12 @@ class CombatState(GameState):
                 (ability.name, use_ability, [ability])
                 for ability in self.selected_combatant.abilities
             ]
+            def update_ability(idx):
+                if idx == 0:
+                    self.selected_ability = None
+                else:
+                    self.selected_ability = self.selected_combatant.abilities[idx - 1]
+            self.menu_helper.selection_change_cb = update_ability
             show_menu('action')
             self.display_message('Select an action')
         elif next_state == 'MOVE':
@@ -344,14 +350,6 @@ class CombatState(GameState):
                 )
 
         # Update tile color tints
-        if self.input_state == 'ACTION':
-            if self.menu_helper.selection_idx != 0:
-                self.selected_ability = self.selected_combatant.abilities[
-                    self.menu_helper.selection_idx - 1
-                ]
-            else:
-                self.selected_ability = None
-
         if self.selected_ability is not None:
             self.range_tiles = self.find_tiles_in_range(
                 self.selected_combatant.tile_position,
