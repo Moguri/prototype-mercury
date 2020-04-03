@@ -105,7 +105,6 @@ class RanchState(GameState):
     def __init__(self):
         super().__init__()
 
-        gdb = gamedb.get_instance()
         self.player = base.blackboard['player']
 
         # Setup lighting
@@ -152,11 +151,6 @@ class RanchState(GameState):
         base.camera.look_at(0, 0, 1)
 
         # UI
-        def accept_cb():
-            if self.message_modal:
-                self.display_message('')
-                return True
-            return False
         self.menu_helper.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
