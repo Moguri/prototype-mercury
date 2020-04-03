@@ -11,7 +11,7 @@
 
     <body>
         <div id="app">
-            <div id='nav' v-if='!state.show_stats' class='pure-menu'>
+            <div id='nav' v-if='state.show_menu' class='pure-menu'>
                 <span class='custom-menu-heading pure-menu-heading'>{{state.menu_heading}}</span>
                 <ul class='pure-menu-list'>
                     <li v-for='(item, idx) in state.menu_items' class='custom-menu-item pure-menu-item'

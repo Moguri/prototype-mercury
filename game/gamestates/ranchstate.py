@@ -204,17 +204,41 @@ class RanchState(GameState):
         self.menu_helper.reject_cb = back_to_main
 
         if next_state == 'MAIN':
+            self.set_background('base')
             self.menu_helper.set_menu('Ranch', [
                 ('Combat', self.set_input_state, ['COMBAT']),
+                ('Market', self.set_input_state, ['MARKET']),
+                ('Select Monster', self.set_input_state, ['SELECT_MONSTER']),
                 ('Monster Stats', self.set_input_state, ['STATS']),
                 ('Train', self.set_input_state, ['TRAIN']),
                 ('Change Job', self.set_input_state, ['JOBS']),
+                ('Dismiss Monster', self.set_input_state, ['DISMISS']),
                 ('Save Game', base.change_state, ['Save']),
                 ('Load Game', base.change_state, ['Load']),
                 ('Quit', self.set_input_state, ['QUIT']),
             ])
-            self.set_background('base')
+        elif next_state == 'SELECT_MONSTER':
+            self.display_message('Select a monster', modal=True)
+            prev_selection = self.monster_selection
+
+            def update_monster_selection(delta):
+                self.monster_selection += delta
+                if self.monster_selection < 0:
+                    self.monster_selection = len(self.monster_actors) - 1
+                elif self.monster_selection >= len(self.monster_actors):
+                    self.monster_selection = 0
+            self.accept('move-left', update_monster_selection, [-1])
+            self.accept('move-right', update_monster_selection, [1])
+
+            self.accept('accept', self.set_input_state, ['MAIN'])
+
+            def reject_sel():
+                self.monster_selection = prev_selection
+                self.input_state = 'MAIN'
+            self.accept('reject', reject_sel)
         elif next_state == 'MARKET':
+            self.load_monster_models([])
+            base.camera.set_x(0)
             def get_monster(breedid):
                 breed = gdb['breeds'][breedid]
                 monster_name = random.choice(RANDOM_NAMES)
@@ -222,6 +246,7 @@ class RanchState(GameState):
                     Monster.make_new('player.monster', monster_name, breed.id)
                 )
                 self.load_monster_models()
+                self.monster_selection = len(self.monster_actors) - 1
                 back_to_main()
             menu_items = [
                 (breed.name, get_monster, [breed.id])
@@ -283,6 +308,20 @@ class RanchState(GameState):
                 self.current_monster.id
             ]
             base.change_state('Combat')
+        elif next_state == 'DISMISS':
+            mon = self.player.monsters.pop(self.monster_selection)
+            self.display_message(f'Dismissed {mon.name}', modal=True)
+
+            def accept_dismiss():
+                self.monster_selection -= 1
+                if self.monster_selection < 0:
+                    self.monster_selection = 0
+                if self.current_monster:
+                    self.load_monster_models()
+                    self.input_state = 'MAIN'
+                else:
+                    self.input_state = 'MARKET'
+            self.accept('accept', accept_dismiss)
         elif next_state == 'QUIT':
             self.menu_helper.set_menu('', [
                 ('Back', self.set_input_state, ['MAIN']),
@@ -293,6 +332,12 @@ class RanchState(GameState):
             raise RuntimeError(f'Unknown state {next_state}')
 
         self._input_state = next_state
+
+    def update(self, dt):
+        super().update(dt)
+
+        if self.input_state != 'MARKET':
+            base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
     def load_monster_models(self, breeds=None):
         for monact in self.monster_actors:
@@ -331,6 +376,7 @@ class RanchState(GameState):
             labelnp.set_shader_auto(True)
 
             offset += stride
+
         self.lighting.recalc_bounds(self.monsters_root)
 
     def set_background(self, bgname):
