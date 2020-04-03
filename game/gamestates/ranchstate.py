@@ -205,6 +205,7 @@ class RanchState(GameState):
         def back_to_main():
             self.input_state = 'MAIN'
         self.menu_helper.reject_cb = back_to_main
+        self.menu_helper.selection_change_cb = None
 
         if next_state == 'MAIN':
             show_menu('base')
@@ -224,6 +225,13 @@ class RanchState(GameState):
                 for breed in gdb['breeds'].values()
                 if self.player.can_use_breed(breed)
             ]
+
+            def show_breed(_idx):
+                if self.menu_helper.selection_idx == 0:
+                    return
+                breed = gdb['breeds'][self.menu_helper.current_selection[2][0]]
+                self.load_monster_model(breed)
+            self.menu_helper.selection_change_cb = show_breed
             self.display_message('Select a breed')
             self.set_background('market')
             show_menu('monsters_market')
@@ -273,21 +281,24 @@ class RanchState(GameState):
 
         self._input_state = next_state
 
-    def load_monster_model(self):
+    def load_monster_model(self, breed=None):
         if self.monster_actor:
             self.monster_actor.cleanup()
             self.monster_actor.remove_node()
+        self.monster_actor = None
 
-        if self.player.monsters:
+        if breed is None and self.player.monsters:
             breed = self.player.monsters[0].breed
-            monster_model = base.loader.load_model('{}.bam'.format(breed.bam_file))
-            self.monster_actor = Actor(monster_model.find('**/{}'.format(breed.root_node)))
-            self.monster_actor.set_h(180)
-            self.monster_actor.loop(breed.anim_map['idle'])
-            self.monster_actor.reparent_to(self.root_node)
-            self.lighting.recalc_bounds(self.monster_actor)
-        else:
-            self.monster_actor = None
+
+        if breed is None:
+            return
+
+        monster_model = base.loader.load_model('{}.bam'.format(breed.bam_file))
+        self.monster_actor = Actor(monster_model.find('**/{}'.format(breed.root_node)))
+        self.monster_actor.set_h(180)
+        self.monster_actor.loop(breed.anim_map['idle'])
+        self.monster_actor.reparent_to(self.root_node)
+        self.lighting.recalc_bounds(self.monster_actor)
 
     def set_background(self, bgname):
         self.background_image.set_shader_input('tex', self.background_textures[bgname])
