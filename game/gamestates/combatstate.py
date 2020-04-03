@@ -12,6 +12,7 @@ from ..combatant import Combatant
 
 from .gamestate import GameState
 from .menuhelper import MenuHelper
+from .commonlighting import CommonLighting
 
 class CombatState(GameState):
     SELECTED_COLOR = (3, 0, 0, 1)
@@ -87,39 +88,11 @@ class CombatState(GameState):
 
         # Setup Lighting
         arena_world_center = self.tile_coord_to_world(*arena_center)
-        key_light = p3d.DirectionalLight('sun')
-        key_light.color_temperature = 6000
-        key_lightnp = self.root_node.attach_new_node(key_light)
-        key_lightnp.set_pos(arena_world_center + (0, -15, 15))
-        key_lightnp.look_at(self.tile_coord_to_world(*arena_center))
-        base.render.set_light(key_lightnp)
-
-        fill_light = p3d.DirectionalLight('fill light')
-        fill_light.color_temperature = 4800
-        fill_light.color = key_light.color * 0.5
-        fill_lightnp = self.root_node.attach_new_node(fill_light)
-        fill_lightnp.set_pos(arena_world_center + (-20, 0, 10))
-        fill_lightnp.look_at(self.tile_coord_to_world(*arena_center))
-        base.render.set_light(fill_lightnp)
-
-        back_light = p3d.DirectionalLight('fill light')
-        back_light.color_temperature = 4800
-        back_light.color = key_light.color * 0.25
-        back_lightnp = self.root_node.attach_new_node(back_light)
-        back_lightnp.set_pos(20, 20, 0)
-        back_lightnp.look_at(0, 0, 0)
-        base.render.set_light(back_lightnp)
-
-        # Setup shadows
-        key_light.set_shadow_caster(True, 4096, 4096)
-        light_lens = key_light.get_lens()
-        light_lens.set_film_size(15, 15)
-        light_lens.far = 40
+        CommonLighting(self.root_node, arena_world_center)
 
         # Setup Camera
         base.camera.set_pos(-10, -10, 10)
         base.camera.look_at(self.tile_coord_to_world(*arena_center))
-
 
         # Setup UI
         def reject_cb():

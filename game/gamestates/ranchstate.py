@@ -7,6 +7,7 @@ from ..monster import Monster
 
 from .gamestate import GameState
 from .menuhelper import MenuHelper
+from .commonlighting import CommonLighting
 
 
 _BG_VERT = """
@@ -108,39 +109,12 @@ class RanchState(GameState):
         gdb = gamedb.get_instance()
         self.player = base.blackboard['player']
 
+        # Setup lighting
+        self.lighting = CommonLighting(self.root_node, calc_shadow_bounds=False)
+
         # Load and display the monster model
         self.monster_actor = None
         self.load_monster_model()
-
-        # Setup lighting
-        key_light = p3d.DirectionalLight('sun')
-        key_light.color_temperature = 6000
-        key_lightnp = self.root_node.attach_new_node(key_light)
-        key_lightnp.set_pos(0, -15, 15)
-        key_lightnp.look_at(0, 0, 0)
-        base.render.set_light(key_lightnp)
-
-        fill_light = p3d.DirectionalLight('fill light')
-        fill_light.color_temperature = 4800
-        fill_light.color = key_light.color * 0.5
-        fill_lightnp = self.root_node.attach_new_node(fill_light)
-        fill_lightnp.set_pos(-20, 0, 10)
-        fill_lightnp.look_at(0, 0, 0)
-        base.render.set_light(fill_lightnp)
-
-        back_light = p3d.DirectionalLight('fill light')
-        back_light.color_temperature = 4800
-        back_light.color = key_light.color * 0.25
-        back_lightnp = self.root_node.attach_new_node(back_light)
-        back_lightnp.set_pos(20, 20, 0)
-        back_lightnp.look_at(0, 0, 0)
-        base.render.set_light(back_lightnp)
-
-        # Setup shadows
-        key_light.set_shadow_caster(True, 4096, 4096)
-        light_lens = key_light.get_lens()
-        light_lens.set_film_size(15, 15)
-        light_lens.far = 40
 
         # Setup plane to catch shadows
         if p3d.ConfigVariableBool('enable-shadows').get_value():
@@ -249,6 +223,7 @@ class RanchState(GameState):
             self.monster_actor.set_h(180)
             self.monster_actor.loop(breed.anim_map['idle'])
             self.monster_actor.reparent_to(self.root_node)
+            self.lighting.recalc_bounds(self.monster_actor)
         else:
             self.monster_actor = None
 
