@@ -146,7 +146,6 @@ class RanchState(GameState):
         self.background_image.set_bin('background', 0)
         self.background_image.set_depth_test(False)
         self.background_image.set_depth_write(False)
-        self.set_background('base')
 
         # Setup Camera
         base.camera.set_pos(-3, -5, 5)
@@ -157,36 +156,27 @@ class RanchState(GameState):
             if self.message_modal:
                 self.display_message('')
                 return True
-            elif self._show_stats:
-                self._show_stats = False
-                return True
             return False
-
-        def reject_cb():
-            self.menu_helper.set_menu('base')
-            self._show_stats = False
-
-        self.menu_helper.accept_cb = accept_cb
-        self.menu_helper.reject_cb = reject_cb
         self.menu_helper.menus = {
             'base': [
                 ('Combat', self.enter_combat, []),
-                ('Monster Stats', self.show_stats, []),
-                ('Train', self.train, []),
-                ('Change Job', self.menu_helper.set_menu, ['jobs']),
+                ('Monster Stats', self.set_input_state, ['STATS']),
+                ('Train', self.set_input_state, ['TRAIN']),
+                ('Change Job', self.set_input_state, ['JOBS']),
                 ('Save Game', base.change_state, ['Save']),
                 ('Load Game', base.change_state, ['Load']),
                 ('Quit', self.menu_helper.set_menu, ['quit']),
             ],
             'monsters_market': [
-                ('Back', self.menu_helper.set_menu, ['base']),
+                ('Back', self.set_input_state, ['MAIN']),
             ] + [
                 (breed.name, self.get_monster, [breed.id]) for breed in gdb['breeds'].values()
             ],
             'jobs': [
-                ('Back', self.menu_helper.set_menu, ['base']),
+                ('Back', self.set_input_state, ['MAIN']),
             ],
             'quit': [
+                ('Back', self.set_input_state, ['MAIN']),
                 ('Exit to Title Menu', base.change_state, ['Title']),
                 ('Exit Game', messenger.send, ['escape']),
             ],
@@ -200,15 +190,74 @@ class RanchState(GameState):
         self.message = ""
         self.message_modal = False
 
-        self._show_stats = False
-
         self.load_ui('ranch')
 
-        self.menu_helper.set_menu('base')
+        # Set initial input state
+        self.input_state = 'MAIN'
 
     def set_input_state(self, next_state):
+        self.display_message('')
         super().set_input_state(next_state)
-        pass
+        gdb = gamedb.get_instance()
+        self.update_ui({
+            'show_stats': False,
+        })
+        def show_menu(menu):
+            self.menu_helper.set_menu(menu)
+            self.menu_helper.lock = False
+            self.menu_helper.show = True
+
+        def back_to_main():
+            self.input_state = 'MAIN'
+        self.menu_helper.reject_cb = back_to_main
+
+        if next_state == 'MAIN':
+            show_menu('base')
+            self.set_background('base')
+        elif next_state == 'MARKET':
+            show_menu('monsters_market')
+            self.display_message('Select a breed')
+            self.set_background('market')
+        elif next_state == 'STATS':
+            self.update_ui({
+                'show_stats': True,
+            })
+            monsterdict = self.player.monsters[0].to_dict()
+            monsterdict['breed'] = self.player.monsters[0].breed.name
+            monsterdict['job'] = self.player.monsters[0].job.name
+            self.update_ui({
+                'monster': monsterdict
+            })
+            self.accept('accept', back_to_main)
+        elif next_state == 'TRAIN':
+            monster = self.player.monsters[0]
+            job = monster.job
+            monster.job_levels[job.id] += 1
+            self.display_message(
+                f'{job.name} raised to level  {monster.job_levels[job.id]}',
+                modal=True
+            )
+            self.accept('accept', back_to_main)
+
+        elif next_state == 'JOBS':
+            def change_job(jobid):
+                gdb = gamedb.get_instance()
+                job = gdb['jobs'][jobid]
+                self.player.monsters[0].job = job
+                self.display_message('')
+                back_to_main()
+            self.menu_helper.menus['jobs'] = [
+                ('Back', back_to_main),
+            ] + [
+                (job.name, change_job, [job.id])
+                for job in gdb['jobs'].values()
+                if self.player.monsters[0].can_use_job(job)
+            ]
+            show_menu('jobs')
+        else:
+            raise RuntimeError(f'Unknown state {next_state}')
+
+        self._input_state = next_state
 
     def load_monster_model(self):
         if self.monster_actor:
@@ -229,30 +278,6 @@ class RanchState(GameState):
     def set_background(self, bgname):
         self.background_image.set_shader_input('tex', self.background_textures[bgname])
 
-    def update(self, dt):
-        super().update(dt)
-
-        gdb = gamedb.get_instance()
-
-        if (not self.menu_helper.lock and not self.player.monsters and
-                self.menu_helper.current_menu != 'monsters_market'):
-            self.load_monster_model()
-            self.menu_helper.set_menu('monsters_market')
-            self.display_message('Select a breed')
-            self.set_background('market')
-
-        if self.player.monsters:
-            self.menu_helper.menus['jobs'] = [
-                ('Back', self.menu_helper.set_menu, ['base']),
-            ] + [
-                (job.name, self.change_job, [job.id])
-                for job in gdb['jobs'].values()
-                if self.player.monsters[0].can_use_job(job)
-            ]
-        self.update_ui({
-            'show_stats': self._show_stats,
-        })
-
     def display_message(self, msg, modal=False):
         self.message = msg
         self.message_modal = modal
@@ -268,41 +293,11 @@ class RanchState(GameState):
         ]
         base.change_state('Combat')
 
-    def show_stats(self):
-        self._show_stats = True
-        monsterdict = self.player.monsters[0].to_dict()
-        monsterdict['breed'] = self.player.monsters[0].breed.name
-        monsterdict['job'] = self.player.monsters[0].job.name
-        self.update_ui({
-            'monster': monsterdict
-        })
-
     def get_monster(self, breedid):
         gdb = gamedb.get_instance()
         breed = gdb['breeds'][breedid]
         self.player.monsters.append(
             Monster.make_new('player.monster', breed.name, breed.id)
         )
-        self.display_message('')
-        self.menu_helper.set_menu('base')
         self.load_monster_model()
-        self.set_background('base')
-
-    def change_job(self, jobid):
-        gdb = gamedb.get_instance()
-        job = gdb['jobs'][jobid]
-        self.player.monsters[0].job = job
-        self.display_message('')
-        self.menu_helper.set_menu('base')
-
-    def train(self):
-        if not self.player.monsters:
-            return
-
-        monster = self.player.monsters[0]
-        job = monster.job
-        monster.job_levels[job.id] += 1
-        self.display_message(
-            f'{job.name} raised to level  {monster.job_levels[job.id]}',
-            modal=True
-        )
+        self.input_state = 'MAIN'
