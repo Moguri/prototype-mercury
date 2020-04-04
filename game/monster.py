@@ -86,8 +86,8 @@ class Monster:
         return self.breed.ap_per_second
 
     @property
-    def move_cost(self):
-        return self.breed.move_cost
+    def movement(self):
+        return self.breed.movement
 
     @property
     def level(self):
