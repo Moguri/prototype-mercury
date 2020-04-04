@@ -36,11 +36,6 @@ def dt():
     return 1/60
 
 @pytest.fixture
-def ai_controller(combatant):
-    from game import ai
-    return ai.Controller(combatant)
-
-@pytest.fixture
 def player(monster):
     from game import playerdata
 
