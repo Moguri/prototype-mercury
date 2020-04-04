@@ -13,6 +13,7 @@ class PlayerData:
         self.saveid = uuid.uuid4().hex
         self.last_access_time = datetime.datetime.now().isoformat()
         self.personal_tags = set()
+        self.max_monsters = 3
 
     def to_dict(self):
         return {
