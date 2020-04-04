@@ -6,9 +6,9 @@ import panda3d.core as p3d
 
 from .. import gamedb
 from ..monster import Monster
+from ..commonlighting import CommonLighting
 
 from .gamestate import GameState
-from .commonlighting import CommonLighting
 
 
 _BG_VERT = """

@@ -9,9 +9,9 @@ from .. import effects
 from .. import gamedb
 from ..monster import Monster
 from ..combatant import Combatant
+from ..commonlighting import CommonLighting
 
 from .gamestate import GameState
-from .commonlighting import CommonLighting
 
 class CombatState(GameState):
     SELECTED_COLOR = (3, 0, 0, 1)
