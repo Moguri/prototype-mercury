@@ -5,7 +5,7 @@ from direct.actor.Actor import Actor
 from . import gamedb
 
 class Combatant:
-    def __init__(self, monster, parent_node, ability_inputs):
+    def __init__(self, monster, parent_node):
         gdb = gamedb.get_instance()
 
         self._monster = monster
@@ -14,7 +14,6 @@ class Combatant:
         self.current_hp = self.max_hp
         self.current_ap = 20
 
-        self.ability_inputs = ability_inputs
         self.abilities = [gdb['abilities'][ability_id] for ability_id in monster.job.abilities]
 
         self.range_index = 0
@@ -63,11 +62,6 @@ class Combatant:
         self.current_ap = min(self.current_ap, self.max_ap)
 
     def get_state(self):
-        ability_labels = [
-            base.event_mapper.get_labels_for_event(inp, 'raw--')[0]
-            for inp in self.ability_inputs
-        ]
-
         return {
             'name': self.name,
             'hp_current': self.current_hp,
@@ -76,11 +70,10 @@ class Combatant:
             'ap_max': self.max_ap,
             'abilities': [{
                 'name': ability.name,
-                'input': _input.upper(),
                 'range': ability.range,
                 'cost': ability.cost,
                 'usable': self.ability_is_usable(ability),
-            } for ability, _input in zip(self.abilities, ability_labels)],
+            } for ability in self.abilities],
         }
 
     def ability_is_usable(self, ability):

@@ -29,7 +29,7 @@ def empty_nodepath():
 @pytest.fixture
 def combatant(monster, empty_nodepath):
     from game import combatant
-    return combatant.Combatant(monster, empty_nodepath, [])
+    return combatant.Combatant(monster, empty_nodepath)
 
 @pytest.fixture
 def dt():

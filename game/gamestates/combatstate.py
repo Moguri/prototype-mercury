@@ -58,11 +58,7 @@ class CombatState(GameState):
         ]
 
         self.player_combatants = [
-            Combatant(
-                Monster(mon),
-                self.root_node,
-                []
-            ) for mon in self.player.monsters
+            Combatant(mon, self.root_node) for mon in self.player.monsters
         ]
         for idx, combatant in enumerate(self.player_combatants):
             self.move_combatant_to_tile(
@@ -70,17 +66,19 @@ class CombatState(GameState):
                 (0, idx)
             )
             combatant.path.set_h(-90)
+
         self.enemy_combatants = [
             Combatant(
                 Monster(random.choice(available_monsters)),
-                self.root_node,
-                []
+                self.root_node
             ),
         ]
-        self.move_combatant_to_tile(
-            self.enemy_combatants[0],
-            (4, 4)
-        )
+        for idx, combatant in enumerate(self.enemy_combatants):
+            self.move_combatant_to_tile(
+                combatant,
+                (4, idx)
+            )
+            combatant.path.set_h(90)
         self.selected_combatant = self.player_combatants[0]
         self.selected_ability = None
 
