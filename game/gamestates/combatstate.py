@@ -153,7 +153,13 @@ class CombatState(GameState):
         elif next_state == 'MOVE':
             def accept_move():
                 selection = self.combatant_in_tile(self.selected_tile)
-                if selection is None:
+                in_range = self.tile_in_range(
+                    self.selected_tile,
+                    self.selected_combatant.tile_position,
+                    0,
+                    self.selected_combatant.movement
+                )
+                if selection is None and in_range:
                     self.move_combatant_to_tile(
                         self.selected_combatant,
                         self.selected_tile
@@ -341,7 +347,13 @@ class CombatState(GameState):
                 )
 
         # Update tile color tints
-        if self.selected_ability is not None:
+        if self.input_state == 'MOVE':
+            self.range_tiles = self.find_tiles_in_range(
+                self.selected_combatant.tile_position,
+                0,
+                self.selected_combatant.movement
+            )
+        elif self.selected_ability is not None:
             self.range_tiles = self.find_tiles_in_range(
                 self.selected_combatant.tile_position,
                 self.selected_ability.range_min,
