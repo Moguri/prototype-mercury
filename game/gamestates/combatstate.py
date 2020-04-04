@@ -79,8 +79,8 @@ class CombatState(GameState):
                 (4, idx)
             )
             combatant.path.set_h(90)
-        self.selected_combatant = self.player_combatants[0]
         self.selected_ability = None
+        self.current_combatant = None
 
         # Setup Lighting
         arena_world_center = self.tile_coord_to_world(*arena_center)
@@ -94,7 +94,7 @@ class CombatState(GameState):
         self.load_ui('combat')
 
         # Set initial input state
-        self.input_state = 'SELECT'
+        self.input_state = 'END_TURN'
 
     @property
     def combatants(self):
@@ -124,8 +124,7 @@ class CombatState(GameState):
         if next_state == 'SELECT':
             def accept_selection():
                 selection = self.combatant_in_tile(self.selected_tile)
-                if selection:
-                    self.selected_combatant = selection
+                if selection and selection == self.current_combatant:
                     self.input_state = 'ACTION'
             setup_selection(accept_selection)
             self.display_message('Select a combatant')
@@ -133,17 +132,17 @@ class CombatState(GameState):
             def use_ability(ability):
                 self.input_state = 'TARGET'
                 self.selected_ability = ability
-            self.menu_helper.set_menu(self.selected_combatant.name, [
+            self.menu_helper.set_menu(self.current_combatant.name, [
                 ('Move', self.set_input_state, ['MOVE']),
             ] + [
                 (ability.name, use_ability, [ability])
-                for ability in self.selected_combatant.abilities
+                for ability in self.current_combatant.abilities
             ])
             def update_ability(idx):
                 if idx == 0:
                     self.selected_ability = None
                 else:
-                    self.selected_ability = self.selected_combatant.abilities[idx - 1]
+                    self.selected_ability = self.current_combatant.abilities[idx - 1]
             self.menu_helper.selection_change_cb = update_ability
             def action_reject():
                 self.input_state = 'SELECT'
@@ -153,19 +152,19 @@ class CombatState(GameState):
                 selection = self.combatant_in_tile(self.selected_tile)
                 in_range = self.tile_in_range(
                     self.selected_tile,
-                    self.selected_combatant.tile_position,
+                    self.current_combatant.tile_position,
                     0,
-                    self.selected_combatant.movement
+                    self.current_combatant.movement
                 )
                 if selection is None and in_range:
                     self.move_combatant_to_tile(
-                        self.selected_combatant,
+                        self.current_combatant,
                         self.selected_tile
                     )
                     self.input_state = 'SELECT'
 
             def reject_move():
-                self.selected_tile = self.selected_combatant.tile_position
+                self.selected_tile = self.current_combatant.tile_position
                 self.input_state = 'ACTION'
 
             setup_selection(accept_move, reject_move)
@@ -175,42 +174,56 @@ class CombatState(GameState):
                 selection = self.combatant_in_tile(self.selected_tile)
                 in_range = self.tile_in_range(
                     self.selected_tile,
-                    self.selected_combatant.tile_position,
+                    self.current_combatant.tile_position,
                     self.selected_ability.range_min,
                     self.selected_ability.range_max
                 )
                 if selection is not None and in_range:
                     self.display_message(
-                        f'{self.selected_combatant.name} is using {self.selected_ability.name} '
+                        f'{self.current_combatant.name} is using {self.selected_ability.name} '
                         f'on {selection.name}'
                     )
-                    self.selected_combatant.target = selection
-                    selection.target = self.selected_combatant
-                    def cleanup():
-                        self.selected_ability = None
-                        self.selected_tile = self.selected_combatant.tile_position
-                        for combatant in (self.selected_combatant, selection):
-                            if combatant.is_dead:
-                                combatant.play_anim('death')
-                        self.input_state = 'SELECT'
+                    self.current_combatant.target = selection
+                    selection.target = self.current_combatant
                     sequence = effects.sequence_from_ability(
                         self.root_node,
-                        self.selected_combatant,
+                        self.current_combatant,
                         self.selected_ability,
                         self
                     )
+                    def cleanup():
+                        for combatant in (self.current_combatant, selection):
+                            if combatant.is_dead:
+                                combatant.play_anim('death')
+                        self.current_combatant.current_ct = 0
+                        self.input_state = 'END_TURN'
                     sequence.extend(intervals.Sequence(
                         intervals.Func(cleanup)
                     ))
                     sequence.start()
 
             def reject_target():
-                self.selected_tile = self.selected_combatant.tile_position
+                self.selected_tile = self.current_combatant.tile_position
                 self.input_state = 'ACTION'
 
             setup_selection(accept_target, reject_target)
             self.display_message('Select a target')
-        elif next_state == 'END':
+        elif next_state == 'END_TURN':
+            self.selected_ability = None
+            combatants_by_ct = sorted(
+                list(self.combatants),
+                reverse=True,
+                key=lambda x: x.current_ct
+            )
+            self.current_combatant = combatants_by_ct[0]
+            ctdiff = 100 - self.current_combatant.current_ct
+            if ctdiff > 0:
+                for combatant in self.combatants:
+                    combatant.current_ct += ctdiff
+                    print(f'{combatant.name}: {combatant.current_ct} CT')
+            self.selected_tile = self.current_combatant.tile_position
+            self.input_state = 'ACTION'
+        elif next_state == 'END_COMBAT':
             if not self.get_remaining_enemy_combatants():
                 self.display_message('Victory!')
             else:
@@ -331,29 +344,29 @@ class CombatState(GameState):
 
         # Check for end condition
         if not self.get_remaining_player_combatants() or not self.get_remaining_enemy_combatants():
-            self.input_state = 'END'
+            self.input_state = 'END_COMBAT'
 
         # Update combatant facing
         if self.input_state in ('MOVE', 'TARGET'):
             facing = self.tile_get_facing_to(
-                self.selected_combatant.tile_position,
+                self.current_combatant.tile_position,
                 self.selected_tile
             )
             if sum(facing) != 0:
-                self.selected_combatant.path.set_h(
+                self.current_combatant.path.set_h(
                     math.degrees(math.atan2(facing[1], facing[0])) - 90
                 )
 
         # Update tile color tints
         if self.input_state == 'MOVE':
             self.range_tiles = self.find_tiles_in_range(
-                self.selected_combatant.tile_position,
+                self.current_combatant.tile_position,
                 0,
-                self.selected_combatant.movement
+                self.current_combatant.movement
             )
         elif self.selected_ability is not None:
             self.range_tiles = self.find_tiles_in_range(
-                self.selected_combatant.tile_position,
+                self.current_combatant.tile_position,
                 self.selected_ability.range_min,
                 self.selected_ability.range_max
             )

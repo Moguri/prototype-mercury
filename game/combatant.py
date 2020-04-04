@@ -12,7 +12,7 @@ class Combatant:
         breed = monster.breed
 
         self.current_hp = self.max_hp
-        self.current_ap = 20
+        self.current_ct = 0
 
         self.abilities = [gdb['abilities'][ability_id] for ability_id in monster.job.abilities]
 
@@ -52,25 +52,11 @@ class Combatant:
     def is_dead(self):
         return self.current_hp <= 0
 
-    @property
-    def max_ap(self):
-        return self._monster.ability_points
-
-    def update(self, dt, range_index):
-        self.range_index = range_index
-        self.current_ap += self.ap_per_second * dt
-        self.current_ap = min(self.current_ap, self.max_ap)
-
     def get_state(self):
         return {
             'name': self.name,
             'hp_current': self.current_hp,
             'hp_max': self.max_hp,
+            'ct_current': min(100, self.current_ct),
+            'ct_max': 100,
         }
-
-    def ability_is_usable(self, ability):
-        return (
-            ability.cost < self.current_ap and
-            self.range_index in ability.range and
-            self.target is not None
-        )

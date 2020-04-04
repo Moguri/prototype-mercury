@@ -36,7 +36,16 @@
                     :max='state.monster.hp_max'
                 >
                 </progress>
-                <span>{{state.monster.hp_current}}/{{state.monster.hp_max}}</span>
+                <span>{{state.monster.hp_current}}/{{state.monster.hp_max}}</span><br>
+
+                <span>CT:</span>
+                <progress
+                    id='ct-bar'
+                    :value='state.monster.ct_current'
+                    :max='state.monster.ct_max'
+                >
+                </progress>
+                <span>{{state.monster.ct_current}}/{{state.monster.ct_max}}</span>
             </div>
         </div>
     </body>
