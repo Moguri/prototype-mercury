@@ -66,14 +66,6 @@ class Combatant:
             'name': self.name,
             'hp_current': self.current_hp,
             'hp_max': self.max_hp,
-            'ap_current': int(self.current_ap),
-            'ap_max': self.max_ap,
-            'abilities': [{
-                'name': ability.name,
-                'range': ability.range,
-                'cost': ability.cost,
-                'usable': self.ability_is_usable(ability),
-            } for ability in self.abilities],
         }
 
     def ability_is_usable(self, ability):

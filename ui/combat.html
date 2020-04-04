@@ -7,6 +7,7 @@
         <script src="vue.js"></script>
         <link rel="stylesheet" href="pure-min.css">
         <link rel="stylesheet" href="common.css">
+        <link rel="stylesheet" href="combat.css">
     </head>
 
     <body>
@@ -25,6 +26,18 @@
                 <span>{{state.message}}</span>
                 <span class='modal-indicator' v-if='state.message_modal'>&#x25bc;</span>
             </div>
+
+            <div id='stats' v-if='state.monster.name' class='pure-menu'>
+                <p>{{state.monster.name}}</p>
+                <span>HP:</span>
+                <progress
+                    id='health-bar'
+                    :value='state.monster.hp_current'
+                    :max='state.monster.hp_max'
+                >
+                </progress>
+                <span>{{state.monster.hp_current}}/{{state.monster.hp_max}}</span>
+            </div>
         </div>
     </body>
 
@@ -33,15 +46,8 @@
         setup_ui({
             monster: {
                 name: 'Foo',
-                breed: 'Bar',
-                job: '',
-                hit_points:100,
-                ability_points:100,
-                physical_attack:100,
-                magical_attack:100,
-                accuracy:100,
-                evasion:100,
-                defense:100,
+                hp_current: 35,
+                hp_max: 100
             }
         });
     </script>
