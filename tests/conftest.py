@@ -61,6 +61,7 @@ def app():
     import pman.shim
     from game import playerdata
     from game import gamedb
+    from game.monster import Monster
 
     p3d.load_prc_file_data(
         '',
@@ -76,6 +77,8 @@ def app():
             self.blackboard = {
                 'player': player,
             }
+            default_monster = Monster.make_new('player_monster', 'Default', 'claygolem')
+            self.blackboard['player'].monsters = [default_monster]
             self.camera = p3d.NodePath('camera')
             class Pipeline:
                 def __init__(self):

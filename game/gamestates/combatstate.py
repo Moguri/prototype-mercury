@@ -45,8 +45,10 @@ class CombatState(GameState):
                 self.tile_model.instance_to(tilenp)
                 self.tilenps[-1].append(tilenp)
         self.arena.flatten_medium()
-        self.selected_tile = (4, 3)
+        self.selected_tile = (0, 0)
         self.range_tiles = []
+
+        self.player = base.blackboard['player']
 
         # Combatants
         available_monsters = [
@@ -54,32 +56,27 @@ class CombatState(GameState):
             for i in list(gdb['monsters'].values())
             if i.id not in ('player_monster', 'bobcatshark')
         ]
-        monsters = [
-            random.choice(available_monsters),
-            random.choice(available_monsters),
-        ]
-        if 'monsters' in base.blackboard:
-            for idx, monster in enumerate(base.blackboard['monsters']):
-                monsters[idx] = gdb['monsters'][monster]
 
         self.player_combatants = [
             Combatant(
-                Monster(monsters[0]),
+                Monster(mon),
                 self.root_node,
                 []
-            )
+            ) for mon in self.player.monsters
         ]
+        for idx, combatant in enumerate(self.player_combatants):
+            self.move_combatant_to_tile(
+                combatant,
+                (0, idx)
+            )
+            combatant.path.set_h(-90)
         self.enemy_combatants = [
             Combatant(
-                Monster(monsters[1]),
+                Monster(random.choice(available_monsters)),
                 self.root_node,
                 []
             ),
         ]
-        self.move_combatant_to_tile(
-            self.player_combatants[0],
-            (4, 3)
-        )
         self.move_combatant_to_tile(
             self.enemy_combatants[0],
             (4, 4)
@@ -138,7 +135,7 @@ class CombatState(GameState):
             def use_ability(ability):
                 self.input_state = 'TARGET'
                 self.selected_ability = ability
-            self.menu_helper.set_menu('Select an Action', [
+            self.menu_helper.set_menu(self.selected_combatant.name, [
                 ('Move', self.set_input_state, ['MOVE']),
             ] + [
                 (ability.name, use_ability, [ability])
