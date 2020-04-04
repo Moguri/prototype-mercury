@@ -3,7 +3,7 @@ import json
 from direct.showbase.DirectObject import DirectObject
 import panda3d.core as p3d
 
-from .menuhelper import MenuHelper
+from ..menuhelper import MenuHelper
 
 
 class GameState(DirectObject):
