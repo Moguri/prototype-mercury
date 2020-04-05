@@ -147,7 +147,7 @@ class AiController():
             target.tile_position
         )
         if sum(facing) != 0:
-            combatant.path.set_h(
+            combatant.set_h(
                 math.degrees(math.atan2(facing[1], facing[0])) - 90
             )
 
@@ -205,7 +205,7 @@ class CombatState(GameState):
                 combatant,
                 (0, idx)
             )
-            combatant.path.set_h(-90)
+            combatant.set_h(-90)
 
         self.enemy_combatants = [
             Combatant(
@@ -218,7 +218,7 @@ class CombatState(GameState):
                 combatant,
                 (4, idx)
             )
-            combatant.path.set_h(90)
+            combatant.set_h(90)
         self.selected_ability = None
         self.current_combatant = None
 
@@ -409,7 +409,7 @@ class CombatState(GameState):
             return False
 
         combatant.tile_position = tile_pos
-        combatant.path.set_pos(self.arena.tile_coord_to_world(tile_pos))
+        combatant.set_pos(self.arena.tile_coord_to_world(tile_pos))
 
         return True
 
@@ -481,7 +481,7 @@ class CombatState(GameState):
                 self.selected_tile
             )
             if sum(facing) != 0:
-                self.current_combatant.path.set_h(
+                self.current_combatant.set_h(
                     math.degrees(math.atan2(facing[1], facing[0])) - 90
                 )
 

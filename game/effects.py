@@ -143,7 +143,7 @@ class SequenceBuilder:
         textnode.set_text(str(self.strength) if self.is_hit else "Miss")
 
         textnp = self.rendernp.attach_new_node(textnode)
-        textnp.set_pos(target.path, 0, 0, 2)
+        textnp.set_pos(target.as_nodepath, 0, 0, 2)
         textnp.set_billboard_point_eye()
         textnp.set_bin("fixed", 0)
         textnp.set_depth_test(False)
@@ -166,9 +166,7 @@ class SequenceBuilder:
 
 
     def play_animation(self, target, parameters):
-        return target.path.actor_interval(
-            target.get_anim(parameters['animation_name'])
-        )
+        return target.actor_interval(parameters['animation_name'])
 
     def move_to_range(self, target, parameters):
         target_range = parameters['range']

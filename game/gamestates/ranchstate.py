@@ -1,11 +1,10 @@
 import random
 
-from direct.actor.Actor import Actor
 from direct.showbase.MessengerGlobal import messenger
 import panda3d.core as p3d
 
 from .. import gamedb
-from ..monster import Monster
+from ..monster import Monster, MonsterActor
 from ..commonlighting import CommonLighting
 
 from .gamestate import GameState
@@ -354,12 +353,9 @@ class RanchState(GameState):
         stride = 2
         offset = 0
         for breed, labelstr in zip(breeds, labels):
-            model = base.loader.load_model('{}.bam'.format(breed.bam_file))
-            actor = Actor(model.find('**/{}'.format(breed.root_node)))
+            actor = MonsterActor(breed, self.monsters_root)
             actor.set_h(-135)
             actor.set_pos(self.monsters_root, p3d.LVector3(offset, 0, 0))
-            actor.loop(breed.anim_map['idle'])
-            actor.reparent_to(self.monsters_root)
             self.monster_actors.append(actor)
 
             label = p3d.TextNode('monster label')

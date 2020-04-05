@@ -1,8 +1,5 @@
-import builtins
-
-from direct.actor.Actor import Actor
-
 from . import gamedb
+from .monster import MonsterActor
 
 class Combatant:
     def __init__(self, monster, parent_node):
@@ -22,27 +19,12 @@ class Combatant:
 
         self.lock_controls = False
 
-        if hasattr(builtins, 'base'):
-            model = base.loader.load_model('{}.bam'.format(breed.bam_file))
-            self.path = Actor(model.find('**/{}'.format(breed.root_node)))
-            self.play_anim('idle', loop=True)
-            self.path.reparent_to(parent_node)
-        else:
-            self.path = Actor()
+        self._actor = MonsterActor(breed, parent_node)
 
     def __getattr__(self, name):
-        return getattr(self._monster, name)
-
-    def play_anim(self, anim, *, loop=False):
-        self.path.stop()
-        anim = self.get_anim(anim)
-        if loop:
-            self.path.loop(anim)
-        else:
-            self.path.play(anim)
-
-    def get_anim(self, anim):
-        return self._monster.breed.anim_map[anim]
+        if hasattr(self._monster, name):
+            return getattr(self._monster, name)
+        return getattr(self._actor, name)
 
     @property
     def max_hp(self):

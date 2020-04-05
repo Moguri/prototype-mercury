@@ -1,4 +1,64 @@
+import builtins
+import collections
+
+from direct.actor.Actor import Actor
+from direct.interval import IntervalGlobal as intervals
+
 from . import gamedb
+
+
+class MonsterActor:
+    _anim_warnings = collections.defaultdict(set)
+
+    def __init__(self, breed, parent_node=None):
+        self.breed = breed
+
+        if hasattr(builtins, 'base'):
+            model = base.loader.load_model('{}.bam'.format(breed.bam_file))
+            self._path = Actor(model.find('**/{}'.format(breed.root_node)))
+            self.play_anim('idle', loop=True)
+            if parent_node:
+                self._path.reparent_to(parent_node)
+        else:
+            self._path = Actor()
+
+    def __getattr__(self, name):
+        return getattr(self._path, name)
+
+    def __estattr__(self, name, value):
+        return setattr(self._path, name, value)
+
+    @property
+    def as_nodepath(self):
+        return self._path
+
+    def _anim_warning(self, anim):
+        if anim not in self._anim_warnings[self.breed.id]:
+            print(f'Warning: {self.breed.name} is missing an animation: {anim}')
+            self._anim_warnings[self.breed.id].add(anim)
+
+    def play_anim(self, anim, *, loop=False):
+        self._path.stop()
+        mapped_anim = self.get_anim(anim)
+        if mapped_anim is None:
+            self._anim_warning(anim)
+            return
+        if loop:
+            self._path.loop(mapped_anim)
+        else:
+            self._path.play(mapped_anim)
+
+    def get_anim(self, anim):
+        if anim in self._path.get_anim_names():
+            return anim
+        return self.breed.anim_map.get(anim, None)
+
+    def actor_interval(self, anim):
+        mapped_anim = self.get_anim(anim)
+        if mapped_anim is None:
+            self._anim_warning(anim)
+            return intervals.Sequence()
+        return self._path.actor_interval(mapped_anim)
 
 
 class Monster:
