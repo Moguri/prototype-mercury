@@ -5,5 +5,5 @@ fastjsonschema
 appdirs
 panda3d_pman
 panda3d-blend2bam
-panda3d-eventmapper
+panda3d-eventmapper~=0.2
 panda3d-simplepbr~=0.5
