@@ -61,7 +61,6 @@ class Monster:
             }
         })
         monsterdata.link(gdb)
-        gdb['monsters'][monster_id] = monsterdata
 
         return cls(monsterdata)
 
