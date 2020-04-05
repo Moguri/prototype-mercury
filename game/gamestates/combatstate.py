@@ -220,7 +220,6 @@ class CombatState(GameState):
             if ctdiff > 0:
                 for combatant in self.combatants:
                     combatant.current_ct += ctdiff
-                    print(f'{combatant.name}: {combatant.current_ct} CT')
             self.selected_tile = self.current_combatant.tile_position
             self.input_state = 'ACTION'
         elif next_state == 'END_COMBAT':
