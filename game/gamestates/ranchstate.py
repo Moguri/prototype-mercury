@@ -206,7 +206,7 @@ class RanchState(GameState):
         if next_state == 'MAIN':
             self.set_background('base')
             menu_items = [
-                ('Combat', self.set_input_state, ['COMBAT']),
+                ('Battle', self.set_input_state, ['COMBAT']),
                 ('Select Monster', self.set_input_state, ['SELECT_MONSTER']),
                 ('Monster Stats', self.set_input_state, ['STATS']),
                 ('Train', self.set_input_state, ['TRAIN']),
@@ -306,9 +306,6 @@ class RanchState(GameState):
                 if self.current_monster.job.id != job.id and self.current_monster.can_use_job(job)
             ])
         elif next_state == 'COMBAT':
-            base.blackboard['monsters'] = [
-                self.current_monster.id
-            ]
             base.change_state('Combat')
         elif next_state == 'DISMISS':
             mon = self.player.monsters.pop(self.monster_selection)
