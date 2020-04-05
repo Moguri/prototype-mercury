@@ -100,6 +100,9 @@ class SequenceBuilder:
 
         for effect in ability.effects:
             self.sequence.extend(self.parse_effect(effect))
+        self.sequence.append(
+            intervals.Func(combatant.play_anim, 'idle'),
+        )
 
     def parse_effect(self, effect):
         sequence = intervals.Sequence()
