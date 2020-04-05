@@ -1,8 +1,14 @@
+@font-face {
+    font-family: BalooThambi2;
+    src: url('fonts/BalooThambi2-Medium.ttf');
+}
+
 html,
 body,
 #app {
     width: 100%;
     font-size: calc(0.75em + 1vmin);
+    font-family: "BalooThambi2", sans-serif;
 }
 
 .pure-g > div {
