@@ -13,6 +13,83 @@ from ..commonlighting import CommonLighting
 
 from .gamestate import GameState
 
+class Arena:
+    def __init__(self, parent_node, sizex, sizey):
+        self.root_node = parent_node.attach_new_node('Arena')
+        arena_tiles = base.loader.load_model('arena_tiles.bam')
+        self.tile_model = arena_tiles.find('**/ArenaTile')
+
+        self.tilenps = []
+
+        self.sizex = sizex
+        self.sizey = sizey
+        self.center = (
+            self.sizex // 2,
+            self.sizey // 2
+        )
+        for xtile in range(self.sizex):
+            self.tilenps.append([])
+            for ytile in range(self.sizey):
+                xpos, ypos, _ = self.tile_coord_to_world((xtile, ytile))
+                zpos = (random.random() - 0.5) / 10.0 - 1.0
+                tilenp = self.root_node.attach_new_node(f'arenatile-{xtile}-{ytile}')
+                tilenp.set_pos((xpos, ypos, zpos))
+                self.tile_model.instance_to(tilenp)
+                self.tilenps[-1].append(tilenp)
+        self.root_node.flatten_medium()
+
+    def vec_to_tile_coord(self, vec):
+        return tuple(int(i) for i in vec)
+
+    def tile_coord_in_bounds(self, tile_pos):
+        return bool(self.sizex > tile_pos[0] >= 0 and self.sizey > tile_pos[1] >= 0)
+
+    def tile_coord_to_world(self, tile_pos):
+        xtile, ytile = tile_pos
+        return p3d.LVector3(xtile * 2, ytile * 2, 0)
+
+    def tilenp_to_coord(self, tilenp):
+        return tuple([int(i) for i in tilenp.name.split('-')[-2:]])
+
+    def tile_distance(self, tilea, tileb):
+        distvec = p3d.LVector2(tilea) - p3d.LVector2(tileb)
+        return abs(distvec.x) + abs(distvec.y)
+
+    def tile_in_range(self, tile_coord, start, min_range, max_range):
+        tiledist = self.tile_distance(start, tile_coord)
+        return bool(min_range <= tiledist <= max_range)
+
+    def tile_get_facing_to(self, from_tile, to_tile):
+        posa = p3d.LVector2(from_tile)
+        posb = p3d.LVector2(to_tile)
+
+        direction = posb - posa
+        direction.normalize()
+        direction.x = round(direction.x)
+        direction.y = round(direction.y)
+
+        facing = [int(i) for i in direction]
+
+        # Special cases
+        if abs(facing[0]) == 1 and abs(facing[1]) == 1:
+            facing[1] = 0
+
+        return tuple(facing)
+
+    def find_tiles_in_range(self, start, min_range, max_range):
+        tiles = []
+        for tile_coord in (self.tilenp_to_coord(i) for i in itertools.chain(*self.tilenps)):
+            if self.tile_in_range(tile_coord, start, min_range, max_range):
+                tiles.append(tile_coord)
+        return tiles
+
+    def color_tiles(self, color, tiles=None):
+        for tilenp in itertools.chain(*self.tilenps):
+            tile_coord = self.tilenp_to_coord(tilenp)
+            if tiles is None or tile_coord in tiles:
+                tilenp.set_color(color)
+
+
 class CombatState(GameState):
     SELECTED_COLOR = (3, 0, 0, 1)
     RANGE_COLOR = (0, 0, 3, 1)
@@ -23,28 +100,7 @@ class CombatState(GameState):
         gdb = gamedb.get_instance()
 
         # Arena
-        arena_tiles = base.loader.load_model('arena_tiles.bam')
-        self.tile_model = arena_tiles.find('**/ArenaTile')
-
-        self.arena = self.root_node.attach_new_node('Arena')
-        self.tilenps = []
-
-        self.xsize = 5
-        self.ysize = 5
-        arena_center = (
-            self.xsize // 2,
-            self.ysize // 2
-        )
-        for xtile in range(self.xsize):
-            self.tilenps.append([])
-            for ytile in range(self.ysize):
-                xpos, ypos, _ = self.tile_coord_to_world(xtile, ytile)
-                zpos = (random.random() - 0.5) / 10.0 - 1.0
-                tilenp = self.arena.attach_new_node(f'arenatile-{xtile}-{ytile}')
-                tilenp.set_pos((xpos, ypos, zpos))
-                self.tile_model.instance_to(tilenp)
-                self.tilenps[-1].append(tilenp)
-        self.arena.flatten_medium()
+        self.arena = Arena(self.root_node, 5, 5)
         self.selected_tile = (0, 0)
         self.range_tiles = []
 
@@ -83,12 +139,12 @@ class CombatState(GameState):
         self.current_combatant = None
 
         # Setup Lighting
-        arena_world_center = self.tile_coord_to_world(*arena_center)
+        arena_world_center = self.arena.tile_coord_to_world(self.arena.center)
         CommonLighting(self.root_node, arena_world_center)
 
         # Setup Camera
         base.camera.set_pos(-10, -10, 10)
-        base.camera.look_at(self.tile_coord_to_world(*arena_center))
+        base.camera.look_at(self.arena.tile_coord_to_world(self.arena.center))
 
         # Setup UI
         self.load_ui('combat')
@@ -150,7 +206,7 @@ class CombatState(GameState):
         elif next_state == 'MOVE':
             def accept_move():
                 selection = self.combatant_in_tile(self.selected_tile)
-                in_range = self.tile_in_range(
+                in_range = self.arena.tile_in_range(
                     self.selected_tile,
                     self.current_combatant.tile_position,
                     0,
@@ -172,7 +228,7 @@ class CombatState(GameState):
         elif next_state == 'TARGET':
             def accept_target():
                 selection = self.combatant_in_tile(self.selected_tile)
-                in_range = self.tile_in_range(
+                in_range = self.arena.tile_in_range(
                     self.selected_tile,
                     self.current_combatant.tile_position,
                     self.selected_ability.range_min,
@@ -235,18 +291,6 @@ class CombatState(GameState):
 
         self._input_state = next_state
 
-    def vec_to_tile_coord(self, vec):
-        return tuple(int(i) for i in vec)
-
-    def tile_coord_in_bounds(self, tile_pos):
-        return bool(self.xsize > tile_pos[0] >= 0 and self.ysize > tile_pos[1] >= 0)
-
-    def tile_coord_to_world(self, xtile, ytile):
-        return p3d.LVector3(xtile * 2, ytile * 2, 0)
-
-    def tilenp_to_coord(self, tilenp):
-        return tuple([int(i) for i in tilenp.name.split('-')[-2:]])
-
     def combatant_in_tile(self, tile_pos):
         combatants = [
             i
@@ -257,67 +301,37 @@ class CombatState(GameState):
         return combatants[0] if combatants else None
 
     def move_combatant_to_tile(self, combatant, tile_pos):
-        if not self.tile_coord_in_bounds(tile_pos):
+        if not self.arena.tile_coord_in_bounds(tile_pos):
             return False
 
         combatant.tile_position = tile_pos
-        combatant.path.set_pos(self.tile_coord_to_world(*tile_pos))
+        combatant.path.set_pos(self.arena.tile_coord_to_world(tile_pos))
 
         return True
 
-    def tile_get_facing_to(self, from_tile, to_tile):
-        posa = p3d.LVector2(from_tile)
-        posb = p3d.LVector2(to_tile)
-
-        direction = posb - posa
-        direction.normalize()
-        direction.x = round(direction.x)
-        direction.y = round(direction.y)
-
-        facing = [int(i) for i in direction]
-
-        # Special cases
-        if abs(facing[0]) == 1 and abs(facing[1]) == 1:
-            facing[1] = 0
-
-        return tuple(facing)
-
     def move_combatant_to_range(self, combatant, other, target_range):
-        distance = self.tile_distance(
+        distance = self.arena.tile_distance(
             combatant.tile_position,
             other.tile_position
         )
         if distance == target_range:
             return
 
-        direction = p3d.LVector2(self.tile_get_facing_to(
+        direction = p3d.LVector2(self.arena.tile_get_facing_to(
             combatant.tile_position,
             other.tile_position
         ))
         other_pos = p3d.LVector2(other.tile_position)
-        new_pos = self.vec_to_tile_coord(-direction * target_range + other_pos)
+        new_pos = self.arena.vec_to_tile_coord(-direction * target_range + other_pos)
         self.move_combatant_to_tile(combatant, new_pos)
 
     def move_selection(self, vector):
-        selection = self.vec_to_tile_coord(p3d.LVector2(self.selected_tile) + p3d.LVector2(vector))
+        selection = self.arena.vec_to_tile_coord(
+            p3d.LVector2(self.selected_tile) + p3d.LVector2(vector)
+        )
 
-        if self.tile_coord_in_bounds(selection):
+        if self.arena.tile_coord_in_bounds(selection):
             self.selected_tile = selection
-
-    def tile_distance(self, tilea, tileb):
-        distvec = p3d.LVector2(tilea) - p3d.LVector2(tileb)
-        return abs(distvec.x) + abs(distvec.y)
-
-    def tile_in_range(self, tile_coord, start, min_range, max_range):
-        tiledist = self.tile_distance(start, tile_coord)
-        return bool(min_range <= tiledist <= max_range)
-
-    def find_tiles_in_range(self, start, min_range, max_range):
-        tiles = []
-        for tile_coord in (self.tilenp_to_coord(i) for i in itertools.chain(*self.tilenps)):
-            if self.tile_in_range(tile_coord, start, min_range, max_range):
-                tiles.append(tile_coord)
-        return tiles
 
     def display_message(self, msg):
         self.update_ui({
@@ -347,7 +361,7 @@ class CombatState(GameState):
 
         # Update combatant facing
         if self.input_state in ('MOVE', 'TARGET'):
-            facing = self.tile_get_facing_to(
+            facing = self.arena.tile_get_facing_to(
                 self.current_combatant.tile_position,
                 self.selected_tile
             )
@@ -358,13 +372,13 @@ class CombatState(GameState):
 
         # Update tile color tints
         if self.input_state == 'MOVE':
-            self.range_tiles = self.find_tiles_in_range(
+            self.range_tiles = self.arena.find_tiles_in_range(
                 self.current_combatant.tile_position,
                 0,
                 self.current_combatant.movement
             )
         elif self.selected_ability is not None:
-            self.range_tiles = self.find_tiles_in_range(
+            self.range_tiles = self.arena.find_tiles_in_range(
                 self.current_combatant.tile_position,
                 self.selected_ability.range_min,
                 self.selected_ability.range_max
@@ -372,16 +386,11 @@ class CombatState(GameState):
         else:
             self.range_tiles = []
 
-        for tilenp in itertools.chain(*self.tilenps):
-            tile_coord = self.tilenp_to_coord(tilenp)
-            if tile_coord == self.selected_tile:
-                color = self.SELECTED_COLOR
-            elif tile_coord in self.range_tiles:
-                color = self.RANGE_COLOR
-            else:
-                color = (1, 1, 1, 1)
-            tilenp.set_color(color)
+        self.arena.color_tiles((1, 1, 1, 1))
+        self.arena.color_tiles(self.RANGE_COLOR, self.range_tiles)
+        self.arena.color_tiles(self.SELECTED_COLOR, [self.selected_tile])
 
+        # Update stat display
         combatant_at_cursor = self.combatant_in_tile(self.selected_tile)
         if combatant_at_cursor:
             self.update_ui({'monster': combatant_at_cursor.get_state()})
