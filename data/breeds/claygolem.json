@@ -7,7 +7,8 @@
     "anim_map": {
         "idle": "cg.Idle",
         "attack": "cg.Attack",
-        "death": "cg.Death"
+        "death": "cg.Death",
+        "magic": "cg.Magic"
     },
     "hp": 100,
     "ap_per_second": 5,
