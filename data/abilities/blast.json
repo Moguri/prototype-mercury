@@ -8,7 +8,10 @@
     "type": "magical",
     "effects": [
         {
-            "type": "template_simple"
+            "type": "template_simple",
+            "parameters": {
+                "animation_name": "magic"
+            }
         }
     ]
 }
