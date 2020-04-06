@@ -33,9 +33,13 @@ class MonsterActor:
         return self._path
 
     def _anim_warning(self, anim):
-        if anim not in self._anim_warnings[self.breed.id]:
+        if isinstance(anim, str):
+            baseanim = anim
+        else:
+            baseanim = anim[-1]
+        if baseanim not in self._anim_warnings[self.breed.id]:
             print(f'Warning: {self.breed.name} is missing an animation: {anim}')
-            self._anim_warnings[self.breed.id].add(anim)
+            self._anim_warnings[self.breed.id].add(baseanim)
 
     def play_anim(self, anim, *, loop=False):
         self._path.stop()
@@ -48,10 +52,17 @@ class MonsterActor:
         else:
             self._path.play(mapped_anim)
 
-    def get_anim(self, anim):
-        if anim in self._path.get_anim_names():
-            return anim
-        return self.breed.anim_map.get(anim, None)
+    def get_anim(self, anims):
+        if isinstance(anims, str):
+            anims = [anims]
+
+        for anim in anims:
+            if anim in self._path.get_anim_names():
+                return anim
+            if anim in self.breed.anim_map:
+                return self.breed.anim_map[anim]
+
+        return None
 
     def actor_interval(self, anim):
         mapped_anim = self.get_anim(anim)
