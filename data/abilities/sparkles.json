@@ -8,10 +8,7 @@
     "type": "magical",
     "effects": [
         {
-            "type": "template_simple",
-            "parameters": {
-                "animation_name": "attack"
-            }
+            "type": "template_simple"
         }
     ]
 }

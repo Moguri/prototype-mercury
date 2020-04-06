@@ -169,7 +169,12 @@ class SequenceBuilder:
 
 
     def play_animation(self, target, parameters):
-        return target.actor_interval(parameters['animation_name'])
+        anims = parameters.get('animation_name', [])
+        if isinstance(anims, str):
+            anims = [anims]
+        anims.insert(0, self.ability.id)
+        anims.append('attack')
+        return target.actor_interval(anims)
 
     def move_to_range(self, target, parameters):
         target_range = parameters['range']
