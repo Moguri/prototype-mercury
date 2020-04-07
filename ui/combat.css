@@ -4,6 +4,15 @@
     height: auto;
 }
 
+#results {
+    position: fixed;
+    width: 66%;
+    left: 50%;
+    margin-left: -33%;
+    top: 33%;
+    padding: 0.5em;
+}
+
 #stats {
     position: fixed;
     right: 1em;

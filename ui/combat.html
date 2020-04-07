@@ -22,6 +22,13 @@
                 </ul>
             </div>
 
+            <div id='results' v-if='state.results' class='pure-menu'>
+                <p>Results:</p>
+                <ul>
+                    <li v-for='result in state.results'>{{result}}</a>
+                </ul>
+            </div>
+
             <div id='message-bar' v-if='state.message != ""'>
                 <span>{{state.message}}</span>
                 <span class='modal-indicator' v-if='state.message_modal'>&#x25bc;</span>

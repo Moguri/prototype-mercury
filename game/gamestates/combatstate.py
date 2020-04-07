@@ -247,6 +247,13 @@ class CombatState(GameState):
         # Set initial input state
         self.input_state = 'END_TURN'
 
+        # Kill all enemies cheat
+        # def kill_all():
+        #     for combatant in self.enemy_combatants:
+        #         combatant.current_hp = 0
+        #     self.check_for_dead_combatants()
+        # self.accept('k', kill_all)
+
     @property
     def combatants(self):
         return (
@@ -397,11 +404,21 @@ class CombatState(GameState):
                 ])
                 sequence.start()
         elif next_state == 'END_COMBAT':
+            isvictory = not self.get_remaining_enemy_combatants()
             if not self.get_remaining_enemy_combatants():
                 self.display_message('Victory!')
+                results = []
+                for mon in self.player_combatants:
+                    job = mon.job
+                    mon.job_levels[job.id] += 1
+                    results.append(
+                        f'{mon.name} raised {job.name} to level {mon.job_levels[job.id]}'
+                    )
             else:
                 self.display_message('Defeat.')
+                results = ['Nothing']
 
+            self.update_ui({'results': results})
             self.accept('accept', base.change_to_previous_state)
             self.accept('reject', base.change_to_previous_state)
         else:
@@ -485,7 +502,7 @@ class CombatState(GameState):
         super().update(dt)
 
         # Check for end condition
-        if self.combat_over():
+        if self.combat_over() and self.input_state != 'END_COMBAT':
             self.input_state = 'END_COMBAT'
 
         # Update combatant facing
