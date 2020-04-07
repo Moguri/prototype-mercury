@@ -10,6 +10,8 @@ class Combatant:
 
         self.current_hp = self.max_hp
         self.current_ct = 0
+        self.move_max = self.movement
+        self.move_current = 0
 
         self.abilities = [gdb['abilities'][ability_id] for ability_id in monster.job.abilities]
 

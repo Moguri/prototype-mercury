@@ -308,9 +308,14 @@ class CombatState(GameState):
                     self.selected_tile,
                     self.current_combatant.tile_position,
                     0,
-                    self.current_combatant.movement
+                    self.current_combatant.move_current
                 )
                 if selection is None and in_range:
+                    dist = self.arena.tile_distance(
+                        self.current_combatant.tile_position,
+                        self.selected_tile
+                    )
+                    self.current_combatant.move_current -= dist
                     self.move_combatant_to_tile(
                         self.current_combatant,
                         self.selected_tile
@@ -370,6 +375,7 @@ class CombatState(GameState):
                 key=lambda x: x.current_ct
             )
             self.current_combatant = combatants_by_ct[0]
+            self.current_combatant.move_current = self.current_combatant.move_max
             ctdiff = 100 - self.current_combatant.current_ct
             if ctdiff > 0:
                 for combatant in self.combatants:
@@ -498,7 +504,7 @@ class CombatState(GameState):
             self.range_tiles = self.arena.find_tiles_in_range(
                 self.current_combatant.tile_position,
                 0,
-                self.current_combatant.movement
+                self.current_combatant.move_current
             )
         elif self.selected_ability is not None:
             self.range_tiles = self.arena.find_tiles_in_range(
