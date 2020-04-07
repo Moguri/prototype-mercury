@@ -220,10 +220,16 @@ class CombatState(GameState):
                 self.root_node
             ),
         ]
-        for idx, combatant in enumerate(self.enemy_combatants):
+        possible_positions = [
+            (x, y)
+            for x in range(self.arena.sizex - 1, self.arena.sizex - 3, -1)
+            for y in range(self.arena.sizey - 1)
+        ]
+        placements = random.sample(possible_positions, len(self.enemy_combatants))
+        for combatant, placement in zip(self.enemy_combatants, placements):
             self.move_combatant_to_tile(
                 combatant,
-                (9, idx)
+                placement
             )
             combatant.set_h(90)
         self.selected_ability = None
