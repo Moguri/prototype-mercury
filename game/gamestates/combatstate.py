@@ -266,6 +266,8 @@ class CombatState(GameState):
         self.display_message('')
         super().set_input_state(next_state)
 
+        self.range_tiles = []
+
         def setup_selection(accept_cb, reject_cb=None):
             self.accept('move-up', self.move_selection, [(0, 1)])
             self.accept('move-left', self.move_selection, [(-1, 0)])
@@ -299,11 +301,21 @@ class CombatState(GameState):
                 ('End Turn', self.set_input_state, ['END_TURN']),
             ])
             def update_ability(idx):
-                try:
-                    self.selected_ability = self.current_combatant.abilities[idx - 1]
-                except IndexError:
-                    # Not an ability option
-                    self.selected_ability = None
+                self.range_tiles = []
+                if idx == 0:
+                    self.range_tiles = self.arena.find_tiles_in_range(
+                        self.current_combatant.tile_position,
+                        0,
+                        self.current_combatant.move_current
+                    )
+                elif idx - 1 < len(self.current_combatant.abilities):
+                    ability = self.current_combatant.abilities[idx - 1]
+                    self.range_tiles = self.arena.find_tiles_in_range(
+                        self.current_combatant.tile_position,
+                        ability.range_min,
+                        ability.range_max
+                    )
+            update_ability(0)
             self.menu_helper.selection_change_cb = update_ability
             def action_reject():
                 self.input_state = 'SELECT'
@@ -525,14 +537,6 @@ class CombatState(GameState):
                 0,
                 self.current_combatant.move_current
             )
-        elif self.selected_ability is not None:
-            self.range_tiles = self.arena.find_tiles_in_range(
-                self.current_combatant.tile_position,
-                self.selected_ability.range_min,
-                self.selected_ability.range_max
-            )
-        else:
-            self.range_tiles = []
 
         self.arena.color_tiles((1, 1, 1, 1))
         self.arena.color_tiles(self.RANGE_COLOR, self.range_tiles)
