@@ -10,6 +10,7 @@ from .. import gamedb
 from ..monster import Monster
 from ..combatant import Combatant
 from ..commonlighting import CommonLighting
+from .. import bgnode
 
 from .gamestate import GameState
 
@@ -182,6 +183,12 @@ class CombatState(GameState):
         super().__init__()
 
         gdb = gamedb.get_instance()
+
+        # Background Image
+        bgtex = base.loader.load_texture('arenabg.png')
+        bgtex.set_format(p3d.Texture.F_srgb_alpha)
+        self.background_image = bgnode.generate(self.root_node)
+        self.background_image.set_shader_input('tex', bgtex)
 
         # Arena
         self.arena = Arena(self.root_node, 5, 5)

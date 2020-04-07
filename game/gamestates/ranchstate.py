@@ -6,48 +6,10 @@ import panda3d.core as p3d
 from .. import gamedb
 from ..monster import Monster, MonsterActor
 from ..commonlighting import CommonLighting
+from .. import bgnode
 
 from .gamestate import GameState
 
-
-_BG_VERT = """
-#version 130
-
-out vec2 texcoord;
-
-const vec4 positions[4] = vec4[4](
-    vec4(-1, -1, 0, 1),
-    vec4( 1, -1, 0, 1),
-    vec4(-1,  1, 0, 1),
-    vec4( 1,  1, 0, 1)
-);
-
-const vec2 texcoords[4] = vec2[4](
-    vec2(0, 0),
-    vec2(1, 0),
-    vec2(0, 1),
-    vec2(1, 1)
-);
-
-void main() {
-    gl_Position = positions[gl_VertexID];
-    texcoord = texcoords[gl_VertexID];
-}
-"""
-
-_BG_FRAG = """
-#version 130
-
-uniform sampler2D tex;
-uniform float exposure_inv;
-in vec2 texcoord;
-
-out vec4 color;
-
-void main() {
-    color = vec4(texture2D(tex, texcoord).rgb, 1.0) * exposure_inv;
-}
-"""
 
 SHADOW_CATCH_V = """
 #version 130
@@ -167,12 +129,7 @@ class RanchState(GameState):
                 tex.set_format(p3d.Texture.F_srgb_alpha)
             else:
                 tex.set_format(p3d.Texture.F_srgb)
-        self.background_image = self.root_node.attach_new_node(p3d.CardMaker('bgimg').generate())
-        self.background_image.set_shader(p3d.Shader.make(p3d.Shader.SL_GLSL, _BG_VERT, _BG_FRAG))
-        self.background_image.set_shader_input('exposure_inv', 1.0 / base.render_pipeline.exposure)
-        self.background_image.set_bin('background', 0)
-        self.background_image.set_depth_test(False)
-        self.background_image.set_depth_write(False)
+        self.background_image = bgnode.generate(self.root_node)
 
         # Setup Camera
         base.camera.set_pos(0, -5, 5)
