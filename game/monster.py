@@ -1,10 +1,35 @@
 import builtins
 import collections
+import random
 
 from direct.actor.Actor import Actor
 from direct.interval import IntervalGlobal as intervals
 
 from . import gamedb
+
+
+RANDOM_NAMES = [
+    'Aeon Faunagrief',
+    'Aeon Valentine',
+    'Bedlam Gunner',
+    'Belladonna Griefamber',
+    'Honor Mourner',
+    'Hunter Seraphslayer',
+    'Maxim Jester',
+    'Maxim Veil',
+    'Rage Darkdawn',
+    'Raven Grimhunter',
+    'Reaper Queenbane',
+    'Seraph Ravendragon',
+    'Solitaire Knight',
+    'Song Darkwarden',
+    'Spirit Griffon',
+    'Spirit Mistangel',
+    'Star Saber',
+    'Totem Beastguard',
+    'Wolf Steeltotem',
+    'Zealot Talon',
+]
 
 
 class MonsterActor:
@@ -118,10 +143,21 @@ class Monster:
         return set(job.required_tags).issubset(self.tags)
 
     @classmethod
-    def make_new(cls, monster_id, name, breed_id):
+    def get_random_name(cls):
+        return random.choice(RANDOM_NAMES)
+
+    @classmethod
+    def make_new(cls, monster_id, name=None, breed_id=None):
         gdb = gamedb.get_instance()
 
-        breed = gdb['breeds'][breed_id]
+        if name is None:
+            name = cls.get_random_name()
+
+        if breed_id is not None:
+            breed = gdb['breeds'][breed_id]
+        else:
+            breed = random.choice(list(gdb['breeds'].values()))
+
         monsterdata = gdb.schema_to_datamodel['monsters']({
             'id': monster_id,
             'name': name,

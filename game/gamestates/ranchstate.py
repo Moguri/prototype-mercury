@@ -1,5 +1,3 @@
-import random
-
 from direct.showbase.MessengerGlobal import messenger
 import panda3d.core as p3d
 
@@ -62,29 +60,6 @@ void main() {
     }
 }
 """
-
-RANDOM_NAMES = [
-    'Aeon Faunagrief',
-    'Aeon Valentine',
-    'Bedlam Gunner',
-    'Belladonna Griefamber',
-    'Honor Mourner',
-    'Hunter Seraphslayer',
-    'Maxim Jester',
-    'Maxim Veil',
-    'Rage Darkdawn',
-    'Raven Grimhunter',
-    'Reaper Queenbane',
-    'Seraph Ravendragon',
-    'Solitaire Knight',
-    'Song Darkwarden',
-    'Spirit Griffon',
-    'Spirit Mistangel',
-    'Star Saber',
-    'Totem Beastguard',
-    'Wolf Steeltotem',
-    'Zealot Talon',
-]
 
 
 class RanchState(GameState):
@@ -198,9 +173,8 @@ class RanchState(GameState):
             base.camera.set_x(0)
             def get_monster(breedid):
                 breed = gdb['breeds'][breedid]
-                monster_name = random.choice(RANDOM_NAMES)
                 self.player.monsters.append(
-                    Monster.make_new('player.monster', monster_name, breed.id)
+                    Monster.make_new('player.monster', breed_id=breed.id)
                 )
                 self.load_monster_models()
                 self.monster_selection = len(self.monster_actors) - 1

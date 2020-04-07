@@ -6,7 +6,6 @@ from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
 
 from .. import effects
-from .. import gamedb
 from ..monster import Monster
 from ..combatant import Combatant
 from ..commonlighting import CommonLighting
@@ -182,8 +181,6 @@ class CombatState(GameState):
     def __init__(self):
         super().__init__()
 
-        gdb = gamedb.get_instance()
-
         # Background Image
         bgtex = base.loader.load_texture('arenabg.png')
         bgtex.set_format(p3d.Texture.F_srgb_alpha)
@@ -198,12 +195,6 @@ class CombatState(GameState):
         self.player = base.blackboard['player']
 
         # Combatants
-        available_monsters = [
-            i
-            for i in list(gdb['monsters'].values())
-            if i.id not in ('player_monster', 'bobcatshark')
-        ]
-
         self.player_combatants = [
             Combatant(mon, self.root_node) for mon in self.player.monsters
         ]
@@ -216,9 +207,10 @@ class CombatState(GameState):
 
         self.enemy_combatants = [
             Combatant(
-                Monster(random.choice(available_monsters)),
+                Monster.make_new(f'combatant{i}'),
                 self.root_node
-            ),
+            )
+            for i in range(len(self.player_combatants))
         ]
         possible_positions = [
             (x, y)

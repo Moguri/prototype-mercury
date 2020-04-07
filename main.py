@@ -49,7 +49,7 @@ class GameApp(ShowBase):
             'player': PlayerData(),
         }
         default_breed = p3d.ConfigVariableString('mercury-default-breed', 'claygolem').get_value()
-        default_monster = Monster.make_new('player_monster', 'Default', default_breed)
+        default_monster = Monster.make_new('player_monster', breed_id=default_breed)
         self.blackboard['player'].monsters = [default_monster]
 
         # UI
