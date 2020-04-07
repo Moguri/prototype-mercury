@@ -191,7 +191,7 @@ class CombatState(GameState):
         self.background_image.set_shader_input('tex', bgtex)
 
         # Arena
-        self.arena = Arena(self.root_node, 5, 5)
+        self.arena = Arena(self.root_node, 10, 10)
         self.selected_tile = (0, 0)
         self.range_tiles = []
 
@@ -223,7 +223,7 @@ class CombatState(GameState):
         for idx, combatant in enumerate(self.enemy_combatants):
             self.move_combatant_to_tile(
                 combatant,
-                (4, idx)
+                (9, idx)
             )
             combatant.set_h(90)
         self.selected_ability = None
@@ -234,8 +234,9 @@ class CombatState(GameState):
         CommonLighting(self.root_node, arena_world_center)
 
         # Setup Camera
-        base.camera.set_pos(-10, -10, 10)
-        base.camera.look_at(self.arena.tile_coord_to_world(self.arena.center))
+        base.camera.set_pos(-15, -15, 15)
+        lookat_offset = p3d.LVector3(-3, -3, 0)
+        base.camera.look_at(self.arena.tile_coord_to_world(self.arena.center) + lookat_offset)
 
         # Setup UI
         self.load_ui('combat')
