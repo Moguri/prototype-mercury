@@ -311,6 +311,8 @@ class CombatState(GameState):
         elif next_state == 'MOVE':
             def accept_move():
                 selection = self.combatant_in_tile(self.selected_tile)
+                if selection == self.current_combatant:
+                    selection = None
                 in_range = self.arena.tile_in_range(
                     self.selected_tile,
                     self.current_combatant.tile_position,
@@ -327,7 +329,7 @@ class CombatState(GameState):
                         self.current_combatant,
                         self.selected_tile
                     )
-                    self.input_state = 'SELECT'
+                    self.input_state = 'ACTION'
 
             def reject_move():
                 self.selected_tile = self.current_combatant.tile_position
