@@ -165,7 +165,6 @@ class RanchState(GameState):
                 ('Battle', self.set_input_state, ['COMBAT']),
                 ('Select Monster', self.set_input_state, ['SELECT_MONSTER']),
                 ('Monster Stats', self.set_input_state, ['STATS']),
-                ('Train', self.set_input_state, ['TRAIN']),
                 ('Change Job', self.set_input_state, ['JOBS']),
                 ('Dismiss Monster', self.set_input_state, ['DISMISS']),
                 ('Save Game', base.change_state, ['Save']),
@@ -236,16 +235,6 @@ class RanchState(GameState):
                 'monster': monsterdict
             })
             self.accept('accept', back_to_main)
-        elif next_state == 'TRAIN':
-            monster = self.current_monster
-            job = monster.job
-            monster.job_levels[job.id] += 1
-            self.display_message(
-                f'{job.name} raised to level  {monster.job_levels[job.id]}',
-                modal=True
-            )
-            self.accept('accept', back_to_main)
-
         elif next_state == 'JOBS':
             def change_job(jobid):
                 gdb = gamedb.get_instance()
