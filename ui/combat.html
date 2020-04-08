@@ -12,26 +12,23 @@
 
     <body>
         <div id="app">
-            <div id='nav' v-if='state.show_menu' class='pure-menu'>
-                <span class='custom-menu-heading pure-menu-heading'>{{state.menu_heading}}</span>
-                <ul class='pure-menu-list'>
-                    <li v-for='(item, idx) in state.menu_items' class='custom-menu-item pure-menu-item'
-                        v-bind:class="{'pure-menu-selected': idx == state.selection_index}">
-                        <a href='#' class='pure-menu-link'>{{item}}</a>
-                    </li>
-                </ul>
-            </div>
+            <nav-bar
+                :show_menu='state.show_menu'
+                :menu_heading='state.menu_heading'
+                :menu_items='state.menu_items'
+                :selection_index='state.selection_index'
+            ></nav-bar>
+
+            <message-bar
+                :message='state.message'
+                :modal='state.message_modal'
+            ></message-bar>
 
             <div id='results' v-if='state.results' class='pure-menu'>
                 <p>Results:</p>
                 <ul>
                     <li v-for='result in state.results'>{{result}}</a>
                 </ul>
-            </div>
-
-            <div id='message-bar' v-if='state.message != ""'>
-                <span>{{state.message}}</span>
-                <span class='modal-indicator' v-if='state.message_modal'>&#x25bc;</span>
             </div>
 
             <div id='stats' v-if='state.monster.name' class='pure-menu'>
