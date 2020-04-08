@@ -6,6 +6,7 @@
 
         <script src="vue.js"></script>
         <link rel="stylesheet" href="pure-min.css">
+        <link rel="stylesheet" href="animate.css">
         <link rel="stylesheet" href="common.css">
         <link rel="stylesheet" href="combat.css">
     </head>
@@ -24,33 +25,42 @@
                 :modal='state.message_modal'
             ></message-bar>
 
-            <div id='results' v-if='state.results' class='pure-menu'>
-                <p>Results:</p>
-                <ul>
-                    <li v-for='result in state.results'>{{result}}</a>
-                </ul>
-            </div>
+            <transition
+                enter-active-class="animated bounceInDown faster"
+            >
+                <div id='results' v-if='state.results' class='pure-menu'>
+                    <p>Results:</p>
+                    <ul>
+                        <li v-for='result in state.results'>{{result}}</a>
+                    </ul>
+                </div>
+            </transition>
 
-            <div id='stats' v-if='state.monster.name' class='pure-menu'>
-                <p>{{state.monster.name}}</p>
-                <span>HP:</span>
-                <progress
-                    id='health-bar'
-                    :value='state.monster.hp_current'
-                    :max='state.monster.hp_max'
-                >
-                </progress>
-                <span>{{state.monster.hp_current}}/{{state.monster.hp_max}}</span><br>
+            <transition
+                enter-active-class="animated slideInRight speed-200"
+                leave-active-class="animated slideOutRight speed-200"
+            >
+                <div id='stats' v-if='state.monster.name' class='pure-menu'>
+                    <p>{{state.monster.name}}</p>
+                    <span>HP:</span>
+                    <progress
+                        id='health-bar'
+                        :value='state.monster.hp_current'
+                        :max='state.monster.hp_max'
+                    >
+                    </progress>
+                    <span>{{state.monster.hp_current}}/{{state.monster.hp_max}}</span><br>
 
-                <span>CT:</span>
-                <progress
-                    id='ct-bar'
-                    :value='state.monster.ct_current'
-                    :max='state.monster.ct_max'
-                >
-                </progress>
-                <span>{{state.monster.ct_current}}/{{state.monster.ct_max}}</span>
-            </div>
+                    <span>CT:</span>
+                    <progress
+                        id='ct-bar'
+                        :value='state.monster.ct_current'
+                        :max='state.monster.ct_max'
+                    >
+                    </progress>
+                    <span>{{state.monster.ct_current}}/{{state.monster.ct_max}}</span>
+                </div>
+            </transition>
         </div>
     </body>
 

@@ -71,3 +71,8 @@ body,
         opacity: 0;
     }
 }
+
+.animated.speed-200 {
+  -webkit-animation-duration: 230ms;
+  animation-duration: 200ms;
+}

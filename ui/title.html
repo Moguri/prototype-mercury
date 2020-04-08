@@ -6,6 +6,7 @@
 
         <script src="vue.js"></script>
         <link rel="stylesheet" href="pure-min.css">
+        <link rel="stylesheet" href="animate.css">
         <link rel="stylesheet" href="common.css">
         <link rel="stylesheet" href="title.css">
     </head>
@@ -16,8 +17,8 @@
                 <source src="titlebg.webm" type="video/webm">
             </video>
 
-            <h1 id="title">Mercury</h1>
-            <div id='title-nav' class='pure-menu pure-menu-horizontal'>
+            <h1 id="title" class='animated slideInDown'>Mercury</h1>
+            <div id='title-nav' class='pure-menu pure-menu-horizontal animated slidInUp'>
                 <ul class='pure-menu-list'>
                     <li v-for='(item, idx) in state.menu_items' class='custom-menu-item pure-menu-item'
                         v-bind:class="{'pure-menu-selected': idx == state.selection_index}">

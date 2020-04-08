@@ -23,6 +23,10 @@ function update_state(new_state) {
 Vue.component('nav-bar', {
   props: ['show_menu', 'menu_heading', 'menu_items', 'selection_index'],
   template: `
+    <transition
+        enter-active-class="animated slideInLeft speed-200"
+        leave-active-class="animated slideOutLeft speed-200"
+    >
       <div id='nav' v-if='show_menu' class='pure-menu'>
           <span class='custom-menu-heading pure-menu-heading'>{{menu_heading}}</span>
           <ul class='pure-menu-list'>
@@ -32,15 +36,21 @@ Vue.component('nav-bar', {
               </li>
           </ul>
       </div>
+    </transition>
   `
 });
 
 Vue.component('message-bar', {
   props: ['message', 'modal'],
   template: `
-    <div id='message-bar' v-if='message !== ""'>
-        <span>{{message}}</span>
-        <span class='modal-indicator' v-if='modal'>&#x25bc;</span>
-    </div>
+    <transition
+        enter-active-class="animated fadeIn speed-200"
+        leave-active-class="animated fadeOut speed-200"
+    >
+      <div id='message-bar' v-if='message !== ""'>
+          <span>{{message}}</span>
+          <span class='modal-indicator' v-if='modal'>&#x25bc;</span>
+      </div>
+    </transition>
   `
 });

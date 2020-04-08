@@ -542,7 +542,7 @@ class CombatState(GameState):
 
         # Update stat display
         combatant_at_cursor = self.combatant_in_tile(self.selected_tile)
-        if combatant_at_cursor:
+        if combatant_at_cursor and self.input_state != 'END_COMBAT':
             self.update_ui({'monster': combatant_at_cursor.get_state()})
         else:
             self.update_ui({'monster': {}})
