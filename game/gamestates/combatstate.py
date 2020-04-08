@@ -198,10 +198,23 @@ class CombatState(GameState):
         self.player_combatants = [
             Combatant(mon, self.root_node) for mon in self.player.monsters
         ]
-        for idx, combatant in enumerate(self.player_combatants):
+        random_placement = p3d.ConfigVariableBool(
+            'mercury-random-combat-placement',
+            True
+        ).get_value()
+        possible_positions = [
+            (x, y)
+            for x in range(2)
+            for y in range(self.arena.sizey - 1)
+        ]
+        if random_placement:
+            placements = random.sample(possible_positions, len(self.player_combatants))
+        else:
+            placements = possible_positions
+        for combatant, placement in zip(self.player_combatants, placements):
             self.move_combatant_to_tile(
                 combatant,
-                (0, idx)
+                placement
             )
             combatant.set_h(-90)
 
