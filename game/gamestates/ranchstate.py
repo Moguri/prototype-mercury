@@ -225,7 +225,14 @@ class RanchState(GameState):
                 if self.current_monster.job.id != job.id and self.current_monster.can_use_job(job)
             ])
         elif next_state == 'COMBAT':
-            base.change_state('Combat')
+            def enter_combat(ctype):
+                base.blackboard['combat_type'] = ctype
+                base.change_state('Combat')
+            self.menu_helper.set_menu('', [
+                ('Back', self.set_input_state, ['MAIN']),
+                ('Skirmish', enter_combat, ['skirmish']),
+                ('Boss Fight', enter_combat, ['boss']),
+            ])
         elif next_state == 'DISMISS':
             mon = self.player.monsters.pop(self.monster_selection)
             self.display_message(f'Dismissed {mon.name}', modal=True)

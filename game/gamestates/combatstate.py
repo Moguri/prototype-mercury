@@ -194,7 +194,7 @@ class CombatState(GameState):
 
         self.player = base.blackboard['player']
 
-        # Combatants
+        # Player Combatants
         self.player_combatants = [
             Combatant(mon, self.root_node) for mon in self.player.monsters
         ]
@@ -205,12 +205,15 @@ class CombatState(GameState):
             )
             combatant.set_h(-90)
 
+        # Enemy Combatants
+        default_combat_type = p3d.ConfigVariableString('mercury-default-combat-type', 'skirmish')
+        combat_type = base.blackboard.get('combat_type', default_combat_type)
         self.enemy_combatants = [
             Combatant(
                 Monster.make_new(f'combatant{i}'),
                 self.root_node
             )
-            for i in range(len(self.player_combatants))
+            for i in range(7 if combat_type == 'boss' else len(self.player_combatants))
         ]
         possible_positions = [
             (x, y)
