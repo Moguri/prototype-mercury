@@ -24,6 +24,6 @@ This file is loaded after all over config so it will override the config in the 
 
 ## License
 
-* Anything mentioned in `credits.txt` have licenses as specified in the file
+* Anything mentioned in [CREDITS.md](CREDITS.md) have licenses as specified in the file
 * Any remaining code is [Apache-2.0](https://choosealicense.com/licenses/apache-2.0/)
 * Any remaining assets are [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
