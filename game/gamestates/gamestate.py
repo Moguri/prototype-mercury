@@ -27,6 +27,13 @@ class GameState(DirectObject):
     def update_ui(self, state_data):
         base.ui.execute_js('update_state({})'.format(json.dumps(state_data)), onload=True)
 
+    def play_bg_music(self, filename):
+        if p3d.ConfigVariableBool('mercury-disable-music', False).get_value():
+            return
+        bgmusic = base.loader.load_music(f'music/{filename}.opus')
+        bgmusic.set_loop(True)
+        bgmusic.play()
+
     def set_input_state(self, _next_state):
         self.ignore_all()
         self.menu_helper.show = False

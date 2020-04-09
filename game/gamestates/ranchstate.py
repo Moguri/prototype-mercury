@@ -106,6 +106,9 @@ class RanchState(GameState):
                 tex.set_format(p3d.Texture.F_srgb)
         self.background_image = bgnode.generate(self.root_node)
 
+        # Setup Background Music
+        self.play_bg_music('woodland_fantasy')
+
         # Setup Camera
         base.camera.set_pos(0, -5, 5)
         base.camera.look_at(0, 0, 1)

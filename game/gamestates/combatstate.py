@@ -187,6 +187,9 @@ class CombatState(GameState):
         self.background_image = bgnode.generate(self.root_node)
         self.background_image.set_shader_input('tex', bgtex)
 
+        # Background Music
+        self.play_bg_music('the_last_encounter')
+
         # Arena
         self.arena = Arena(self.root_node, 10, 10)
         self.selected_tile = (0, 0)

@@ -13,5 +13,7 @@ class TitleState(GameState):
             ('Quit', self.quit, []),
         ])
 
+        self.play_bg_music('the_fall_of_arcana')
+
     def quit(self):
         messenger.send('escape')
