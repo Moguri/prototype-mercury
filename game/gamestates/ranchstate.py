@@ -145,12 +145,15 @@ class RanchState(GameState):
                 ('Monster Stats', self.set_input_state, ['STATS']),
                 ('Change Job', self.set_input_state, ['JOBS']),
                 ('Dismiss Monster', self.set_input_state, ['DISMISS']),
-                ('Save Game', base.change_state, ['Save']),
-                ('Load Game', base.change_state, ['Load']),
-                ('Quit', self.set_input_state, ['QUIT']),
             ]
             if len(self.player.monsters) < self.player.max_monsters:
                 menu_items.insert(1, ('Market', self.set_input_state, ['MARKET']))
+            if base.allow_saves:
+                menu_items.extend([
+                    ('Save Game', base.change_state, ['Save']),
+                    ('Load Game', base.change_state, ['Load']),
+                ])
+            menu_items.append(('Quit', self.set_input_state, ['QUIT']))
             self.menu_helper.set_menu('Ranch', menu_items)
         elif next_state == 'SELECT_MONSTER':
             self.display_message('Select a monster', modal=True)

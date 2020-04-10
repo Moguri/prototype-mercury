@@ -45,6 +45,7 @@ class GameApp(ShowBase):
         self.accept('save-screenshot', self.screenshot)
 
         # Global storage
+        self.allow_saves = p3d.ConfigVariableBool('mercury-allow-saves', False)
         self.blackboard = {
             'player': PlayerData(),
         }
