@@ -144,6 +144,7 @@ class AiController():
 
         if target_tile:
             self.controller.move_combatant_to_tile(combatant, target_tile)
+            self.controller.selected_tile = combatant.tile_position
 
         # Update facing
         facing = self.arena.tile_get_facing_to(
@@ -288,14 +289,21 @@ class CombatState(GameState):
         self.range_tiles = []
 
         def setup_selection(accept_cb, reject_cb=None):
-            self.accept('move-up', self.move_selection, [(0, 1)])
-            self.accept('move-left', self.move_selection, [(-1, 0)])
-            self.accept('move-down', self.move_selection, [(0, -1)])
-            self.accept('move-right', self.move_selection, [(1, 0)])
-            self.accept('move-up-repeat', self.move_selection, [(0, 1)])
-            self.accept('move-left-repeat', self.move_selection, [(-1, 0)])
-            self.accept('move-down-repeat', self.move_selection, [(0, -1)])
-            self.accept('move-right-repeat', self.move_selection, [(1, 0)])
+            def move_selection(vector):
+                selection = self.arena.vec_to_tile_coord(
+                    p3d.LVector2(self.selected_tile) + p3d.LVector2(vector)
+                )
+
+                if self.arena.tile_coord_in_bounds(selection):
+                    self.selected_tile = selection
+            self.accept('move-up', move_selection, [(0, 1)])
+            self.accept('move-left', move_selection, [(-1, 0)])
+            self.accept('move-down', move_selection, [(0, -1)])
+            self.accept('move-right', move_selection, [(1, 0)])
+            self.accept('move-up-repeat', move_selection, [(0, 1)])
+            self.accept('move-left-repeat', move_selection, [(-1, 0)])
+            self.accept('move-down-repeat', move_selection, [(0, -1)])
+            self.accept('move-right-repeat', move_selection, [(1, 0)])
             self.accept('accept', accept_cb)
             if reject_cb is not None:
                 self.accept('reject', reject_cb)
@@ -309,8 +317,8 @@ class CombatState(GameState):
             self.display_message('Select a combatant')
         elif next_state == 'ACTION':
             def use_ability(ability):
-                self.input_state = 'TARGET'
                 self.selected_ability = ability
+                self.input_state = 'TARGET'
             self.menu_helper.set_menu(self.current_combatant.name, [
                 ('Move', self.set_input_state, ['MOVE']),
             ] + [
@@ -340,6 +348,11 @@ class CombatState(GameState):
                 self.input_state = 'SELECT'
             self.menu_helper.reject_cb = action_reject
         elif next_state == 'MOVE':
+            self.range_tiles = self.arena.find_tiles_in_range(
+                self.current_combatant.tile_position,
+                0,
+                self.current_combatant.move_current
+            )
             def accept_move():
                 selection = self.combatant_in_tile(self.selected_tile)
                 if selection == self.current_combatant:
@@ -369,6 +382,11 @@ class CombatState(GameState):
             setup_selection(accept_move, reject_move)
             self.display_message('Select new location')
         elif next_state == 'TARGET':
+            self.range_tiles = self.arena.find_tiles_in_range(
+                self.current_combatant.tile_position,
+                self.selected_ability.range_min,
+                self.selected_ability.range_max
+            )
             def accept_target():
                 selection = self.combatant_in_tile(self.selected_tile)
                 in_range = self.arena.tile_in_range(
@@ -491,14 +509,6 @@ class CombatState(GameState):
         other_pos = p3d.LVector2(other.tile_position)
         new_pos = self.arena.vec_to_tile_coord(-direction * target_range + other_pos)
         self.move_combatant_to_tile(combatant, new_pos)
-
-    def move_selection(self, vector):
-        selection = self.arena.vec_to_tile_coord(
-            p3d.LVector2(self.selected_tile) + p3d.LVector2(vector)
-        )
-
-        if self.arena.tile_coord_in_bounds(selection):
-            self.selected_tile = selection
 
     def display_message(self, msg):
         self.update_ui({
