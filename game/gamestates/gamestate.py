@@ -11,6 +11,8 @@ class GameState(DirectObject):
         super().__init__()
         self.root_node = p3d.NodePath('State Root')
         self.root_node.reparent_to(base.render)
+        self.root_node2d = p3d.NodePath('State Root 2D')
+        self.root_node2d.reparent_to(base.render2d)
         self.menu_helper = MenuHelper(self.update_ui)
         self._input_state = None
 
@@ -18,6 +20,8 @@ class GameState(DirectObject):
         self.ignoreAll()
         self.root_node.remove_node()
         self.root_node = None
+        self.root_node2d.remove_node()
+        self.root_node2d = None
         base.render.clear_light()
         self.menu_helper.cleanup()
 
