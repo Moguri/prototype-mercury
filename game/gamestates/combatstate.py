@@ -123,6 +123,7 @@ class AiController():
             0,
             combatant.movement
         )
+        tiles = [tile for tile in tiles if self.controller.combatant_in_tile(tile) is None]
         target_tile = None
         dist_to_target = self.arena.tile_distance(
             combatant.tile_position,
