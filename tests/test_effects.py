@@ -6,11 +6,11 @@ from game import gamedb
 from game import effects
 
 @pytest.mark.parametrize("ability", gamedb.get_instance()['abilities'].values())
-def test_smoke(combatant, empty_nodepath, ability):
+def test_smoke(combatant, empty_nodepath, ability, combat):
     combatant.target = combatant
     print(ability.name)
     pprint.pprint(ability.effects)
-    effects.sequence_from_ability(empty_nodepath, combatant, ability, None)
+    effects.sequence_from_ability(empty_nodepath, combatant, ability, combat)
 
 def test_calc_hit_mod():
     assert effects.calculate_hit_mod(300, 250) == 5

@@ -8,7 +8,8 @@
         "idle": "cg.Idle",
         "attack": "cg.Attack",
         "death": "cg.Death",
-        "magic": "cg.Magic"
+        "magic": "cg.Magic",
+        "walk": "cg.Run"
     },
     "hp": 100,
     "ap_per_second": 5,

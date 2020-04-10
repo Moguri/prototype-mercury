@@ -183,23 +183,19 @@ class SequenceBuilder:
         if hit_required and not self.is_hit:
             return intervals.Sequence()
 
-        def func():
-            self.combat.move_combatant_to_range(
-                target,
-                target.target,
-                target_range
-            )
-
-        return intervals.Func(func)
+        seq = self.combat.move_combatant_to_range(
+            target,
+            target.target,
+            target_range
+        )
+        return seq
 
     def move_to_start(self, target, _parameters):
         target_pos = self.initial_position
-        def func():
-            self.combat.move_combatant_to_tile(
-                target,
-                target_pos
-            )
-        return intervals.Func(func)
+        return self.combat.move_combatant_to_tile(
+            target,
+            target_pos
+        )
 
     #
     # Template Effects

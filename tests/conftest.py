@@ -5,6 +5,7 @@ import os
 from unittest.mock import MagicMock
 
 import panda3d.core as p3d
+from direct.interval import IntervalGlobal as intervals
 import pytest
 
 TESTDIR = os.path.abspath(os.path.dirname(__file__))
@@ -44,6 +45,15 @@ def player(monster):
     player.monsters.append(monster)
 
     return player
+
+@pytest.fixture
+def combat():
+    class Combat:
+        def move_combatant_to_tile(self, *_args, **_kwargs):
+            return intervals.Sequence()
+        def move_combatant_to_range(self, *_args, **_kwargs):
+            return intervals.Sequence()
+    return Combat()
 
 @pytest.fixture
 def state_manager():

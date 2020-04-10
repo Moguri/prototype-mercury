@@ -98,6 +98,8 @@ class AiController():
         self.targets = {}
 
     def update_combatant(self, combatant, enemy_combatants):
+        sequence = intervals.Sequence()
+
         # Find a target
         target = self.targets.get(combatant, None)
         if target is None or target.is_dead():
@@ -143,8 +145,12 @@ class AiController():
                 dist_to_target = tile_dist
 
         if target_tile:
-            self.controller.move_combatant_to_tile(combatant, target_tile)
-            self.controller.selected_tile = combatant.tile_position
+            def update_selected():
+                self.controller.selected_tile = combatant.tile_position
+            sequence.extend([
+                self.controller.move_combatant_to_tile(combatant, target_tile),
+                intervals.Func(update_selected)
+            ])
 
         # Update facing
         facing = self.arena.tile_get_facing_to(
@@ -152,12 +158,12 @@ class AiController():
             target.tile_position
         )
         if sum(facing) != 0:
-            combatant.set_h(
-                math.degrees(math.atan2(facing[1], facing[0])) - 90
+            newfacing = math.degrees(math.atan2(facing[1], facing[0])) - 90
+            sequence.append(
+                intervals.Func(combatant.set_h, newfacing)
             )
 
         # Use an ability if able
-        sequence = intervals.Sequence()
         if ability.range_min <= dist_to_target <= ability.range_max:
             self.controller.display_message(
                 f'{combatant.name} is using {ability.name} '
@@ -165,13 +171,13 @@ class AiController():
             )
             combatant.target = target
             target.target = combatant
-            sequence = effects.sequence_from_ability(
-                self.effects_root,
-                combatant,
-                ability,
-                self.controller
-            )
             sequence.extend([
+                effects.sequence_from_ability(
+                    self.effects_root,
+                    combatant,
+                    ability,
+                    self.controller
+                ),
                 intervals.WaitInterval(1),
             ])
 
@@ -221,7 +227,8 @@ class CombatState(GameState):
         for combatant, placement in zip(self.player_combatants, placements):
             self.move_combatant_to_tile(
                 combatant,
-                placement
+                placement,
+                True
             )
             combatant.set_h(-90)
 
@@ -244,7 +251,8 @@ class CombatState(GameState):
         for combatant, placement in zip(self.enemy_combatants, placements):
             self.move_combatant_to_tile(
                 combatant,
-                placement
+                placement,
+                True
             )
             combatant.set_h(90)
         self.selected_ability = None
@@ -369,11 +377,13 @@ class CombatState(GameState):
                         self.selected_tile
                     )
                     self.current_combatant.move_current -= dist
-                    self.move_combatant_to_tile(
-                        self.current_combatant,
-                        self.selected_tile
-                    )
-                    self.input_state = 'ACTION'
+                    intervals.Sequence(
+                        self.move_combatant_to_tile(
+                            self.current_combatant,
+                            self.selected_tile
+                        ),
+                        intervals.Func(self.set_input_state, 'ACTION')
+                    ).start()
 
             def reject_move():
                 self.selected_tile = self.current_combatant.tile_position
@@ -485,14 +495,25 @@ class CombatState(GameState):
 
         return combatants[0] if combatants else None
 
-    def move_combatant_to_tile(self, combatant, tile_pos):
-        if not self.arena.tile_coord_in_bounds(tile_pos):
-            return False
-
+    def move_combatant_to_tile(self, combatant, tile_pos, immediate=False):
+        if immediate:
+            duration = 0
+        else:
+            duration = self.arena.tile_distance(combatant.tile_position, tile_pos) * 0.2
         combatant.tile_position = tile_pos
-        combatant.set_pos(self.arena.tile_coord_to_world(tile_pos))
-
-        return True
+        newpos = self.arena.tile_coord_to_world(tile_pos)
+        sequence = intervals.Sequence(
+            intervals.Func(combatant.play_anim, 'walk'),
+            intervals.LerpPosInterval(
+                combatant.as_nodepath,
+                duration,
+                newpos
+            ),
+            intervals.Func(combatant.play_anim, 'idle')
+        )
+        if immediate:
+            sequence.start()
+        return sequence
 
     def move_combatant_to_range(self, combatant, other, target_range):
         distance = self.arena.tile_distance(
@@ -500,7 +521,7 @@ class CombatState(GameState):
             other.tile_position
         )
         if distance == target_range:
-            return
+            return intervals.Sequence()
 
         direction = p3d.LVector2(self.arena.tile_get_facing_to(
             combatant.tile_position,
@@ -508,7 +529,7 @@ class CombatState(GameState):
         ))
         other_pos = p3d.LVector2(other.tile_position)
         new_pos = self.arena.vec_to_tile_coord(-direction * target_range + other_pos)
-        self.move_combatant_to_tile(combatant, new_pos)
+        return self.move_combatant_to_tile(combatant, new_pos)
 
     def display_message(self, msg):
         self.update_ui({
