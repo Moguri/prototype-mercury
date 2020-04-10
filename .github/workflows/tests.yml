@@ -6,7 +6,7 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  test_and_build:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -26,6 +26,23 @@ jobs:
     - name: Run Tests
       run: |
         pman test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+    - name: Install Blender
+      run: |
+        sudo snap install blender --classic
+        pman update --extras blender
+        rm tests/test_imports.py
     - name: Build Binary Distributions
       run: |
-        pman dist
+        pman dist --skip-installers
