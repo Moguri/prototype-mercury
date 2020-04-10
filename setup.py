@@ -46,6 +46,7 @@ setup(
             'plugins': [
                 'pandagl',
                 'p3openal_audio',
+                'p3ffmpeg',
             ],
             'exclude_modules': {
                 '*': [
