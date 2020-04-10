@@ -1,7 +1,6 @@
 from direct.gui.OnscreenImage import OnscreenImage
 from direct.showbase.MessengerGlobal import messenger
 
-from ..playerdata import PlayerData
 from .gamestate import GameState
 
 class TitleState(GameState):
@@ -17,13 +16,10 @@ class TitleState(GameState):
             ('Quit', messenger.send, ['quit']),
         ]
         if base.allow_saves:
-            menu_items.insert(0, ('New Game', base.change_state, ['NewTrainer']))
+            menu_items.insert(0, ('New Game', base.change_state, ['NewTrainer', True]))
             menu_items.insert(1, ('Load Game', base.change_state, ['Load']))
         else:
-            def new_game():
-                base.blackboard['player'] = PlayerData()
-                base.change_state('Ranch')
-            menu_items.insert(0, ('Start', new_game, []))
+            menu_items.insert(0, ('Start', base.change_state, ['NewTrainer', True]))
         self.menu_helper.set_menu('', menu_items)
 
         # Background Music

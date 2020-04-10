@@ -16,6 +16,12 @@ class GameState(DirectObject):
         self.menu_helper = MenuHelper(self.update_ui)
         self._input_state = None
 
+        def handle_fade(task):
+            if base.transitions.fadeOutActive():
+                base.transitions.fadeIn()
+            return task.done
+        base.taskMgr.do_method_later(0, handle_fade, 'Fade In')
+
     def cleanup(self):
         self.ignoreAll()
         self.root_node.remove_node()

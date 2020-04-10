@@ -2,6 +2,7 @@ import os
 import sys
 
 from direct.showbase.ShowBase import ShowBase
+from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
 import cefpanda
 import pman.shim
@@ -65,11 +66,23 @@ class GameApp(ShowBase):
             return task.cont
         self.taskMgr.add(update_state, 'GameState Update')
 
-    def change_state(self, next_state):
-        self.gman.change(next_state)
+    def change_state(self, next_state, skip_fade=False):
+        ival = intervals.Func(self.gman.change, next_state)
+        if skip_fade:
+            ival.start()
+        else:
+            self.transitions.fadeOut(
+                finishIval=ival
+            )
 
-    def change_to_previous_state(self):
-        self.gman.change_to_previous()
+    def change_to_previous_state(self, skip_fade=False):
+        ival = intervals.Func(self.gman.change_to_previous)
+        if skip_fade:
+            ival.start()
+        else:
+            self.transitions.fadeOut(
+                finishIval=ival
+            )
 
     def load_ui(self, uiname):
         self.ui.load_file(os.path.join(pathutils.APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
