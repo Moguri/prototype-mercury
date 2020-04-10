@@ -170,7 +170,6 @@ class AiController():
                 self.controller
             )
             sequence.extend([
-                intervals.Func(self.controller.check_for_dead_combatants),
                 intervals.WaitInterval(1),
             ])
 
@@ -271,7 +270,6 @@ class CombatState(GameState):
         # def kill_all():
         #     for combatant in self.enemy_combatants:
         #         combatant.current_hp = 0
-        #     self.check_for_dead_combatants()
         # self.accept('k', kill_all)
 
     @property
@@ -392,7 +390,6 @@ class CombatState(GameState):
                         self
                     )
                     def cleanup():
-                        self.check_for_dead_combatants()
                         if self.input_state != 'END_COMBAT':
                             self.input_state = 'END_TURN'
                     sequence.append(
@@ -526,11 +523,6 @@ class CombatState(GameState):
             not self.get_remaining_player_combatants() or
             not self.get_remaining_enemy_combatants()
         )
-
-    def check_for_dead_combatants(self):
-        for combatant in self.player_combatants + self.enemy_combatants:
-            if combatant.is_dead:
-                combatant.play_anim('death')
 
     def update(self, dt):
         super().update(dt)

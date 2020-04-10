@@ -8,7 +8,7 @@ class Combatant:
         self._monster = monster
         breed = monster.breed
 
-        self.current_hp = self.max_hp
+        self._current_hp = self.max_hp
         self.current_ct = 0
         self.move_max = self.movement
         self.move_current = 0
@@ -27,6 +27,17 @@ class Combatant:
         if hasattr(self._monster, name):
             return getattr(self._monster, name)
         return getattr(self._actor, name)
+
+    @property
+    def current_hp(self):
+        return self._current_hp
+
+    @current_hp.setter
+    def current_hp(self, value):
+        wasdead = self.is_dead
+        self._current_hp = value
+        if not wasdead and self.is_dead:
+            self.play_anim('death')
 
     @property
     def max_hp(self):
