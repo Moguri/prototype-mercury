@@ -95,10 +95,13 @@ class AiController():
         self.arena = arena
         self.controller = controller
         self.effects_root = effects_root
+        self.targets = {}
 
     def update_combatant(self, combatant, enemy_combatants):
         # Find a target
-        target = enemy_combatants[0]
+        target = self.targets.get(combatant, None)
+        if target is None or target.is_dead():
+            target = random.choice(enemy_combatants)
         for enemy in enemy_combatants:
             dist_to_closest = self.arena.tile_distance(
                 combatant.tile_position,
@@ -425,7 +428,7 @@ class CombatState(GameState):
             else:
                 sequence = self.aicontroller.update_combatant(
                     self.current_combatant,
-                    self.player_combatants
+                    self.get_remaining_player_combatants()
                 )
                 def cleanup():
                     if self.input_state != 'END_COMBAT':
