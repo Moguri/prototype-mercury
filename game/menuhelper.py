@@ -21,6 +21,10 @@ class MenuHelper(DirectObject):
         self.accept('accept', self.accept_selection)
         self.accept('reject', self.reject_selection)
 
+        self.sfx_select = base.loader.load_sfx('assets/sfx/ui-select.opus')
+        self.sfx_accept = base.loader.load_sfx('assets/sfx/ui-accept.opus')
+        self.sfx_reject = base.loader.load_sfx('assets/sfx/ui-reject.opus')
+
         self.accept_cb = None
         self.reject_cb = None
         self.selection_change_cb = None
@@ -54,6 +58,8 @@ class MenuHelper(DirectObject):
         elif self.selection_idx >= len(self._menu_items):
             self.selection_idx = 0
 
+        self.sfx_select.play()
+
         self.update_ui({
             'selection_index': self.selection_idx,
         })
@@ -75,12 +81,16 @@ class MenuHelper(DirectObject):
         if self.lock:
             return
 
+        self.sfx_accept.play()
+
         selection = self._menu_items[self.selection_idx]
         selection[1](*selection[2])
 
     def reject_selection(self):
         if not self._menu_items:
             return
+
+        self.sfx_reject.play()
 
         if self.reject_cb is not None:
             # pylint: disable=not-callable

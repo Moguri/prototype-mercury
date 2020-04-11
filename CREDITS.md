@@ -7,6 +7,9 @@
 
 ["Lively Meadow"](https://opengameart.org/content/lively-meadow-victory-fanfare-and-song) by [Matthew Pablo](https://matthewpablo.com/) is licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by/3.0/)
 
+# SFX
+[UI Sound Effects](https://opengameart.org/content/ui-sounds) by [StumpyStrust](https://opengameart.org/users/stumpystrust) are licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
+
 # Background Images
 [Background Images (ranchbg, marketbg, arenabg)](https://opengameart.org/content/backgrounds-3) by [Gabriel de Aguiar](https://opengameart.org/users/nidhoggn) are licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
 
