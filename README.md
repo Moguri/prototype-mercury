@@ -6,13 +6,21 @@
 
 An open-source monster raising and combat game
 
-## Dependencies
+## Pre-built Binaries
+
+Pre-built binaries are available [on Itch.io](https://mogurijin.itch.io/mercury).
+To use these, download the appropriate version for your platform and extract the archive.
+Then run the `mercury` binary (`mercury.exe` on Windows).
+
+## Development
+
+### Dependencies
 
 * Python 3.7
 * Python packages in `requirements.txt`
 * Blender 2.8+ (preferably on the system PATH)
 
-## Getting started
+### Getting started
 
 * Clone the repo
 * Setup a virtual environment (optional, but recommended)
