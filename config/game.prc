@@ -6,3 +6,4 @@ texture-anisotropic-degree 16
 mercury-saves-dir $MAIN_DIR/saves
 text-default-font ui/fonts/BalooThambi2-Medium.ttf
 text-pixels-per-unit 64
+screenshot-extension png
