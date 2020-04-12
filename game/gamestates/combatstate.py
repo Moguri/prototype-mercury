@@ -297,10 +297,19 @@ class CombatState(GameState):
         self.range_tiles = []
 
         def setup_selection(accept_cb, reject_cb=None):
+            def accept_cb_wrap():
+                self.menu_helper.sfx_accept.play()
+                accept_cb()
+            def reject_cb_wrap():
+                self.menu_helper.sfx_reject.play()
+                if reject_cb is not None:
+                    reject_cb()
+
             def move_selection(vector):
                 selection = self.arena.vec_to_tile_coord(
                     p3d.LVector2(self.selected_tile) + p3d.LVector2(vector)
                 )
+                self.menu_helper.sfx_select.play()
 
                 if self.arena.tile_coord_in_bounds(selection):
                     self.selected_tile = selection
@@ -312,9 +321,8 @@ class CombatState(GameState):
             self.accept('move-left-repeat', move_selection, [(-1, 0)])
             self.accept('move-down-repeat', move_selection, [(0, -1)])
             self.accept('move-right-repeat', move_selection, [(1, 0)])
-            self.accept('accept', accept_cb)
-            if reject_cb is not None:
-                self.accept('reject', reject_cb)
+            self.accept('accept', accept_cb_wrap)
+            self.accept('reject', reject_cb_wrap)
 
         if next_state == 'SELECT':
             def accept_selection():
