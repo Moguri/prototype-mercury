@@ -190,8 +190,12 @@ class RanchState(GameState):
                 for breed in gdb['breeds'].values()
                 if self.player.can_use_breed(breed)
             ]
+            def market_reject():
+                if self.player.monsters:
+                    self.load_monster_models()
+                    back_to_main()
             if self.player.monsters:
-                menu_items.insert(0, ('Back', back_to_main, []))
+                menu_items.insert(0, ('Back', market_reject, []))
             self.menu_helper.set_menu('Select a Breed', menu_items)
 
             def show_breed(_idx=None):
@@ -202,6 +206,7 @@ class RanchState(GameState):
                 self.load_monster_models([breed])
             show_breed()
             self.menu_helper.selection_change_cb = show_breed
+            self.menu_helper.reject_cb = market_reject
             self.display_message('Select a breed')
             self.set_background('market')
         elif next_state == 'STATS':
