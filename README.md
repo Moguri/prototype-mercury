@@ -12,6 +12,11 @@ Pre-built binaries are available [on Itch.io](https://mogurijin.itch.io/mercury)
 To use these, download the appropriate version for your platform and extract the archive.
 Then run the `mercury` binary (`mercury.exe` on Windows).
 
+## Configuration
+
+Configuration is currently done by adding and modifying a `config/user.prc`.
+This file is loaded after all over config so it will override the config in the other `config/*.prc` files.
+
 ## Development
 
 ### Dependencies
@@ -27,12 +32,7 @@ Then run the `mercury` binary (`mercury.exe` on Windows).
 * Install dependencies: `pip install -r requirements.txt`
 * Run the game: `pman run` or `python main.py`
 
-## Configuration
-
-Configuration is currently done by adding and modifying a `config/user.prc`.
-This file is loaded after all over config so it will override the config in the other `config/*.prc` files.
-
-## Using Pyenv
+### Using Pyenv
 
 The current release of cefpython3 [dynamically links against libpython](https://github.com/cztomczak/cefpython/issues/554) on Linux. By default, [Pyenv does not build a shared library for Python](https://github.com/pyenv/pyenv/issues/65). So, in short, when present with this error message while using Pyenv:
 
