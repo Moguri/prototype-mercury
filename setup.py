@@ -1,6 +1,29 @@
+import os
+import shutil
+
 from setuptools import setup
 
 import pman.build_apps
+
+
+class CustomBuildApps(pman.build_apps.BuildApps):
+    def run(self):
+        # Run regular build_apps
+        super().run()
+
+        # Post-build cleanup
+        for platform in self.platforms:
+            builddir = os.path.join(self.build_base, platform)
+
+            # Unnecessary CEF files
+            shutil.rmtree(os.path.join(builddir, 'locales'))
+            rmfiles = [
+                'devtools_resources.pak',
+                'cef_extensions.pak',
+                'snapshot_blob.bin',
+            ]
+            for fname in rmfiles:
+                os.remove(os.path.join(builddir, fname))
 
 
 CONFIG = pman.get_config()
@@ -17,7 +40,7 @@ setup(
         'pytest-pylint',
     ],
     cmdclass={
-        'build_apps': pman.build_apps.BuildApps,
+        'build_apps': CustomBuildApps,
     },
     options={
         'build_apps': {
