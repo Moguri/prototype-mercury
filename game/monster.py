@@ -156,7 +156,7 @@ class Monster:
         if breed_id is not None:
             breed = gdb['breeds'][breed_id]
         else:
-            breed = random.choice(list(gdb['breeds'].values()))
+            breed = random.choice([i for i in gdb['breeds'].values() if i.id != 'bobcatshark'])
 
         monsterdata = gdb.schema_to_datamodel['monsters']({
             'id': monster_id,
