@@ -1,5 +1,7 @@
 ![CI](https://github.com/Kupoman/prototype-mercury/workflows/CI/badge.svg)
 
+![screenshot](images/screenshot.png)
+
 # Mercury
 
 An open-source monster raising and combat game
