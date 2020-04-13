@@ -1,4 +1,4 @@
-![CI](https://github.com/Kupoman/prototype-mercury/workflows/CI/badge.svg)
+![CI](https://github.com/Moguri/prototype-mercury/workflows/CI/badge.svg)
 
 ![screenshot](images/screenshot.png)
 
