@@ -46,3 +46,19 @@ jobs:
     - name: Build Binary Distributions
       run: |
         pman dist --skip-installers
+    - name: Publish Windows Binary
+      uses: josephbmanley/butler-publish-itchio-action@v1.0.1
+      env:
+        BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+        CHANNEL: windows-dev
+        ITCH_GAME: mercury
+        ITCH_USER: mogurijin
+        PACKAGE: build/win_amd64
+    - name: Publish Linux Binary
+      uses: josephbmanley/butler-publish-itchio-action@v1.0.1
+      env:
+        BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+        CHANNEL: linux-dev
+        ITCH_GAME: mercury
+        ITCH_USER: mogurijin
+        PACKAGE: build/manylinux1_x86_64
