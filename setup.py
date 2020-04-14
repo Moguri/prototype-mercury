@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 
 from setuptools import setup
 
@@ -11,7 +12,7 @@ class CustomBuildApps(pman.build_apps.BuildApps):
         # Run regular build_apps
         super().run()
 
-        # Post-build cleanup
+        # Post-build cleanup and fixes
         for platform in self.platforms:
             builddir = os.path.join(self.build_base, platform)
 
@@ -24,6 +25,12 @@ class CustomBuildApps(pman.build_apps.BuildApps):
             ]
             for fname in rmfiles:
                 os.remove(os.path.join(builddir, fname))
+
+            if 'linux' in platform:
+                shutil.copyfile(
+                    os.path.join(sys.base_prefix, 'lib', 'libpython3.7m.so.1.0'),
+                    os.path.join(builddir, 'libpython3.7m.so.1.0')
+                )
 
 
 CONFIG = pman.get_config()
