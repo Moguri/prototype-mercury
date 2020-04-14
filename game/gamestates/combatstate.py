@@ -335,24 +335,33 @@ class CombatState(GameState):
             def use_ability(ability):
                 self.selected_ability = ability
                 self.input_state = 'TARGET'
-            self.menu_helper.set_menu(self.current_combatant.name, [
-                ('Move', self.set_input_state, ['MOVE']),
-            ] + [
-                (ability.name, use_ability, [ability])
-                for ability in self.current_combatant.abilities
-            ] + [
-                ('End Turn', self.set_input_state, ['END_TURN']),
-            ])
+
+            menu_items = []
+            if self.current_combatant.move_current > 0:
+                menu_items.append(('Move', self.set_input_state, ['MOVE']))
+
+            if not self.current_combatant.ability_used:
+                menu_items += [
+                    (ability.name, use_ability, [ability])
+                    for ability in self.current_combatant.abilities
+                    if not self.current_combatant.ability_used
+                ]
+
+            menu_items.append(('End Turn', self.set_input_state, ['END_TURN']))
+
+            self.menu_helper.set_menu(self.current_combatant.name, menu_items)
+
             def update_ability(idx):
                 self.range_tiles = []
-                if idx == 0:
+                menu_item = menu_items[idx][0]
+                if menu_item == 'Move':
                     self.range_tiles = self.arena.find_tiles_in_range(
                         self.current_combatant.tile_position,
                         0,
                         self.current_combatant.move_current
                     )
-                elif idx - 1 < len(self.current_combatant.abilities):
-                    ability = self.current_combatant.abilities[idx - 1]
+                elif menu_item != 'End Turn':
+                    ability = menu_items[idx][2][0]
                     self.range_tiles = self.arena.find_tiles_in_range(
                         self.current_combatant.tile_position,
                         ability.range_min,
@@ -427,8 +436,10 @@ class CombatState(GameState):
                         self
                     )
                     def cleanup():
+                        self.current_combatant.ability_used = True
+                        self.selected_tile = self.current_combatant.tile_position
                         if self.input_state != 'END_COMBAT':
-                            self.input_state = 'END_TURN'
+                            self.input_state = 'ACTION'
                     sequence.append(
                         intervals.Func(cleanup)
                     )
@@ -451,6 +462,7 @@ class CombatState(GameState):
             )
             self.current_combatant = combatants_by_ct[0]
             self.current_combatant.move_current = self.current_combatant.move_max
+            self.current_combatant.ability_used = False
             ctdiff = 100 - self.current_combatant.current_ct
             if ctdiff > 0:
                 for combatant in self.combatants:
