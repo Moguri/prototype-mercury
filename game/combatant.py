@@ -14,7 +14,12 @@ class Combatant:
         self.move_current = 0
         self.ability_used = False
 
-        self.abilities = [gdb['abilities'][ability_id] for ability_id in monster.job.abilities]
+        self.abilities = [
+            gdb['abilities']['basic_attack']
+        ] + [
+            gdb['abilities'][ability_id]
+            for ability_id in monster.job.abilities
+        ]
 
         self.range_index = 0
         self.target = None
