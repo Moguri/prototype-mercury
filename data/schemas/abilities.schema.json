@@ -7,10 +7,6 @@
         "name": {
             "type": "string"
         },
-        "cost": {
-            "type": "integer",
-            "minimum": 0
-        },
         "range_min": {
             "type": "integer",
             "default": 1,

@@ -1,7 +1,6 @@
 {
     "id": "flying_fist",
     "name": "Flying Fist",
-    "cost": 25,
     "range_min": 2,
     "range_max": 2,
     "damage_rank": 3,
