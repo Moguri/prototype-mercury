@@ -117,7 +117,7 @@ class AiController():
                 target = enemy
 
         # Pick an ability
-        ability = random.choice(target.abilities)
+        ability = random.choice(combatant.abilities)
 
         # Find a tile to move to
         tiles = self.arena.find_tiles_in_range(
