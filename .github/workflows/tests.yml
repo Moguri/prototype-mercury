@@ -48,6 +48,7 @@ jobs:
         pman dist --skip-installers
     - name: Publish Windows Binary
       uses: josephbmanley/butler-publish-itchio-action@v1.0.1
+      if: github.ref == 'master'
       env:
         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
         CHANNEL: windows-dev
@@ -56,6 +57,7 @@ jobs:
         PACKAGE: build/win_amd64
     - name: Publish Linux Binary
       uses: josephbmanley/butler-publish-itchio-action@v1.0.1
+      if: github.ref == 'master'
       env:
         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
         CHANNEL: linux-dev
