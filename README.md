@@ -24,6 +24,7 @@ This file is loaded after all over config so it will override the config in the 
 * Python 3.7
 * Python packages in `requirements.txt`
 * Blender 2.8+ (preferably on the system PATH)
+* [Git LFS](https://git-lfs.github.com/)
 
 ### Getting started
 
