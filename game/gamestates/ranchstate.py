@@ -68,17 +68,29 @@ class RanchState(GameState):
     def __init__(self):
         super().__init__()
 
+        gdb = gamedb.get_instance()
+
         self.player = base.blackboard['player']
         self.monster_selection = 0
+
+        self.monster_actors = []
+        self.monsters_root = self.root_node.attach_new_node('monsters')
 
         # Setup lighting
         self.lights_root = self.root_node.attach_new_node('light root')
         self.lighting = CommonLighting(self.lights_root, calc_shadow_bounds=False)
         self.lights_root.set_h(45)
 
-        # Load and display the monster model
-        self.monster_actors = []
-        self.monsters_root = self.root_node.attach_new_node('monsters')
+        # Pre-load all monster models
+        breeds = []
+        jobs = []
+        for breed in gdb['breeds'].values():
+            for skin in breed.skins:
+                breeds.append(breed)
+                jobs.append(skin)
+        self.load_monster_models(breeds, jobs)
+
+        # Load and display the player monster models
         self.load_monster_models()
 
         # Setup plane to catch shadows
