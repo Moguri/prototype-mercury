@@ -5,8 +5,12 @@
         "in_test"
     ],
     "default_job": "bobcatshark",
-    "bam_file": "clay_golem",
-    "root_node": "ClayGolemArm",
+    "skins": {
+        "default": {
+            "bam_file": "clay_golem",
+            "root_node": "ClayGolemArm"
+        }
+    },
     "anim_map": {
         "idle": "cg.Idle",
         "attack": "cg.Attack",

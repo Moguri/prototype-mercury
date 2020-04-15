@@ -1,3 +1,5 @@
+import itertools
+
 from direct.showbase.MessengerGlobal import messenger
 import panda3d.core as p3d
 
@@ -221,20 +223,37 @@ class RanchState(GameState):
             })
             self.accept('accept', back_to_main)
         elif next_state == 'JOBS':
+            self.load_monster_models([self.current_monster.breed], [self.current_monster.job.id])
+            base.camera.set_x(0)
             def change_job(jobid):
                 gdb = gamedb.get_instance()
                 job = gdb['jobs'][jobid]
                 self.current_monster.job = job
                 self.display_message('')
+                self.load_monster_models()
                 back_to_main()
 
+            def job_reject():
+                self.load_monster_models()
+                back_to_main()
+
+            def show_job(_idx):
+                selection = self.menu_helper.current_selection
+                if selection[0] == 'Back':
+                    jobid = self.current_monster.job.id
+                else:
+                    jobid = selection[2][0]
+                self.load_monster_models([self.current_monster.breed], [jobid])
+
             self.menu_helper.set_menu('Select a Job', [
-                ('Back', back_to_main, []),
+                ('Back', job_reject, []),
             ] + [
                 (job.name, change_job, [job.id])
                 for job in gdb['jobs'].values()
-                if self.current_monster.job.id != job.id and self.current_monster.can_use_job(job)
+                if self.current_monster.can_use_job(job)
             ])
+            self.menu_helper.selection_change_cb = show_job
+            self.menu_helper.reject_cb = job_reject
         elif next_state == 'COMBAT':
             def enter_combat(ctype):
                 base.blackboard['combat_type'] = ctype
@@ -272,26 +291,31 @@ class RanchState(GameState):
     def update(self, dt):
         super().update(dt)
 
-        if self.input_state != 'MARKET':
+        if self.input_state not in ('MARKET', 'JOBS'):
             base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
-    def load_monster_models(self, breeds=None):
+    def load_monster_models(self, breeds=None, jobs=None):
         for monact in self.monster_actors:
             monact.cleanup()
             monact.remove_node()
         self.monster_actors = []
+        labels = []
 
         if breeds is None:
             breeds = [i.breed for i in self.player.monsters]
+            jobs = [i.job.id for i in self.player.monsters]
             labels = [i.name for i in self.player.monsters]
-        else:
-            labels = ['' * len(breeds)]
 
+        if jobs is None:
+            jobs = [i.default_job for i in breeds]
+
+        if not labels:
+            labels = itertools.repeat('')
 
         stride = 2
         offset = 0
-        for breed, labelstr in zip(breeds, labels):
-            actor = MonsterActor(breed, self.monsters_root)
+        for breed, jobid, labelstr in zip(breeds, jobs, labels):
+            actor = MonsterActor(breed, self.monsters_root, jobid)
             actor.set_h(-135)
             actor.set_pos(self.monsters_root, p3d.LVector3(offset, 0, 0))
             self.monster_actors.append(actor)

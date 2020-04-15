@@ -35,12 +35,16 @@ RANDOM_NAMES = [
 class MonsterActor:
     _anim_warnings = collections.defaultdict(set)
 
-    def __init__(self, breed, parent_node=None):
+    def __init__(self, breed, parent_node=None, job=None):
         self.breed = breed
 
+        if job not in self.breed.skins:
+            job = 'default'
+        skin = self.breed.skins[job]
+
         if hasattr(builtins, 'base'):
-            model = base.loader.load_model('{}.bam'.format(breed.bam_file))
-            self._path = Actor(model.find('**/{}'.format(breed.root_node)))
+            model = base.loader.load_model('{}.bam'.format(skin['bam_file']))
+            self._path = Actor(model.find('**/{}'.format(skin['root_node'])))
             self.play_anim('idle', loop=True)
             if parent_node:
                 self._path.reparent_to(parent_node)

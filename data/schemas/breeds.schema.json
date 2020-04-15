@@ -15,13 +15,22 @@
             "uniqueItems": true,
             "default": []
         },
+        "skins": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "bam_file": {
+                        "type": "string"
+                    },
+                    "root_node": {
+                        "type": "string"
+                    }
+                },
+                "minProperties": 1
+            }
+        },
         "default_job" : {
-            "type": "string"
-        },
-        "bam_file" : {
-            "type": "string"
-        },
-        "root_node" : {
             "type": "string"
         },
         "anim_map": {

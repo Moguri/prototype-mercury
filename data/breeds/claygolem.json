@@ -2,8 +2,16 @@
     "id": "claygolem",
     "name": "Clay Golem",
     "default_job": "squire",
-    "bam_file": "clay_golem",
-    "root_node": "ClayGolemArm",
+    "skins": {
+        "default": {
+            "bam_file": "clay_golem",
+            "root_node": "ClayGolemArm"
+        },
+        "mage": {
+            "bam_file": "mage_clay_golem",
+            "root_node": "Armature"
+        }
+    },
     "anim_map": {
         "idle": "cg.Idle",
         "attack": "cg.Attack",
