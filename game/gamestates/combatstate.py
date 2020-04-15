@@ -523,13 +523,13 @@ class CombatState(GameState):
         combatant.tile_position = tile_pos
         newpos = self.arena.tile_coord_to_world(tile_pos)
         sequence = intervals.Sequence(
-            intervals.Func(combatant.play_anim, 'walk'),
+            intervals.Func(combatant.play_anim, 'walk', loop=True),
             intervals.LerpPosInterval(
                 combatant.as_nodepath,
                 duration,
                 newpos
             ),
-            intervals.Func(combatant.play_anim, 'idle')
+            intervals.Func(combatant.play_anim, 'idle', loop=True)
         )
         if immediate:
             sequence.start()
