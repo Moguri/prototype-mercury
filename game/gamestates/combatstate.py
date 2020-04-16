@@ -192,10 +192,8 @@ class CombatState(GameState):
         super().__init__()
 
         # Background Image
-        bgtex = base.loader.load_texture('backgrounds/arenabg.png')
-        bgtex.set_format(p3d.Texture.F_srgb_alpha)
-        self.background_image = bgnode.generate(self.root_node)
-        self.background_image.set_shader_input('tex', bgtex)
+        bgnode.generate(self.root_node, 'arena')
+        bgnode.generate(self.root_node, 'arena', True)
 
         # Background Music
         self.play_bg_music('the_last_encounter')

@@ -110,21 +110,29 @@ class RanchState(GameState):
 
         # Setup backgrounds
         self.background_textures = {
-            'base': base.loader.load_texture('backgrounds/ranchbg.png'),
-            'market': base.loader.load_texture('backgrounds/marketbg.png'),
+            'base': (
+                base.loader.load_texture('backgrounds/ranchbg.png'),
+                base.loader.load_texture('backgrounds/ranchfg.png'),
+            ),
+            'market': (
+                base.loader.load_texture('backgrounds/marketbg.png'),
+                base.loader.load_texture('backgrounds/marketfg.png'),
+            ),
         }
-        for tex in self.background_textures.values():
+        for tex in (i for texs in self.background_textures.values() for i in texs):
             if tex.get_num_components() == 4:
                 tex.set_format(p3d.Texture.F_srgb_alpha)
             else:
                 tex.set_format(p3d.Texture.F_srgb)
         self.background_image = bgnode.generate(self.root_node)
+        self.foreground_image = bgnode.generate(self.root_node, foreground=True)
+        self.foreground_image.set_transparency(p3d.TransparencyAttrib.M_alpha)
 
         # Setup Background Music
         self.play_bg_music('woodland_fantasy')
 
         # Setup Camera
-        base.camera.set_pos(0, -5, 5)
+        base.camera.set_pos(0, -5, 6)
         base.camera.look_at(0, 0, 1)
 
         # UI
@@ -350,7 +358,8 @@ class RanchState(GameState):
             self.lighting.recalc_bounds(self.monsters_root)
 
     def set_background(self, bgname):
-        self.background_image.set_shader_input('tex', self.background_textures[bgname])
+        self.background_image.set_shader_input('tex', self.background_textures[bgname][0])
+        self.foreground_image.set_shader_input('tex', self.background_textures[bgname][1])
 
     def display_message(self, msg, modal=False):
         self.message = msg
