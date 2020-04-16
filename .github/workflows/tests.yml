@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      lfs: true
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
@@ -30,6 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      lfs: true
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
