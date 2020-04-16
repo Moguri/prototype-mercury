@@ -110,8 +110,8 @@ class RanchState(GameState):
 
         # Setup backgrounds
         self.background_textures = {
-            'base': base.loader.load_texture('ranchbg.png'),
-            'market': base.loader.load_texture('marketbg.png'),
+            'base': base.loader.load_texture('backgrounds/ranchbg.png'),
+            'market': base.loader.load_texture('backgrounds/marketbg.png'),
         }
         for tex in self.background_textures.values():
             if tex.get_num_components() == 4:

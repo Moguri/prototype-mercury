@@ -9,7 +9,7 @@ class NewTrainerState(GameState):
         super().__init__()
 
         # Background Image
-        OnscreenImage(parent=self.root_node2d, image='titlebg.webm')
+        OnscreenImage(parent=self.root_node2d, image='backgrounds/titlebg.webm')
 
         if base.allow_saves:
             # UI

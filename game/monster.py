@@ -43,7 +43,7 @@ class MonsterActor:
         skin = self.breed.skins[job]
 
         if hasattr(builtins, 'base'):
-            model = base.loader.load_model('{}.bam'.format(skin['bam_file']))
+            model = base.loader.load_model('models/{}.bam'.format(skin['bam_file']))
             self._path = Actor(model.find('**/{}'.format(skin['root_node'])))
             self.play_anim('idle', loop=True)
             if parent_node:

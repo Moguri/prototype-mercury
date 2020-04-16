@@ -16,7 +16,7 @@ from .gamestate import GameState
 class Arena:
     def __init__(self, parent_node, sizex, sizey):
         self.root_node = parent_node.attach_new_node('Arena')
-        arena_tiles = base.loader.load_model('arena_tiles.bam')
+        arena_tiles = base.loader.load_model('models/arena_tiles.bam')
         self.tile_model = arena_tiles.find('**/ArenaTile')
 
         self.tilenps = []
@@ -192,7 +192,7 @@ class CombatState(GameState):
         super().__init__()
 
         # Background Image
-        bgtex = base.loader.load_texture('arenabg.png')
+        bgtex = base.loader.load_texture('backgrounds/arenabg.png')
         bgtex.set_format(p3d.Texture.F_srgb_alpha)
         self.background_image = bgnode.generate(self.root_node)
         self.background_image.set_shader_input('tex', bgtex)
