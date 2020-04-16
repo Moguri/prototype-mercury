@@ -175,6 +175,26 @@ class Monster:
 
         return cls(monsterdata)
 
+    @classmethod
+    def gen_random(cls, monsterid, level):
+        gdb = gamedb.get_instance()
+        mon = cls.make_new(monsterid)
+
+        mon.job_levels.clear()
+
+        while mon.level < level:
+            availjobs = [i for i in gdb['jobs'].values() if mon.can_use_job(i)]
+            job = random.choice(availjobs)
+            print(f'{monsterid} adding job: {job.name}')
+            if job.id in mon.job_levels:
+                mon.job_levels[job.id] += 1
+            else:
+                mon.job_levels[job.id] = 1
+
+            mon.job = job
+
+        return mon
+
     @property
     def job(self):
         return self._monsterdata.job

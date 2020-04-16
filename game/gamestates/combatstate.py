@@ -235,7 +235,7 @@ class CombatState(GameState):
         combat_type = base.blackboard.get('combat_type', default_combat_type)
         self.enemy_combatants = [
             Combatant(
-                Monster.make_new(f'combatant{i}'),
+                Monster.gen_random(f'combatant{i}', 1),
                 self.root_node
             )
             for i in range(7 if combat_type == 'boss' else len(self.player_combatants))
