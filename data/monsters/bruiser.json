@@ -3,8 +3,7 @@
     "name": "Bruiser",
     "breed": "claygolem",
     "job": "bruiser",
-    "job_levels": {
-        "squire": 2,
-        "bruiser": 1
+    "jp_totals": {
+        "squire": 100
     }
 }

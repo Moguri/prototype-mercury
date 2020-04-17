@@ -487,10 +487,9 @@ class CombatState(GameState):
                 self.display_message('Victory!')
                 results = []
                 for mon in self.player_combatants:
-                    job = mon.job
-                    mon.job_levels[job.id] += 1
+                    mon.add_jp(mon.job, mon.JP_PER_LEVEL)
                     results.append(
-                        f'{mon.name} raised {job.name} to level {mon.job_levels[job.id]}'
+                        f'{mon.name} raised {mon.job.name} to level {mon.job_level(mon.job)}'
                     )
             else:
                 self.display_message('Defeat.')

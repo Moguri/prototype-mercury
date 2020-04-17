@@ -269,8 +269,7 @@ class RanchState(GameState):
                 ('Back', job_reject, []),
             ] + [
                 (job.name, change_job, [job.id])
-                for job in gdb['jobs'].values()
-                if self.current_monster.can_use_job(job)
+                for job in self.current_monster.available_jobs
             ])
             self.menu_helper.selection_change_cb = show_job
             self.menu_helper.reject_cb = job_reject

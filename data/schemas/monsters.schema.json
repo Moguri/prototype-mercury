@@ -13,12 +13,12 @@
         "job": {
             "type": "string"
         },
-        "job_levels": {
+        "jp_totals": {
             "type": "object",
+            "default": {},
             "additionalProperties": {
                 "type": "integer"
-            },
-            "minProperties": 1
+            }
         }
     },
     "links": {

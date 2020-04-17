@@ -2,8 +2,5 @@
     "id": "mage_golem",
     "name": "Mage Golem",
     "breed": "claygolem",
-    "job": "mage",
-    "job_levels": {
-        "mage": 1
-    }
+    "job": "mage"
 }

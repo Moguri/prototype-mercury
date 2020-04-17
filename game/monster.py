@@ -102,6 +102,8 @@ class MonsterActor:
 
 
 class Monster:
+    JP_PER_LEVEL = 100
+
     BASE_STATS = [
         'hp',
         'physical_attack',
@@ -121,8 +123,8 @@ class Monster:
             base_stat = getattr(self.breed, name)
             breed_contrib = getattr(self.breed, f'{name}_affinity') * self.level * 5
             job_contrib = 0
-            for job, level in self.job_levels.items():
-                job = gdb['jobs'][job]
+            for jobid, level in ((jobid, self.job_level(jobid)) for jobid in self.jp_totals):
+                job = gdb['jobs'][jobid]
                 job_contrib += getattr(job, f'{name}_affinity') * level * 5
             return base_stat + breed_contrib + job_contrib
         return getattr(self._monsterdata, name)
@@ -134,7 +136,6 @@ class Monster:
 
         extras = [
             'hit_points',
-            'ability_points',
         ] + self.BASE_STATS
         data.update({
             prop: getattr(self, prop)
@@ -167,9 +168,6 @@ class Monster:
             'name': name,
             'breed': breed.id,
             'job': breed.default_job.id,
-            'job_levels': {
-                breed.default_job.id: 1,
-            }
         })
         monsterdata.link(gdb)
 
@@ -177,21 +175,13 @@ class Monster:
 
     @classmethod
     def gen_random(cls, monsterid, level):
-        gdb = gamedb.get_instance()
         mon = cls.make_new(monsterid)
 
-        mon.job_levels.clear()
-
         while mon.level < level:
-            availjobs = [i for i in gdb['jobs'].values() if mon.can_use_job(i)]
-            job = random.choice(availjobs)
-            print(f'{monsterid} adding job: {job.name}')
-            if job.id in mon.job_levels:
-                mon.job_levels[job.id] += 1
-            else:
-                mon.job_levels[job.id] = 1
+            job = random.choice(mon.available_jobs)
+            mon.add_jp(job, cls.JP_PER_LEVEL)
 
-            mon.job = job
+        mon.job = random.choice(mon.available_jobs)
 
         return mon
 
@@ -204,16 +194,20 @@ class Monster:
         if not self.can_use_job(value):
             raise RuntimeError(f'tag requirements unsatisfied: {value.required_tags}')
         self._monsterdata.job = value
-        if value.id not in self.job_levels:
-            self.job_levels[value.id] = 1
 
-    @property
-    def ability_points(self):
-        return 100
+    def job_level(self, job):
+        if not isinstance(job, str):
+            job = job.id
+        totjp = self.jp_totals.get(job, 0)
+        return 1 + totjp // self.JP_PER_LEVEL
 
-    @property
-    def ap_per_second(self):
-        return self.breed.ap_per_second
+    def add_jp(self, job, value):
+        if not isinstance(job, str):
+            job = job.id
+        if job in self.jp_totals:
+            self.jp_totals[job] += value
+        else:
+            self.jp_totals[job] = value
 
     @property
     def movement(self):
@@ -221,13 +215,22 @@ class Monster:
 
     @property
     def level(self):
-        return 1 + sum((i - 1 for i in self.job_levels.values()))
+        return 1 + sum((self.job_level(i) - 1 for i in self.jp_totals))
+
+    @property
+    def available_jobs(self):
+        gdb = gamedb.get_instance()
+        return [
+            job
+            for job in gdb['jobs'].values()
+            if self.can_use_job(job)
+        ]
 
     @property
     def tags(self):
         return {
             f'breed_{self.breed.id}',
         } | {
-            f'job_{jobname}_{joblevel}'
-            for jobname, joblevel in self.job_levels.items()
+            f'job_{job}_{self.job_level(job)}'
+            for job in self.jp_totals
         }
