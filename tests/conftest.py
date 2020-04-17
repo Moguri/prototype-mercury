@@ -65,7 +65,6 @@ def app():
     from direct.showbase.ShowBase import ShowBase
     import pman.shim
     from game import playerdata
-    from game import gamedb
     from game.monster import Monster
 
     p3d.load_prc_file_data(
@@ -79,7 +78,6 @@ def app():
             super().__init__(self)
             pman.shim.init(self)
             player = playerdata.PlayerData()
-            player.monster = list(gamedb.get_instance()['monsters'].values())[0]
             self.blackboard = {
                 'player': player,
             }

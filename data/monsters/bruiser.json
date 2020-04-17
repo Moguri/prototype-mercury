@@ -1,9 +1,0 @@
-{
-    "id": "bruiser",
-    "name": "Bruiser",
-    "breed": "claygolem",
-    "job": "bruiser",
-    "jp_totals": {
-        "squire": 100
-    }
-}
