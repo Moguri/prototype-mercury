@@ -2,13 +2,20 @@
 import pytest
 
 def test_level(monster):
-    '''Monster level is the sum of the job levels'''
+    '''Monster level is one plus the sum of the gained job levels'''
+    assert monster.level == 1
+
     monster._monsterdata.job_levels = {
         'foo': 2,
         'bar': 1
     }
+    assert monster.level == 2
 
-    assert monster.level == 3
+    monster._monsterdata.job_levels = {
+        'foo': 3,
+        'bar': 2
+    }
+    assert monster.level == 4
 
 def test_stats(monster):
     stats = {

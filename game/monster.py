@@ -221,7 +221,7 @@ class Monster:
 
     @property
     def level(self):
-        return sum(self.job_levels.values())
+        return 1 + sum((i - 1 for i in self.job_levels.values()))
 
     @property
     def tags(self):
