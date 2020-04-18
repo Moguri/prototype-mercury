@@ -234,3 +234,7 @@ class Monster:
             f'job_{job}_{self.job_level(job)}'
             for job in self.jp_totals
         }
+
+    @property
+    def abilities(self):
+        return self.job.abilities

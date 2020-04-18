@@ -18,7 +18,7 @@ class Combatant:
             gdb['abilities']['basic_attack']
         ] + [
             gdb['abilities'][ability_id]
-            for ability_id in monster.job.abilities
+            for ability_id in monster.abilities
         ]
 
         self.range_index = 0
