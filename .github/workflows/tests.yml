@@ -23,7 +23,6 @@ jobs:
     - name: Install Blender
       run: |
         sudo snap install blender --classic
-        pman update --extras blender
         rm tests/test_imports.py
     - name: Convert Assets
       run: |
@@ -48,7 +47,6 @@ jobs:
     - name: Install Blender
       run: |
         sudo snap install blender --classic
-        pman update --extras blender
         rm tests/test_imports.py
     - name: Build Binary Distributions
       run: |
