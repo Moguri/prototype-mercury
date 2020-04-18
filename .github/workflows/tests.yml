@@ -25,6 +25,9 @@ jobs:
         sudo snap install blender --classic
         pman update --extras blender
         rm tests/test_imports.py
+    - name: Convert Assets
+      run: |
+        pman build
     - name: Run Tests
       run: |
         pman test
