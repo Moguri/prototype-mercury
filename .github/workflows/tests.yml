@@ -24,9 +24,10 @@ jobs:
       run: |
         sudo snap install blender --classic
         echo "::add-path::/snap/bin"
-        blender --version
     - name: Convert Assets
       run: |
+        echo $PATH
+        blender --version
         pman build
     - name: Run Tests
       run: |
@@ -49,9 +50,9 @@ jobs:
       run: |
         sudo snap install blender --classic
         echo "::add-path::/snap/bin"
-        blender --version
     - name: Build Binary Distributions
       run: |
+        blender --version
         pman dist --skip-installers
     - name: Publish Windows Binary
       uses: josephbmanley/butler-publish-itchio-action@v1.0.1
