@@ -23,6 +23,8 @@ jobs:
     - name: Install Blender
       run: |
         sudo snap install blender --classic
+        echo "::add-path::/snap/bin"
+        blender --version
     - name: Convert Assets
       run: |
         pman build
@@ -46,6 +48,8 @@ jobs:
     - name: Install Blender
       run: |
         sudo snap install blender --classic
+        echo "::add-path::/snap/bin"
+        blender --version
     - name: Build Binary Distributions
       run: |
         pman dist --skip-installers
