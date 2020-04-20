@@ -1,3 +1,5 @@
+import random
+
 from . import gamedb
 from .monster import MonsterActor
 
@@ -9,7 +11,7 @@ class Combatant:
         breed = monster.breed
 
         self._current_hp = self.max_hp
-        self.current_ct = 0
+        self.current_ct = random.randrange(0, 10)
         self.move_max = self.movement
         self.move_current = 0
         self.ability_used = False
