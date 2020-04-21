@@ -4,7 +4,8 @@
     "abilities": [
         "sparkles",
         "flying_fist",
-        "gust"
+        "gust",
+        "leap"
     ],
     "hp_affinity": 2,
     "physical_attack_affinity": 2,
