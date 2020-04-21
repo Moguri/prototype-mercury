@@ -2,7 +2,6 @@
     "id": "mage",
     "name": "Mage",
     "abilities": [
-        "punch",
         "gust",
         "sparkles",
         "blast"
