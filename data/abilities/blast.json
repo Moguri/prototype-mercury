@@ -3,7 +3,7 @@
     "name": "Blast",
     "range_max": 4,
     "damage_rank": 5,
-    "hit_rank": 1,
+    "hit_chance": 80,
     "type": "magical",
     "effects": [
         {

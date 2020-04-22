@@ -22,10 +22,11 @@
             "minimum": 1,
             "maximum": 5
         },
-        "hit_rank": {
+        "hit_chance": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 5
+            "minimum": 0,
+            "maximum": 100,
+            "default": 100
         },
         "type": {
             "type": "string",

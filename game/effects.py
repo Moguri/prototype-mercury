@@ -4,13 +4,6 @@ import panda3d.core as p3d
 from direct.interval import IntervalGlobal as intervals
 
 
-BP_HITMOD = [
-    [100, 10],
-    [200, 20],
-    [300, 30],
-    [400, 40],
-]
-
 BP_STRFAC = [
     [100, 400],
     [200, 800],
@@ -28,17 +21,8 @@ def _bpsum(diff, bps):
     return tot
 
 
-def calculate_hit_mod(self_acc, target_eva):
-    diff = abs(self_acc - target_eva)
-    mod = _bpsum(diff, BP_HITMOD)
-
-    return mod if self_acc > target_eva else -mod
-
-
-def calculate_hit_chance(combatant, target, ability):
-    base_chance = 40 + ability.hit_rank * 10
-
-    return base_chance + calculate_hit_mod(combatant.accuracy, target.evasion)
+def calculate_hit_chance(_combatant, _target, ability):
+    return ability.hit_chance
 
 
 def calculate_strength_factor(self_stat, opp_stat):

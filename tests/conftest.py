@@ -33,6 +33,10 @@ def combatant(monster, empty_nodepath):
     return combatant.Combatant(monster, empty_nodepath)
 
 @pytest.fixture
+def basic_attack(gdb):
+    return gdb['abilities']['basic_attack']
+
+@pytest.fixture
 def dt():
     return 1/60
 

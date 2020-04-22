@@ -3,7 +3,6 @@
     "name": "Sparkles",
     "range_max": 2,
     "damage_rank": 2,
-    "hit_rank": 4,
     "type": "magical",
     "effects": [
         {

@@ -12,10 +12,9 @@ def test_smoke(combatant, empty_nodepath, ability, combat):
     pprint.pprint(ability.effects)
     effects.sequence_from_ability(empty_nodepath, combatant, ability, combat)
 
-def test_calc_hit_mod():
-    assert effects.calculate_hit_mod(300, 250) == 5
-    assert effects.calculate_hit_mod(100, 250) == -12.5
-    assert effects.calculate_hit_mod(1000, 0) == 40
+
+def test_accuracy(combatant, basic_attack):
+    assert effects.calculate_hit_chance(combatant, combatant, basic_attack) == 100
 
 
 def test_calc_str_fac():

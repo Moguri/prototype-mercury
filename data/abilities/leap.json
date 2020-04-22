@@ -4,7 +4,6 @@
     "range_min": 2,
     "range_max": 3,
     "damage_rank": 1,
-    "hit_rank": 5,
     "type": "physical",
     "effects": [
         {
