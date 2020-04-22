@@ -9,7 +9,5 @@
     "hp_affinity": 1,
     "physical_attack_affinity": 1,
     "magical_attack_affinity": 1,
-    "accuracy_affinity": 1,
-    "evasion_affinity": 1,
     "defense_affinity": 1
 }

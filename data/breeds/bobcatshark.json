@@ -21,13 +21,9 @@
     "physical_attack": 100,
     "magical_attack": 100,
     "defense": 100,
-    "evasion": 100,
-    "accuracy": 100,
     "movement": 5,
     "hp_affinity": 1,
     "physical_attack_affinity": 1,
     "magical_attack_affinity": 1,
-    "accuracy_affinity": 1,
-    "evasion_affinity": 1,
     "defense_affinity": 1
 }

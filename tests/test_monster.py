@@ -22,9 +22,7 @@ def test_stats(monster):
         'hit_points': 130,
         "physical_attack": 130,
         "magical_attack": 120,
-        "defense": 120,
-        "evasion": 130,
-        "accuracy": 120,
+        "defense": 120
     }
 
     monster.add_jp('bobcatshark', monster.JP_PER_LEVEL)

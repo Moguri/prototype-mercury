@@ -113,8 +113,6 @@ class Monster:
         'hp',
         'physical_attack',
         'magical_attack',
-        'accuracy',
-        'evasion',
         'defense',
     ]
     def __init__(self, monsterdata):
