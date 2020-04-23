@@ -76,3 +76,13 @@ body,
   -webkit-animation-duration: 230ms;
   animation-duration: 200ms;
 }
+
+#content-pane {
+    position: fixed;
+    width: 66%;
+    left: 50%;
+    margin-left: -33%;
+    top: 25%;
+    padding: 0.5em;
+    opacity: 0.8;
+}

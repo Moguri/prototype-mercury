@@ -24,8 +24,7 @@
                 :modal='state.message_modal'
             ></message-bar>
 
-            <div id='monster-stats' v-if='state.show_stats'>
-                <p>Name: {{state.monster.name}}</p>
+            <div id='content-pane' class='pure-menu' v-if='state.show_stats'>
                 <p>Breed: {{state.monster.breed}}</p>
                 <p>Job: {{state.monster.job}}</p>
                 <p>HP: {{state.monster.hit_points}}</p>
