@@ -128,7 +128,7 @@ class Monster:
             job_contrib = 0
             for jobid, level in ((jobid, self.job_level(jobid)) for jobid in self.jp_totals):
                 job = gdb['jobs'][jobid]
-                job_contrib += getattr(job, f'{name}_affinity') * level * 5
+                job_contrib += getattr(job, f'{name}_per_level') * level
             return base_stat + breed_contrib + job_contrib
         return getattr(self._monsterdata, name)
 

@@ -6,9 +6,5 @@
         "flying_fist",
         "gust",
         "leap"
-    ],
-    "hp_affinity": 2,
-    "physical_attack_affinity": 2,
-    "magical_attack_affinity": 1,
-    "defense_affinity": 1
+    ]
 }
