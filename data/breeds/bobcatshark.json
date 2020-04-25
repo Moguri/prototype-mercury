@@ -18,12 +18,12 @@
     },
     "hp": 100,
     "ap_per_second": 5,
-    "physical_attack": 100,
-    "magical_attack": 100,
+    "physical_attack": 5,
+    "magical_attack": 5,
     "defense": 100,
     "movement": 5,
-    "hp_affinity": 1,
-    "physical_attack_affinity": 1,
-    "magical_attack_affinity": 1,
-    "defense_affinity": 1
+    "hp_per_level": 10,
+    "physical_attack_per_level": 1,
+    "magical_attack_per_level": 1,
+    "defense_per_level": 5
 }

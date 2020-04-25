@@ -19,10 +19,10 @@ def test_level(monster):
 
 def test_stats(monster):
     stats = {
-        'hit_points': 130,
-        "physical_attack": 130,
-        "magical_attack": 120,
-        "defense": 120
+        'hit_points': 120,
+        "physical_attack": 8,
+        "magical_attack": 8,
+        "defense": 110
     }
 
     monster.add_jp('bobcatshark', monster.JP_PER_LEVEL)

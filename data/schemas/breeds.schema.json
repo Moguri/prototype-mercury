@@ -57,25 +57,25 @@
             "type": "integer",
             "minimum": 0
         },
-        "hp_affinity": {
+        "hp_per_level": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 5
+            "minimum": 0,
+            "default": 0
         },
-        "physical_attack_affinity": {
+        "physical_attack_per_level": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 5
+            "minimum": 0,
+            "default": 0
         },
-        "magical_attack_affinity": {
+        "magical_attack_per_level": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 5
+            "minimum": 0,
+            "default": 0
         },
-        "defense_affinity": {
+        "defense_per_level": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 5
+            "minimum": 0,
+            "default": 0
         },
         "movement": {
             "type": "integer",

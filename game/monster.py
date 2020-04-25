@@ -124,11 +124,11 @@ class Monster:
             name = 'hp'
         if name in self.BASE_STATS:
             base_stat = getattr(self.breed, name)
-            breed_contrib = getattr(self.breed, f'{name}_affinity') * self.level * 5
+            breed_contrib = getattr(self.breed, f'{name}_per_level') * (self.level - 1)
             job_contrib = 0
             for jobid, level in ((jobid, self.job_level(jobid)) for jobid in self.jp_totals):
                 job = gdb['jobs'][jobid]
-                job_contrib += getattr(job, f'{name}_per_level') * level
+                job_contrib += getattr(job, f'{name}_per_level') * (level - 1)
             return base_stat + breed_contrib + job_contrib
         return getattr(self._monsterdata, name)
 
