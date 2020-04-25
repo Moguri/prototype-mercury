@@ -1,7 +1,7 @@
 {
     "id": "basic_attack",
     "name": "Attack",
-    "damage_rank": 1,
+    "power": 1,
     "type": "physical",
     "effects": [
         {

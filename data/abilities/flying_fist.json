@@ -3,7 +3,7 @@
     "name": "Flying Fist",
     "range_min": 2,
     "range_max": 2,
-    "damage_rank": 3,
+    "power": 15,
     "type": "physical",
     "effects": [
         {

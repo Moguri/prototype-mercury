@@ -1,7 +1,7 @@
 {
     "id": "gust",
     "name": "Gust",
-    "damage_rank": 1,
+    "power": 1,
     "type": "magical",
     "effects": [
         {

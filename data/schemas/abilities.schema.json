@@ -17,10 +17,9 @@
             "default": 1,
             "minimum": 1
         },
-        "damage_rank": {
+        "power": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 5
+            "minimum": 1
         },
         "hit_chance": {
             "type": "integer",

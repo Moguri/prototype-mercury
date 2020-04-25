@@ -2,7 +2,7 @@
     "id": "sparkles",
     "name": "Sparkles",
     "range_max": 2,
-    "damage_rank": 2,
+    "power": 10,
     "type": "magical",
     "effects": [
         {

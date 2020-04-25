@@ -2,7 +2,7 @@
     "id": "blast",
     "name": "Blast",
     "range_max": 4,
-    "damage_rank": 5,
+    "power": 20,
     "hit_chance": 80,
     "type": "magical",
     "effects": [

@@ -4,32 +4,8 @@ import panda3d.core as p3d
 from direct.interval import IntervalGlobal as intervals
 
 
-BP_STRFAC = [
-    [100, 400],
-    [200, 800],
-    [300, 1200],
-    [400, 1600],
-]
-
-def _bpsum(diff, bps):
-    tot = 0
-
-    for break_point in bps:
-        tot += max(min(diff, break_point[0]) / break_point[1], 0)
-        diff -= break_point[0]
-
-    return tot
-
-
 def calculate_hit_chance(_combatant, _target, ability):
     return ability.hit_chance
-
-
-def calculate_strength_factor(self_stat, opp_stat):
-    diff = abs(self_stat - opp_stat)
-    factor = 1 + _bpsum(diff, BP_STRFAC)
-
-    return factor if self_stat > opp_stat else 1 / factor
 
 
 def calculate_defense_factor(defense):
@@ -37,21 +13,14 @@ def calculate_defense_factor(defense):
 
 
 def calculate_strength(combatant, target, ability):
-    self_stat = (
+    attack_stat = (
         combatant.physical_attack
         if ability.type == 'physical'
         else combatant.magical_attack
     )
-    opp_stat = (
-        target.physical_attack
-        if ability.type == 'physical'
-        else target.magical_attack
-    )
-    base_str = (ability.damage_rank * 0.25 - 0.2) * self_stat
-    str_factor = calculate_strength_factor(self_stat, opp_stat)
     def_factor = calculate_defense_factor(target.defense)
 
-    return round(base_str * str_factor * def_factor)
+    return round(attack_stat * ability.power * def_factor)
 
 class SequenceBuilder:
     ALLOWED_EFFECTS = [
