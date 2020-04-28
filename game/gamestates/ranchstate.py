@@ -268,7 +268,7 @@ class RanchState(GameState):
             self.menu_helper.set_menu('Select a Job', [
                 ('Back', job_reject, []),
             ] + [
-                (job.name, change_job, [job.id])
+                (f'{job.name} (lvl {self.current_monster.job_level(job)})', change_job, [job.id])
                 for job in self.current_monster.available_jobs
             ])
             self.menu_helper.selection_change_cb = show_job
