@@ -482,18 +482,22 @@ class CombatState(GameState):
                 ])
                 sequence.start()
         elif next_state == 'END_COMBAT':
+            results = []
+            jpgain = Monster.JP_PER_LEVEL * 0.5
             isvictory = not self.get_remaining_enemy_combatants()
-            if not self.get_remaining_enemy_combatants():
+            if isvictory:
                 self.display_message('Victory!')
-                results = []
-                for mon in self.player_combatants:
-                    mon.add_jp(mon.job, mon.JP_PER_LEVEL)
-                    results.append(
-                        f'{mon.name} raised {mon.job.name} to level {mon.job_level(mon.job)}'
-                    )
+                results.append('Victory Bonus: 2x JP')
+                jpgain *= 2
             else:
                 self.display_message('Defeat.')
-                results = ['Nothing']
+
+            jpgain = round(jpgain)
+            for mon in self.player_combatants:
+                mon.add_jp(mon.job, jpgain)
+                results.append(
+                    f'{mon.name} gained {jpgain} JP in {mon.job.name}'
+                )
 
             self.update_ui({'results': results})
             self.accept('accept', base.change_to_previous_state)
