@@ -107,7 +107,7 @@ class MonsterActor:
 
 
 class Monster:
-    JP_PER_LEVEL = 100
+    JP_PER_LEVEL = 500
 
     BASE_STATS = [
         'hp',
