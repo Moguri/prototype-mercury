@@ -174,7 +174,10 @@ class Monster:
         })
         monsterdata.link(gdb)
 
-        return cls(monsterdata)
+        monster = cls(monsterdata)
+        for job in monster.available_jobs:
+            monster.add_jp(job, 100)
+        return monster
 
     @classmethod
     def gen_random(cls, monsterid, level):
