@@ -13,11 +13,21 @@
         "job": {
             "type": "string"
         },
-        "jp_totals": {
+        "jp_unspent": {
             "type": "object",
             "default": {},
             "additionalProperties": {
                 "type": "integer"
+            }
+        },
+        "abilities": {
+            "type": "object",
+            "default": {},
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
             }
         }
     },

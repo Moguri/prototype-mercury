@@ -18,10 +18,7 @@ class Combatant:
 
         self.abilities = [
             gdb['abilities']['basic_attack']
-        ] + [
-            gdb['abilities'][ability_id]
-            for ability_id in monster.abilities
-        ]
+        ] + monster.abilities
 
         self.range_index = 0
         self.target = None

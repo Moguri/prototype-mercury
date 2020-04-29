@@ -3,18 +3,14 @@
 
 def test_level(monster):
     '''Monster level is one plus the sum of the gained job levels'''
+    jp_per_level = monster.JP_PER_LEVEL
     assert monster.level == 1
 
-    monster._monsterdata.jp_totals = {
-        'foo': 100,
-        'bar': 0
-    }
+    monster.add_jp('foo', jp_per_level)
     assert monster.level == 2
 
-    monster._monsterdata.jp_totals = {
-        'foo': 200,
-        'bar': 100
-    }
+    monster.add_jp('foo', jp_per_level)
+    monster.add_jp('bar', jp_per_level)
     assert monster.level == 4
 
 def test_stats(monster):

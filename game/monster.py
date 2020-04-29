@@ -198,6 +198,21 @@ class Monster:
             raise RuntimeError(f'tag requirements unsatisfied: {value.required_tags}')
         self._monsterdata.job = value
 
+    @property
+    def jp_spent(self):
+        gdb = gamedb.get_instance()
+        return {
+            jobid: sum([gdb['abilities'][abid].jp_cost for abid in abilities])
+            for jobid, abilities in self._monsterdata.abilities.items()
+        }
+
+    @property
+    def jp_totals(self):
+        return {
+            jobid: unspent + self.jp_spent.get(jobid, 0)
+            for jobid, unspent in self.jp_unspent.items()
+        }
+
     def job_level(self, job):
         if not isinstance(job, str):
             job = job.id
@@ -207,10 +222,10 @@ class Monster:
     def add_jp(self, job, value):
         if not isinstance(job, str):
             job = job.id
-        if job in self.jp_totals:
-            self.jp_totals[job] += value
+        if job in self.jp_unspent:
+            self.jp_unspent[job] += value
         else:
-            self.jp_totals[job] = value
+            self.jp_unspent[job] = value
 
     @property
     def movement(self):
@@ -235,9 +250,14 @@ class Monster:
             f'breed_{self.breed.id}',
         } | {
             f'job_{job}_{self.job_level(job)}'
-            for job in self.jp_totals
+            for job in self.jp_unspent
         }
 
     @property
     def abilities(self):
-        return self.job.abilities
+        gdb = gamedb.get_instance()
+        return [
+            gdb['abilities'][abid]
+            for ablist in self._monsterdata.abilities.values()
+            for abid in ablist
+        ]
