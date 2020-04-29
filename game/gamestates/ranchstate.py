@@ -166,6 +166,7 @@ class RanchState(GameState):
                 ('Select Monster', self.set_input_state, ['SELECT_MONSTER']),
                 ('Monster Stats', self.set_input_state, ['STATS']),
                 ('Change Job', self.set_input_state, ['JOBS']),
+                ('Abilities', self.set_input_state, ['ABILITIES']),
                 ('Dismiss Monster', self.set_input_state, ['DISMISS']),
             ]
             if len(self.player.monsters) < self.player.max_monsters:
@@ -278,6 +279,25 @@ class RanchState(GameState):
             ])
             self.menu_helper.selection_change_cb = show_job
             self.menu_helper.reject_cb = job_reject
+        elif next_state == 'ABILITIES':
+            unspentjp = self.current_monster.jp_unspent.get(self.current_monster.job.id, 0)
+            def learn_ability(ability):
+                if unspentjp >= ability.jp_cost:
+                    self.current_monster.add_ability(ability)
+                    self.input_state = 'ABILITIES' # Refresh menu
+
+            learnedids = [ability.id for ability in self.current_monster.abilities]
+            self.menu_helper.set_menu(f'Available JP: {unspentjp}', [
+                ('Back', self.set_input_state, ['MAIN']),
+            ] + [
+                (
+                    f'{ability.name} ({ability.jp_cost} JP)' + \
+                        ('★' if ability.id in learnedids else ''),
+                    learn_ability,
+                    [ability]
+                )
+                for ability in [gdb['abilities'][i] for i in self.current_monster.job.abilities]
+            ])
         elif next_state == 'COMBAT':
             def enter_combat(ctype):
                 base.blackboard['combat_type'] = ctype

@@ -253,6 +253,17 @@ class Monster:
             for job in self.jp_unspent
         }
 
+    def add_ability(self, ability):
+        if isinstance(ability, str):
+            gdb = gamedb.get_instance()
+            ability = gdb['abilities'][ability]
+        if self.job.id not in self.jp_unspent:
+            self._monsterdata.jp_unspent[self.job.id] = 0
+        self.jp_unspent[self.job.id] -= ability.jp_cost
+        if self.job.id not in self._monsterdata.abilities:
+            self._monsterdata.abilities[self.job.id] = []
+        self._monsterdata.abilities[self.job.id].append(ability.id)
+
     @property
     def abilities(self):
         gdb = gamedb.get_instance()
