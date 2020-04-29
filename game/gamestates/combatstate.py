@@ -274,12 +274,6 @@ class CombatState(GameState):
         # Set initial input state
         self.input_state = 'END_TURN'
 
-        # Kill all enemies cheat
-        # def kill_all():
-        #     for combatant in self.enemy_combatants:
-        #         combatant.current_hp = 0
-        # self.accept('k', kill_all)
-
     @property
     def combatants(self):
         return (
@@ -291,6 +285,13 @@ class CombatState(GameState):
     def set_input_state(self, next_state):
         self.display_message('')
         super().set_input_state(next_state)
+
+        # Kill all enemies cheat
+        # def kill_all():
+        #     print('Setting enemy health to 0')
+        #     for combatant in self.enemy_combatants:
+        #         combatant.current_hp = 0
+        # self.accept('k', kill_all)
 
         self.range_tiles = []
 
