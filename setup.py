@@ -45,6 +45,7 @@ setup(
         'pytest',
         'pylint~=2.4.0',
         'pytest-pylint',
+        'pytest-cov',
     ],
     cmdclass={
         'build_apps': CustomBuildApps,
