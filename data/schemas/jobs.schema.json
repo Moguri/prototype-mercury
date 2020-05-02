@@ -24,26 +24,6 @@
             "uniqueItems": true,
             "default": []
         },
-        "hp_per_level": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
-        },
-        "physical_attack_per_level": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
-        },
-        "magical_attack_per_level": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
-        },
-        "defense_per_level": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
-        },
         "stat_upgrades": {
             "type": "object",
             "default": {},

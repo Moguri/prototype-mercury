@@ -128,18 +128,12 @@ class Monster:
         self._monsterdata = monsterdata
 
     def __getattr__(self, name):
-        gdb = gamedb.get_instance()
         if name == 'hit_points':
             name = 'hp'
         if name in self.BASE_STATS:
             base_stat = getattr(self.breed, name)
-            breed_contrib = getattr(self.breed, f'{name}_per_level') * (self.level - 1)
-            job_contrib = 0
-            for jobid, level in ((jobid, self.job_level(jobid)) for jobid in self.jp_totals):
-                job = gdb['jobs'][jobid]
-                job_contrib += getattr(job, f'{name}_per_level') * (level - 1)
             upgrades_contrib = self.upgrades_for_stat(name) * self.STAT_UPGRADE_AMOUNTS[name]
-            return base_stat + breed_contrib + job_contrib + upgrades_contrib
+            return base_stat + upgrades_contrib
         return getattr(self._monsterdata, name)
 
     def to_dict(self, skip_extras=False):

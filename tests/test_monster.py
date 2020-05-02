@@ -13,18 +13,6 @@ def test_level(monster):
     monster.add_jp('bar', jp_per_level)
     assert monster.level == 4
 
-def test_stats(monster):
-    stats = {
-        'hit_points': 120,
-        "physical_attack": 8,
-        "magical_attack": 8,
-        "defense": 110
-    }
-
-    monster.add_jp('bobcatshark', monster.JP_PER_LEVEL)
-    for key, value in stats.items():
-        assert getattr(monster, key) == value
-
 def test_tags(monster):
     assert 'breed_bobcatshark' in monster.tags
     monster.add_jp('bobcatshark', 1)

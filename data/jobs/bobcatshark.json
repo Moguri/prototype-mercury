@@ -8,9 +8,5 @@
     ],
     "required_tags": [
         "breed_bobcatshark"
-    ],
-    "hp_per_level": 10,
-    "physical_attack_per_level": 2,
-    "magical_attack_per_level": 2,
-    "defense_per_level": 5
+    ]
 }
