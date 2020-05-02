@@ -109,6 +109,15 @@ class MonsterActor:
 class Monster:
     JP_PER_LEVEL = 500
 
+    STAT_UPGRADE_AMOUNTS = {
+        'hp': 20,
+        'physical_attack': 1,
+        'magical_attack': 1,
+        'defense': 10,
+    }
+
+    STAT_UPGRADE_COST = 100
+
     BASE_STATS = [
         'hp',
         'physical_attack',
@@ -129,7 +138,8 @@ class Monster:
             for jobid, level in ((jobid, self.job_level(jobid)) for jobid in self.jp_totals):
                 job = gdb['jobs'][jobid]
                 job_contrib += getattr(job, f'{name}_per_level') * (level - 1)
-            return base_stat + breed_contrib + job_contrib
+            upgrades_contrib = self.upgrades_for_stat(name) * self.STAT_UPGRADE_AMOUNTS[name]
+            return base_stat + breed_contrib + job_contrib + upgrades_contrib
         return getattr(self._monsterdata, name)
 
     def to_dict(self, skip_extras=False):
@@ -262,7 +272,7 @@ class Monster:
             ability = gdb['abilities'][ability]
         if self.job.id not in self.jp_unspent:
             self._monsterdata.jp_unspent[self.job.id] = 0
-        self.jp_unspent[self.job.id] -= ability.jp_cost
+        self._monsterdata.jp_unspent[self.job.id] -= ability.jp_cost
         if self.job.id not in self._monsterdata.abilities:
             self._monsterdata.abilities[self.job.id] = []
         self._monsterdata.abilities[self.job.id].append(ability.id)
@@ -275,3 +285,20 @@ class Monster:
             for ablist in self._monsterdata.abilities.values()
             for abid in ablist
         ]
+
+    def upgrades_for_stat(self, stat):
+        return sum([
+            upgrades.get(stat, 0)
+            for upgrades in self.stat_upgrades.values()
+        ])
+
+    def upgrade_stat(self, stat):
+        job = self.job.id
+        if job not in self.jp_unspent:
+            self._monsterdata.jp_unspent[job] = 0
+        self.jp_unspent[job] -= self.STAT_UPGRADE_COST
+        if job not in self.stat_upgrades:
+            self.stat_upgrades[job] = {}
+        if stat not in self.stat_upgrades[job]:
+            self.stat_upgrades[job][stat] = 0
+        self.stat_upgrades[job][stat] += 1

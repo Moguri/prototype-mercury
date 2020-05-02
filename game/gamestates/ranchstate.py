@@ -281,14 +281,40 @@ class RanchState(GameState):
             self.menu_helper.reject_cb = job_reject
         elif next_state == 'ABILITIES':
             unspentjp = self.current_monster.jp_unspent.get(self.current_monster.job.id, 0)
+            learnedids = [ability.id for ability in self.current_monster.abilities]
+
+            def curr_ranks(stat):
+                jobid = self.current_monster.job.id
+                upgrades = self.current_monster.stat_upgrades.get(jobid, {})
+                return upgrades.get(stat, 0)
+
             def learn_ability(ability):
-                if unspentjp >= ability.jp_cost:
+                if unspentjp >= ability.jp_cost and ability.id not in learnedids:
                     self.current_monster.add_ability(ability)
                     self.input_state = 'ABILITIES' # Refresh menu
 
-            learnedids = [ability.id for ability in self.current_monster.abilities]
+            def upgrade_stat(stat, max_rank):
+                if unspentjp >= 100 and curr_ranks(stat) < max_rank:
+                    self.current_monster.upgrade_stat(stat)
+                    self.input_state = 'ABILITIES' # Refresh menu
+
+            pretty_stat_names = {
+                'hp': 'HP',
+                'physical_attack': 'PA',
+                'magical_attack': 'MA',
+                'defense': 'DEF',
+            }
+
             self.menu_helper.set_menu(f'Available JP: {unspentjp}', [
                 ('Back', self.set_input_state, ['MAIN']),
+            ] + [
+                (
+                    f'Upgrade {pretty_stat_names[stat]} {curr_ranks(stat)}/{max_rank} (100 JP)' + \
+                        ('★' if curr_ranks(stat) == max_rank else ''),
+                    upgrade_stat,
+                    [stat, max_rank]
+                )
+                for stat, max_rank in self.current_monster.job.stat_upgrades.items()
             ] + [
                 (
                     f'{ability.name} ({ability.jp_cost} JP)' + \

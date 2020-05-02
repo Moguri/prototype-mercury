@@ -43,6 +43,13 @@
             "type": "integer",
             "minimum": 0,
             "default": 0
+        },
+        "stat_upgrades": {
+            "type": "object",
+            "default": {},
+            "additionalProperties": {
+                "type": "integer"
+            }
         }
     }
 }

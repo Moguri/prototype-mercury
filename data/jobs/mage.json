@@ -5,5 +5,9 @@
         "gust",
         "sparkles",
         "blast"
-    ]
+    ],
+    "stat_upgrades": {
+        "hp": 3,
+        "magical_attack": 3
+    }
 }

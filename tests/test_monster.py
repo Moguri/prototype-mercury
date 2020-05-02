@@ -40,3 +40,9 @@ def test_job_assignment(monster, gdb):
     # monster.add_jp('squire', monster.JP_PER_LEVEL)
     assert monster.can_use_job(job)
     monster.job = job
+
+def test_stat_upgrade(monster):
+    monster.upgrade_stat('hp')
+    assert monster.upgrades_for_stat('hp') == 1
+    assert monster.hp == 120
+    assert monster.jp_unspent[monster.job.id] == 0

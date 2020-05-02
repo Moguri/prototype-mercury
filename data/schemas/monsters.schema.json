@@ -29,6 +29,16 @@
                     "type": "string"
                 }
             }
+        },
+        "stat_upgrades": {
+            "type": "object",
+            "default": {},
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "integer"
+                }
+            }
         }
     },
     "links": {
