@@ -18,7 +18,13 @@ def test_accuracy(combatant, basic_attack):
 
 
 def test_strength(combatant, basic_attack):
-    assert effects.calculate_strength(combatant, combatant, basic_attack) == 4
+    # Raw
+    combatant.defense = 0
+    assert effects.calculate_strength(combatant, combatant, basic_attack) == 15
+
+    # 10% DR
+    combatant.defense = 100
+    assert effects.calculate_strength(combatant, combatant, basic_attack) == 14
 
 def test_calc_def_fac():
     assert effects.calculate_defense_factor(100) == 0.9
