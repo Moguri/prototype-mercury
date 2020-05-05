@@ -185,14 +185,35 @@ class Monster:
 
     @classmethod
     def gen_random(cls, monsterid, level):
+        gdb = gamedb.get_instance()
         mon = cls.make_new(monsterid)
 
         while mon.level < level:
             job = random.choice(mon.available_jobs)
             mon.add_jp(job, cls.JP_PER_LEVEL)
 
-        mon.job = random.choice(mon.available_jobs)
+        def get_abilities(job):
+            jp_unspent = mon.jp_unspent.get(job.id, 0)
+            def allow_ability(ability):
+                return (
+                    ability not in mon.abilities and
+                    ability.jp_cost <= jp_unspent
+                )
+            return [
+                ability
+                for ability in (gdb['abilities'][i] for i in mon.job.abilities)
+                if allow_ability(ability)
+            ]
 
+        for job in mon.available_jobs:
+            mon.job = job
+            available_abilities = get_abilities(job)
+            while available_abilities:
+                ability = random.choice(available_abilities)
+                mon.add_ability(ability)
+                available_abilities = get_abilities(job)
+
+        mon.job = random.choice(mon.available_jobs)
         return mon
 
     @property

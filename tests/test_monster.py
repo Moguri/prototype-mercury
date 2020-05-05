@@ -34,3 +34,13 @@ def test_stat_upgrade(monster):
     assert monster.upgrades_for_stat('hp') == 1
     assert monster.hp == 120
     assert monster.jp_unspent[monster.job.id] == 0
+
+def test_gen_random(monster):
+    mon = monster.gen_random('test', 1)
+    assert mon
+    assert mon.level == 1
+    assert mon.abilities
+
+    mon = monster.gen_random('test', 5)
+    assert mon
+    assert mon.level == 5
