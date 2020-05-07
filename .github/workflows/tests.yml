@@ -10,8 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Gen LFS Cache Key File
+      run: git lfs ls-files -l > lsf-cache-key
+    - name: Cache Git LFS
+      uses: actions/cache@v1
+      id: cache-git-lfs
       with:
-        lfs: true
+        path: .git/lfs
+        key: ${{ runner.os }}-${{ hashFiles('**/lsf-cache-key') }}
+    - name: Git LFS
+      if: steps.cache-git-lfs.cache-hit != 'true'
+      run: git lfs pull
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
@@ -36,8 +45,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Gen LFS Cache Key File
+      run: git lfs ls-files -l > lsf-cache-key
+    - name: Cache Git LFS
+      uses: actions/cache@v1
+      id: cache-git-lfs
       with:
-        lfs: true
+        path: .git/lfs
+        key: ${{ runner.os }}-${{ hashFiles('**/lsf-cache-key') }}
+    - name: Git LFS
+      if: steps.cache-git-lfs.cache-hit != 'true'
+      run: git lfs pull
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
