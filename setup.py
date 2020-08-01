@@ -22,6 +22,8 @@ class CustomBuildApps(pman.build_apps.BuildApps):
                 'devtools_resources.pak',
                 'cef_extensions.pak',
                 'snapshot_blob.bin',
+                'License',
+                'LICENSE.txt',
             ]
             for fname in rmfiles:
                 os.remove(os.path.join(builddir, fname))
@@ -60,6 +62,8 @@ setup(
                 'config/**',
                 'data/**',
                 'ui/**',
+                'CREDITS.md',
+                'LICENSE',
             ],
             'exclude_patterns': [
                 'config/user.prc',
