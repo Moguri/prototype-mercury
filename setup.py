@@ -34,11 +34,15 @@ class CustomBuildApps(pman.build_apps.BuildApps):
                     os.path.join(builddir, 'libpython3.7m.so.1.0')
                 )
             elif 'win' in platform:
-                # Remove duplicate msvcp*.dll files from cefpython3
                 rmfiles = [
+                    # Remove duplicate msvcp*.dll files from cefpython3
                     'msvcp90.dll',
                     'msvcp100.dll',
                     'msvcp140.dll',
+
+                    # Unused d3d files
+                    'd3dcompiler_43.dll',
+                    'd3dcompiler_47.dll',
                 ]
                 for fname in rmfiles:
                     os.remove(os.path.join(builddir, fname))
