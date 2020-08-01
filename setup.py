@@ -31,6 +31,9 @@ class CustomBuildApps(pman.build_apps.BuildApps):
                     os.path.join(sys.base_prefix, 'lib', 'libpython3.7m.so.1.0'),
                     os.path.join(builddir, 'libpython3.7m.so.1.0')
                 )
+            elif 'win' in platform:
+                # Remove duplicate MSVCP140.dll
+                os.remove(os.path.join(builddir, 'MSVCP140.dll'))
 
 
 CONFIG = pman.get_config()
