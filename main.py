@@ -85,7 +85,7 @@ class GameApp(ShowBase):
             )
 
     def load_ui(self, uiname):
-        self.ui.load_file(os.path.join(pathutils.APP_ROOT_DIR, 'ui', '{}.html'.format(uiname)))
+        self.ui.load_file(p3d.Filename.expand_from(f'$MAIN_DIR/ui/{uiname}.html'))
 
 
 def main():

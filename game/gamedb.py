@@ -80,7 +80,8 @@ def load_schema(schema_path):
 
 class GameDB(collections.UserDict):
     _ptr = None
-    data_dir = os.path.join(pathutils.APP_ROOT_DIR, 'data')
+    root_dir = pathutils.APP_ROOT_DIR.to_os_specific()
+    data_dir = os.path.join(root_dir, 'data')
     schema_dir = os.path.join(data_dir, 'schemas')
     schema_suffix = '.schema.json'
 
