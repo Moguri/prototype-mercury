@@ -1,6 +1,5 @@
 ;notify-level-EventMapper debug
 
-event-map-item-quit escape
 event-map-item-toggle-buffer-viewer f1
 event-map-item-toggle-oobe f2
 event-map-item-save-screenshot f3
