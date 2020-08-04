@@ -24,6 +24,5 @@
     "physical_attack": 5,
     "magical_attack": 5,
     "defense": 100,
-    "movement": 3,
-    "hp_per_level": 10
+    "movement": 3
 }
