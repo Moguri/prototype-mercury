@@ -20,6 +20,5 @@
     "ap_per_second": 5,
     "physical_attack": 5,
     "magical_attack": 5,
-    "defense": 100,
     "movement": 5
 }

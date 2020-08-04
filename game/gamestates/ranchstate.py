@@ -302,7 +302,6 @@ class RanchState(GameState):
                 'hp': 'HP',
                 'physical_attack': 'PA',
                 'magical_attack': 'MA',
-                'defense': 'DEF',
             }
 
             self.menu_helper.set_menu(f'Available JP: {unspentjp}', [

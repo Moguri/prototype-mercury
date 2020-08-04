@@ -8,19 +8,14 @@ def calculate_hit_chance(_combatant, _target, ability):
     return ability.hit_chance
 
 
-def calculate_defense_factor(defense):
-    return 1 - (defense / 1000)
-
-
-def calculate_strength(combatant, target, ability):
+def calculate_strength(combatant, _target, ability):
     attack_stat = (
         combatant.physical_attack
         if ability.type == 'physical'
         else combatant.magical_attack
     )
-    def_factor = calculate_defense_factor(target.defense)
 
-    return round(attack_stat * ability.power * def_factor)
+    return round(attack_stat * ability.power)
 
 class SequenceBuilder:
     ALLOWED_EFFECTS = [

@@ -113,7 +113,6 @@ class Monster:
         'hp': 20,
         'physical_attack': 1,
         'magical_attack': 1,
-        'defense': 10,
     }
 
     STAT_UPGRADE_COST = 100
@@ -122,7 +121,6 @@ class Monster:
         'hp',
         'physical_attack',
         'magical_attack',
-        'defense',
     ]
     def __init__(self, monsterdata):
         self._monsterdata = monsterdata
