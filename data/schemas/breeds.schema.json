@@ -41,10 +41,6 @@
             "type": "integer",
             "minimum": 0
         },
-        "ap_per_second": {
-            "type": "integer",
-            "minimum": 0
-        },
         "physical_attack": {
             "type": "integer",
             "minimum": 0
