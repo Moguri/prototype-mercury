@@ -53,16 +53,6 @@
             "type": "integer",
             "minimum": 0
         },
-        "physical_attack_per_level": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
-        },
-        "magical_attack_per_level": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 0
-        },
         "movement": {
             "type": "integer",
             "minimum": 1
