@@ -75,7 +75,8 @@ def app():
         '',
         'window-type none\n'
         'framebuffer-hardware false\n'
-        'mercury-disable-music true\n'
+        'audio-music-active false\n'
+        'audio-sfx-active false\n'
     )
     class DummyApp(ShowBase):
         def __init__(self):

@@ -66,6 +66,14 @@ class GameApp(ShowBase):
             return task.cont
         self.taskMgr.add(update_state, 'GameState Update')
 
+        # Get volume levels from config
+        self.musicManager.set_volume(
+            p3d.ConfigVariableDouble('audio-music-volume', 1.0).get_value()
+        )
+        self.sfxManagerList[0].set_volume(
+            p3d.ConfigVariableDouble('audio-sfx-volume', 1.0).get_value()
+        )
+
     def change_state(self, next_state, skip_fade=False):
         ival = intervals.Func(self.gman.change, next_state)
         if skip_fade:
