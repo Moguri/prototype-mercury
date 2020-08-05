@@ -17,6 +17,12 @@
         },
         "skins": {
             "type": "object",
+            "default": {
+                "default": {
+                    "bam_file": "fallback_breed",
+                    "root_node": "ClayGolemArm"
+                }
+            },
             "additionalProperties": {
                 "type": "object",
                 "properties": {
@@ -35,6 +41,13 @@
         },
         "anim_map": {
             "type": "object",
+            "default": {
+                "idle": "cg.Idle",
+                "attack": "cg.Attack",
+                "death": "cg.Death",
+                "magic": "cg.Magic",
+                "walk": "cg.Run"
+            },
             "additionalProperties": {"type": "string"}
         },
         "hp": {

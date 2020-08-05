@@ -5,17 +5,6 @@
         "in_test"
     ],
     "default_job": "bobcatshark",
-    "skins": {
-        "default": {
-            "bam_file": "clay_golem",
-            "root_node": "ClayGolemArm"
-        }
-    },
-    "anim_map": {
-        "idle": "cg.Idle",
-        "attack": "cg.Attack",
-        "death": "cg.Death"
-    },
     "hp": 100,
     "physical_attack": 5,
     "magical_attack": 5,
