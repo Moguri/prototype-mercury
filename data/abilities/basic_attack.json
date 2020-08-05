@@ -1,5 +1,4 @@
 {
-    "id": "basic_attack",
     "name": "Attack",
     "power": 3,
     "type": "physical",

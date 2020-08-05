@@ -108,10 +108,14 @@ class GameDB(collections.UserDict):
     def _load_directory(self, dirname, data_model):
         dirpath = os.path.join(self.data_dir, dirname)
 
-        data_list = [
-            json.load(open(os.path.join(dirpath, filename)))
-            for filename in os.listdir(dirpath)
-        ]
+        data_list = []
+        for filename in os.listdir(dirpath):
+            with open(os.path.join(dirpath, filename)) as datafile:
+                data = json.load(datafile)
+            if not 'id' in data:
+                data['id'] = filename.rsplit('.', 1)[0]
+            data_list.append(data)
+
 
         for data in data_list:
             try:
