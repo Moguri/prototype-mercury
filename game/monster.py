@@ -113,6 +113,7 @@ class Monster:
         'hp': 20,
         'physical_attack': 1,
         'magical_attack': 1,
+        'movement': 1,
     }
 
     STAT_UPGRADE_COST = 100
@@ -121,6 +122,7 @@ class Monster:
         'hp',
         'physical_attack',
         'magical_attack',
+        'movement',
     ]
     def __init__(self, monsterdata):
         self._monsterdata = monsterdata
@@ -252,10 +254,6 @@ class Monster:
             self.jp_unspent[job] += value
         else:
             self.jp_unspent[job] = value
-
-    @property
-    def movement(self):
-        return self.breed.movement
 
     @property
     def level(self):
