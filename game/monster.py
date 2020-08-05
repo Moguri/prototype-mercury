@@ -275,8 +275,9 @@ class Monster:
         return {
             f'breed_{self.breed.id}',
         } | {
-            f'job_{job}_{self.job_level(job)}'
+            f'job_{job}_{level}'
             for job in self.jp_unspent
+            for level in range(1, self.job_level(job) + 1)
         }
 
     def add_ability(self, ability):

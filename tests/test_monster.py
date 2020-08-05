@@ -18,6 +18,10 @@ def test_tags(monster):
     monster.add_jp('bobcatshark', 1)
     assert 'job_bobcatshark_1' in monster.tags
 
+    monster.add_jp('bobcatshark', monster.JP_PER_LEVEL)
+    assert 'job_bobcatshark_1' in monster.tags
+    assert 'job_bobcatshark_2' in monster.tags
+
 def test_job_assignment(monster, gdb):
     job = gdb['jobs']['squire']
 
