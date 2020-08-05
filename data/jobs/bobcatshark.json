@@ -8,5 +8,9 @@
     ],
     "required_tags": [
         "breed_bobcatshark"
-    ]
+    ],
+    "hp_offset": 10,
+    "physical_attack_offset": 2,
+    "magical_attack_offset": 1,
+    "movement_offset": 1
 }

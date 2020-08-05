@@ -133,7 +133,8 @@ class Monster:
         if name in self.BASE_STATS:
             base_stat = getattr(self.breed, name)
             upgrades_contrib = self.upgrades_for_stat(name) * self.STAT_UPGRADE_AMOUNTS[name]
-            return base_stat + upgrades_contrib
+            jobs_contrib = getattr(self.job, f'{name}_offset')
+            return base_stat + upgrades_contrib + jobs_contrib
         return getattr(self._monsterdata, name)
 
     def to_dict(self, skip_extras=False):

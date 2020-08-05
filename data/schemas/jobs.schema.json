@@ -30,6 +30,26 @@
             "additionalProperties": {
                 "type": "integer"
             }
+        },
+        "hp_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "physical_attack_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "magical_attack_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+        },
+        "movement_offset": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
         }
     }
 }
