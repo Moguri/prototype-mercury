@@ -17,7 +17,7 @@ class Combatant:
         self.ability_used = False
 
         self.abilities = [
-            gdb['abilities']['basic_attack']
+            monster.job.basic_attack
         ] + monster.abilities
 
         self.range_index = 0

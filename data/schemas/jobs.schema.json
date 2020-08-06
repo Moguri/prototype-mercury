@@ -7,6 +7,10 @@
         "name": {
             "type": "string"
         },
+        "basic_attack": {
+            "type": "string",
+            "default": "basic_attack"
+        },
         "abilities": {
             "type": "array",
             "items": {
@@ -51,5 +55,8 @@
             "minimum": 0,
             "default": 0
         }
+    },
+    "links": {
+        "basic_attack": "abilities"
     }
 }
