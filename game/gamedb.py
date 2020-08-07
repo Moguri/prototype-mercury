@@ -105,6 +105,10 @@ class GameDB(collections.UserDict):
             if os.path.exists(os.path.join(self.data_dir, i))
         })
 
+    def get_schema(self, key):
+        #pylint: disable=protected-access
+        return self.schema_to_datamodel[key]._schema
+
     def _load_directory(self, dirname, data_model):
         dirpath = os.path.join(self.data_dir, dirname)
 
@@ -133,13 +137,13 @@ class GameDB(collections.UserDict):
         for key in self.keys():
             _ = [model.link(self) for model in self[key].values()]
 
-    def to_json(self):
-        return json.dumps({
+    def to_dict(self):
+        return {
             key: {
                 k: v.to_dict() for k, v in value.items()
             }
-            for key, value in get_instance().items()
-        }, indent=4)
+            for key, value in self.items()
+        }
 
     @classmethod
     def get_instance(cls):
