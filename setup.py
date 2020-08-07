@@ -72,6 +72,7 @@ setup(
                 'config/**',
                 'data/**',
                 'ui/**',
+                'editorui/**',
                 'CREDITS.md',
                 'LICENSE',
             ],
@@ -89,6 +90,9 @@ setup(
             },
             'gui_apps': {
                 APP_NAME: CONFIG['run']['main_file'],
+            },
+            'console_apps': {
+                'editorserver': 'editorserver.py',
             },
             # 'log_filename': '$USER_APPDATA/{0}/{0}.log'.format(APP_NAME),
             'log_filename': 'runtime.log',

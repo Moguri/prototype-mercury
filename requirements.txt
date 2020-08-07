@@ -6,3 +6,4 @@ appdirs
 panda3d_pman>=0.11
 panda3d-eventmapper~=0.2
 panda3d-simplepbr~=0.5
+bottle
