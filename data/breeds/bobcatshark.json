@@ -3,6 +3,9 @@
     "required_tags": [
         "in_test"
     ],
+    "tags": [
+        "mage"
+    ],
     "default_job": "bobcatshark",
     "hp": 100,
     "mp": 100,

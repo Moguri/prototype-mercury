@@ -155,7 +155,7 @@ class Monster:
         return data
 
     def can_use_job(self, job):
-        return set(job.required_tags).issubset(self.tags)
+        return f'job_{job.id}' in self.tags or set(job.required_tags).issubset(self.tags)
 
     @classmethod
     def get_random_name(cls):
@@ -279,7 +279,7 @@ class Monster:
             f'job_{job}_{level}'
             for job in self.jp_unspent
             for level in range(1, self.job_level(job) + 1)
-        }
+        } | set(self.breed.tags)
 
     def add_ability(self, ability):
         if isinstance(ability, str):

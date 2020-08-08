@@ -1,6 +1,9 @@
 {
     "name": "Clay",
     "default_job": "squire",
+    "tags": [
+        "mage"
+    ],
     "skins": {
         "default": {
             "bam_file": "clay_golem",

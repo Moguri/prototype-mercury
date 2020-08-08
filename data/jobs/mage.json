@@ -1,5 +1,8 @@
 {
     "name": "Mage",
+    "required_tags": [
+        "mage"
+    ],
     "abilities": [
         "gust",
         "sparkles",

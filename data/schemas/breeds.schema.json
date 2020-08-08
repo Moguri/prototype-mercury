@@ -15,6 +15,14 @@
             "uniqueItems": true,
             "default": []
         },
+        "tags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "default": []
+        },
         "skins": {
             "type": "object",
             "default": {
