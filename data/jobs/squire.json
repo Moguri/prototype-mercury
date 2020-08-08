@@ -1,11 +1,5 @@
 {
     "name": "Squire",
-    "abilities": [
-        "sparkles",
-        "flying_fist",
-        "gust",
-        "leap"
-    ],
     "basic_attack": "ba_pa_med",
     "stat_upgrades": {
         "hp": 3,
