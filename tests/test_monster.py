@@ -1,5 +1,5 @@
 # pylint: disable=protected-access
-# import pytest
+import pytest
 
 def test_level(monster):
     '''Monster level is one plus the sum of the gained job levels'''
@@ -23,13 +23,13 @@ def test_tags(monster):
     assert 'job_bobcatshark_2' in monster.tags
 
 def test_job_assignment(monster, gdb):
-    job = gdb['jobs']['squire']
+    job = gdb['jobs']['skirmisher']
 
-    # assert not monster.can_use_job(job)
-    # with pytest.raises(RuntimeError, match=r'tag requirements unsatisfied'):
-    #     monster.job = job
+    assert not monster.can_use_job(job)
+    with pytest.raises(RuntimeError, match=r'tag requirements unsatisfied'):
+        monster.job = job
 
-    # monster.add_jp('squire', monster.JP_PER_LEVEL)
+    monster.add_jp('squire', monster.JP_PER_LEVEL * 2)
     assert monster.can_use_job(job)
     monster.job = job
 
