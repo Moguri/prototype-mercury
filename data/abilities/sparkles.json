@@ -2,14 +2,6 @@
     "name": "Sparkles",
     "range_max": 2,
     "power": 10,
-    "type": "magical",
-    "effects": [
-        {
-            "type": "template_simple",
-            "parameters": {
-                "animation_name": "magic"
-            }
-        }
-    ]
+    "type": "magical"
 }
 

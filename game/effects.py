@@ -155,6 +155,8 @@ class SequenceBuilder:
         if 'start_range' in parameters:
             parameters['range'] = parameters['start_range']
             sequence.append(self.move_to_range(self.combatant, parameters))
+        if 'animation_name' not in parameters and self.ability.type == 'magical':
+            parameters['animation_name'] = 'magic'
 
         sequence.extend(intervals.Sequence(
             self.play_animation(self.combatant, parameters),

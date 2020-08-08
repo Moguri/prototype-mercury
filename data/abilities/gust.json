@@ -4,10 +4,7 @@
     "type": "magical",
     "effects": [
         {
-            "type": "template_simple",
-            "parameters": {
-                "animation_name": "magic"
-            }
+            "type": "template_simple"
         },
         {
             "type": "move_to_range",

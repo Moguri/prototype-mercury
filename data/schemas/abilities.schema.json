@@ -46,7 +46,12 @@
         },
         "effects": {
             "type": "array",
-            "items": {}
+            "items": {},
+            "default": [
+                {
+                    "type": "template_simple"
+                }
+            ]
         }
 
     }
