@@ -28,3 +28,10 @@ progress {
 #health-bar::-webkit-progress-value {
     background-color: #c00;
 }
+
+#mp-bar::-webkit-progress-value {
+    background-color: #00c;
+}
+#ct-bar::-webkit-progress-value {
+    background-color: #0c0;
+}

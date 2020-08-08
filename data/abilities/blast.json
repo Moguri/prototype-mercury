@@ -4,6 +4,7 @@
     "power": 20,
     "hit_chance": 80,
     "type": "magical",
+    "mp_cost": 20,
     "effects": [
         {
             "type": "template_simple",

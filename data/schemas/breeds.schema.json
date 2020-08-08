@@ -52,6 +52,10 @@
         },
         "hp": {
             "type": "integer",
+            "minimum": 1
+        },
+        "mp": {
+            "type": "integer",
             "minimum": 0
         },
         "physical_attack": {

@@ -117,7 +117,11 @@ class AiController():
                 target = enemy
 
         # Pick an ability
-        ability = random.choice(combatant.abilities)
+        ability = random.choice([
+            ability
+            for ability in combatant.abilities
+            if ability.mp_cost <= combatant.current_mp
+        ])
 
         # Find a tile to move to
         tiles = self.arena.find_tiles_in_range(
@@ -169,6 +173,7 @@ class AiController():
                 f'{combatant.name} is using {ability.name} '
                 f'on {target.name}'
             )
+            combatant.current_mp -= ability.mp_cost
             combatant.target = target
             target.target = combatant
             sequence.extend([
@@ -332,8 +337,9 @@ class CombatState(GameState):
             self.display_message('Select a combatant')
         elif next_state == 'ACTION':
             def use_ability(ability):
-                self.selected_ability = ability
-                self.input_state = 'TARGET'
+                if ability.mp_cost <= self.current_combatant.current_mp:
+                    self.selected_ability = ability
+                    self.input_state = 'TARGET'
 
             menu_items = []
             if self.current_combatant.move_current > 0:
@@ -426,6 +432,7 @@ class CombatState(GameState):
                         f'{self.current_combatant.name} is using {self.selected_ability.name} '
                         f'on {selection.name}'
                     )
+                    self.current_combatant.current_mp -= self.selected_ability.mp_cost
                     self.current_combatant.target = selection
                     selection.target = self.current_combatant
                     sequence = effects.sequence_from_ability(

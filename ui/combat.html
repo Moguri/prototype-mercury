@@ -51,6 +51,15 @@
                     </progress>
                     <span>{{state.monster.hp_current}}/{{state.monster.hp_max}}</span><br>
 
+                    <span>MP:</span>
+                    <progress
+                        id='mp-bar'
+                        :value='state.monster.mp_current'
+                        :max='state.monster.mp_max'
+                    >
+                    </progress>
+                    <span>{{state.monster.mp_current}}/{{state.monster.mp_max}}</span><br>
+
                     <span>CT:</span>
                     <progress
                         id='ct-bar'
@@ -70,7 +79,9 @@
             monster: {
                 name: 'Foo',
                 hp_current: 35,
-                hp_max: 100
+                hp_max: 100,
+                mp_current: 35,
+                mp_max: 100
             }
         });
     </script>
