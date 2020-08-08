@@ -1,0 +1,12 @@
+{
+    "name": "Bone",
+    "tags": [
+        "mage"
+    ],
+    "default_job": "war_spellsmith",
+    "hp": 80,
+    "mp": 120,
+    "physical_attack": 3,
+    "magical_attack": 6,
+    "movement": 4
+}

@@ -1,0 +1,12 @@
+{
+    "name": "Dragon",
+    "tags": [
+        "mage"
+    ],
+    "default_job": "squire",
+    "hp": 120,
+    "mp": 120,
+    "physical_attack": 6,
+    "magical_attack": 6,
+    "movement": 4
+}

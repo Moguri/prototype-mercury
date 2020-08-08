@@ -1,0 +1,9 @@
+{
+    "name": "Armor",
+    "default_job": "squire",
+    "hp": 140,
+    "mp": 40,
+    "physical_attack": 8,
+    "magical_attack": 1,
+    "movement": 3
+}
