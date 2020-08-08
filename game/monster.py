@@ -110,7 +110,7 @@ class Monster:
     JP_PER_LEVEL = 500
 
     STAT_UPGRADE_AMOUNTS = {
-        'hp': 20,
+        'hp': 10,
         'physical_attack': 1,
         'magical_attack': 1,
         'movement': 1,
