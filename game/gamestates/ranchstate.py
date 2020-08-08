@@ -300,8 +300,10 @@ class RanchState(GameState):
 
             pretty_stat_names = {
                 'hp': 'HP',
+                'mp': 'MP',
                 'physical_attack': 'PA',
                 'magical_attack': 'MA',
+                'movement': 'Movement',
             }
 
             self.menu_helper.set_menu(f'Available JP: {unspentjp}', [
