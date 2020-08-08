@@ -1,6 +1,5 @@
 {
-    "id": "claygolem",
-    "name": "Clay Golem",
+    "name": "Clay",
     "default_job": "squire",
     "skins": {
         "default": {
