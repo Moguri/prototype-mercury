@@ -20,16 +20,15 @@
         "range_min": {
             "type": "integer",
             "default": 1,
-            "minimum": 1
+            "minimum": 0
         },
         "range_max": {
             "type": "integer",
             "default": 1,
-            "minimum": 1
+            "minimum": 0
         },
         "power": {
-            "type": "integer",
-            "minimum": 1
+            "type": "integer"
         },
         "hit_chance": {
             "type": "integer",

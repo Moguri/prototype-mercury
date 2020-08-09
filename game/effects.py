@@ -109,12 +109,25 @@ class SequenceBuilder:
     def change_stat(self, target, parameters):
         stat = parameters['stat']
         seq = intervals.Sequence()
+        strength = self.strength
+        if stat not in ('current_hp', 'current_mp'):
+            strength = max(round(abs(strength) * 0.1), 1)
+            if self.strength < 0:
+                strength *= -1
         if parameters.get('show_result', True):
-            result = str(self.strength) if self.is_hit else 'Miss'
+            prefixes = {
+                'physical_attack': 'PA: ',
+                'magical_attack': 'MA: ',
+                'current_mp': 'MP: ',
+                'movement': 'MOV: ',
+            }
+            result = str(strength) if self.is_hit else 'Miss'
+            result = result.replace('-', '+')
+            result = prefixes.get(stat, '') + result
             seq.append(self.show_result(target, result))
         def func():
             if self.is_hit:
-                setattr(target, stat, getattr(target, stat) - self.strength)
+                setattr(target, stat, getattr(target, stat) - strength)
         seq.append(intervals.Func(func))
         return seq
 
