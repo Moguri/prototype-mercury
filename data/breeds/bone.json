@@ -3,7 +3,7 @@
     "tags": [
         "mage"
     ],
-    "default_job": "war_spellsmith",
+    "default_job": "ruinsmith",
     "hp": 80,
     "mp": 120,
     "physical_attack": 3,
