@@ -27,6 +27,14 @@ class SequenceBuilder:
         'template_simple',
     ]
 
+    CHANGE_STATE_PREFIX = {
+        'current_hp': 'HP: ',
+        'current_mp': 'MP: ',
+        'physical_attack': 'PA: ',
+        'magical_attack': 'MA: ',
+        'movement': 'MOV: ',
+    }
+
     def __init__(self, rendernp, combatant, ability, combat):
         self.rendernp = rendernp
         self.combatant = combatant
@@ -115,15 +123,10 @@ class SequenceBuilder:
             if self.strength < 0:
                 strength *= -1
         if parameters.get('show_result', True):
-            prefixes = {
-                'physical_attack': 'PA: ',
-                'magical_attack': 'MA: ',
-                'current_mp': 'MP: ',
-                'movement': 'MOV: ',
-            }
-            result = str(strength) if self.is_hit else 'Miss'
-            result = result.replace('-', '+')
-            result = prefixes.get(stat, '') + result
+            if self.is_hit:
+                result = self.CHANGE_STATE_PREFIX.get(stat, '') + f'{strength * -1:+}'
+            else:
+                result = 'Miss'
             seq.append(self.show_result(target, result))
         def func():
             if self.is_hit:
