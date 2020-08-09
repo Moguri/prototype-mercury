@@ -1,0 +1,18 @@
+{
+    "name": "Marrow Mage",
+    "required_tags": [
+        "breed_bone",
+        "job_ruinsmith_3"
+    ],
+    "abilities": [
+        "drainhp",
+        "drainmp"
+    ],
+    "basic_attack": "basic_attack",
+    "stat_upgrades": {
+        "hp": 2,
+        "mp": 2
+    },
+    "hp_offset": 20,
+    "mp_offset": 20
+}

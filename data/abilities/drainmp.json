@@ -1,0 +1,23 @@
+{
+    "name": "Drain MP",
+    "range_max": 3,
+    "power": 10,
+    "type": "magical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "stat": "current_mp"
+            }
+        },
+        {
+            "type": "change_stat",
+            "target": "self",
+            "parameters": {
+                "stat": "current_mp",
+                "strength_factor": -1
+            }
+        }
+    ]
+}
+

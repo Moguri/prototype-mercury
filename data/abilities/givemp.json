@@ -1,0 +1,23 @@
+{
+    "name": "Give MP",
+    "range_max": 3,
+    "power": 10,
+    "type": "magical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "target": "self",
+            "parameters": {
+                "stat": "current_mp"
+            }
+        },
+        {
+            "type": "change_stat",
+            "parameters": {
+                "stat": "current_mp",
+                "strength_factor": -1
+            }
+        }
+    ]
+}
+

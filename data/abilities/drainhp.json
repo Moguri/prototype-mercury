@@ -1,0 +1,20 @@
+{
+    "name": "Drain HP",
+    "range_max": 3,
+    "power": 10,
+    "type": "magical",
+    "effects": [
+        {
+            "type": "template_simple"
+        },
+        {
+            "type": "change_stat",
+            "target": "self",
+            "parameters": {
+                "stat": "current_hp",
+                "strength_factor": -1
+            }
+        }
+    ]
+}
+
