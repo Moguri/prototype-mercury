@@ -2,7 +2,8 @@
     "name": "Clay",
     "default_job": "squire",
     "tags": [
-        "mage"
+        "mage",
+        "advanced_fighter"
     ],
     "skins": {
         "default": {

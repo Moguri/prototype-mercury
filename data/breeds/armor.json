@@ -1,6 +1,9 @@
 {
     "name": "Armor",
     "default_job": "squire",
+    "tags": [
+        "advanced_fighter"
+    ],
     "hp": 140,
     "mp": 40,
     "physical_attack": 8,

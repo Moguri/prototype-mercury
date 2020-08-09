@@ -1,7 +1,8 @@
 {
     "name": "Dragon",
     "tags": [
-        "mage"
+        "mage",
+        "advanced_fighter"
     ],
     "default_job": "squire",
     "hp": 120,

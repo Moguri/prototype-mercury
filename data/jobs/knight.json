@@ -1,7 +1,8 @@
 {
     "name": "Knight",
     "required_tags": [
-        "job_squire_3"
+        "job_squire_3",
+        "advanced_fighter"
     ],
     "abilities": [
         "rally"

@@ -4,7 +4,8 @@
         "in_test"
     ],
     "tags": [
-        "mage"
+        "mage",
+        "advanced_fighter"
     ],
     "default_job": "bobcatshark",
     "hp": 100,
