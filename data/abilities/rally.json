@@ -1,0 +1,17 @@
+{
+    "name": "Rally",
+    "power": -1,
+    "range_min": 0,
+    "range_max": 0,
+    "type": "physical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "stat": "physical_attack",
+                "target": "self"
+            }
+        }
+    ]
+}
+
