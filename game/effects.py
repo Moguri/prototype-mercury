@@ -20,7 +20,6 @@ def calculate_strength(combatant, _target, ability):
 class SequenceBuilder:
     ALLOWED_EFFECTS = [
         'change_stat',
-        'show_result',
         'play_animation',
         'move_to_range',
         'move_to_start',
@@ -77,21 +76,10 @@ class SequenceBuilder:
     def as_sequence(self):
         return self.sequence
 
-    #
-    # Basic Effects
-    #
-    def change_stat(self, target, parameters):
-        stat = parameters['stat']
-        def func():
-            if self.is_hit:
-                setattr(target, stat, getattr(target, stat) - self.strength)
-        return intervals.Func(func)
-
-
-    def show_result(self, target, _parameters):
+    def show_result(self, target, value):
         textnode = p3d.TextNode('effect result')
         textnode.set_align(p3d.TextNode.ACenter)
-        textnode.set_text(str(self.strength) if self.is_hit else "Miss")
+        textnode.set_text(value)
 
         textnp = self.rendernp.attach_new_node(textnode)
         textnp.set_pos(target.as_nodepath, 0, 0, 2)
@@ -115,6 +103,20 @@ class SequenceBuilder:
 
         return intervals.Func(func)
 
+    #
+    # Basic Effects
+    #
+    def change_stat(self, target, parameters):
+        stat = parameters['stat']
+        seq = intervals.Sequence()
+        if parameters.get('show_result', True):
+            result = str(self.strength) if self.is_hit else 'Miss'
+            seq.append(self.show_result(target, result))
+        def func():
+            if self.is_hit:
+                setattr(target, stat, getattr(target, stat) - self.strength)
+        seq.append(intervals.Func(func))
+        return seq
 
     def play_animation(self, target, parameters):
         anims = parameters.get('animation_name', [])
@@ -160,7 +162,6 @@ class SequenceBuilder:
 
         sequence.extend(intervals.Sequence(
             self.play_animation(self.combatant, parameters),
-            self.show_result(target, parameters),
             self.change_stat(target, parameters),
         ))
 
