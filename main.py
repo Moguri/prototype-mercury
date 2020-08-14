@@ -27,6 +27,7 @@ class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
         pman.shim.init(self)
+        base.enable_particles()
         gdb = gamedb.get_instance()
 
         # Render pipeline

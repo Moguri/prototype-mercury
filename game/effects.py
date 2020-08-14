@@ -2,6 +2,7 @@ import random
 
 import panda3d.core as p3d
 from direct.interval import IntervalGlobal as intervals
+from direct.particles.ParticleEffect import ParticleEffect
 
 
 def calculate_hit_chance(_combatant, _target, ability):
@@ -21,6 +22,7 @@ class SequenceBuilder:
     ALLOWED_EFFECTS = [
         'change_stat',
         'play_animation',
+        'play_vfx',
         'move_to_range',
         'move_to_start',
 
@@ -143,6 +145,30 @@ class SequenceBuilder:
         anims.append('attack')
         return target.actor_interval(anims)
 
+    def play_vfx(self, target, parameters):
+        vfxnames = parameters.get('vfx', [])
+        duration = parameters.get('duration', 1.0)
+        if isinstance(vfxnames, str):
+            vfxnames = [vfxnames]
+
+        def create_vfx(vfxname):
+            particles = ParticleEffect()
+            particles.loadConfig(f'.built_assets/vfx/{vfxname}.ptf')
+            particles.set_shader_auto(True)
+            return particles
+        vfx = [create_vfx(i) for i in vfxnames]
+
+        def start_particle(effect):
+            effect.start(parent=target.as_nodepath)
+        return intervals.Parallel(*[
+            intervals.Sequence(
+                intervals.Func(start_particle, i),
+                intervals.Wait(duration),
+                intervals.Func(i.cleanup),
+            )
+            for i in vfx
+        ])
+
     def move_to_range(self, target, parameters):
         target_range = parameters['range']
         hit_required = parameters.get('is_hit_dependent', False)
@@ -176,9 +202,12 @@ class SequenceBuilder:
             sequence.append(self.move_to_range(self.combatant, parameters))
         if 'animation_name' not in parameters and self.ability.type == 'magical':
             parameters['animation_name'] = 'magic'
+        if 'vfx' not in parameters and self.ability.type == 'magical':
+            parameters['vfx'] = ['dust']
 
         sequence.extend(intervals.Sequence(
             self.play_animation(self.combatant, parameters),
+            self.play_vfx(target, parameters),
             self.change_stat(target, parameters),
         ))
 

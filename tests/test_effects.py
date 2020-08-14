@@ -1,3 +1,4 @@
+# pylint: disable=unused-argument
 import pprint
 
 import pytest
@@ -6,7 +7,7 @@ from game import gamedb
 from game import effects
 
 @pytest.mark.parametrize("ability", gamedb.get_instance()['abilities'].values())
-def test_smoke(combatant, empty_nodepath, ability, combat):
+def test_smoke(app, combatant, empty_nodepath, ability, combat):
     combatant.target = combatant
     print(ability.name)
     pprint.pprint(ability.effects)
