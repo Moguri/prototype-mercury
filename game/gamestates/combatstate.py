@@ -260,6 +260,7 @@ class CombatState(GameState):
             combatant.set_h(90)
         self.selected_ability = None
         self.current_combatant = None
+        self.forfeit = False
 
         # Setup Lighting
         arena_world_center = self.arena.tile_coord_to_world(self.arena.center)
@@ -354,6 +355,11 @@ class CombatState(GameState):
 
             menu_items.append(('End Turn', self.set_input_state, ['END_TURN']))
 
+            def end_combat():
+                self.forfeit = True
+                self.set_input_state('END_COMBAT')
+            menu_items.append(('End Combat', end_combat, []))
+
             self.menu_helper.set_menu(self.current_combatant.name, menu_items)
 
             def update_ability(idx):
@@ -365,7 +371,7 @@ class CombatState(GameState):
                         0,
                         self.current_combatant.move_current
                     )
-                elif menu_item != 'End Turn':
+                elif menu_item not in ('End Turn', 'End Combat'):
                     ability = menu_items[idx][2][0]
                     self.range_tiles = self.arena.find_tiles_in_range(
                         self.current_combatant.tile_position,
@@ -493,7 +499,10 @@ class CombatState(GameState):
             results = []
             jpgain = Monster.JP_PER_LEVEL * 0.5
             isvictory = not self.get_remaining_enemy_combatants()
-            if isvictory:
+            if self.forfeit:
+                self.display_message('Match was forfeited')
+                jpgain *= 0
+            elif isvictory:
                 self.display_message('Victory!')
                 results.append('Victory Bonus: 2x JP')
                 jpgain *= 2
