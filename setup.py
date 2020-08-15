@@ -96,6 +96,11 @@ setup(
                 'pandagl',
                 'p3openal_audio',
             ],
+            'include_modules': {
+                APP_NAME: [
+                    'direct.particles.ParticleManagerGlobal',
+                ]
+            },
             'exclude_modules': {
                 '*': [
                     'cefpython3.cefpython_py27',

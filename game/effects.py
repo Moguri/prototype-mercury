@@ -4,6 +4,8 @@ import panda3d.core as p3d
 from direct.interval import IntervalGlobal as intervals
 from direct.particles.ParticleEffect import ParticleEffect
 
+import pman
+
 
 def calculate_hit_chance(_combatant, _target, ability):
     return ability.hit_chance
@@ -153,7 +155,11 @@ class SequenceBuilder:
 
         def create_vfx(vfxname):
             particles = ParticleEffect()
-            particles.loadConfig(f'.built_assets/vfx/{vfxname}.ptf')
+            if pman.is_frozen():
+                vfxpath = f'assets/vfx/{vfxname}.ptf'
+            else:
+                vfxpath = f'.built_assets/vfx/{vfxname}.ptf'
+            particles.loadConfig(vfxpath)
             particles.set_shader_auto(True)
             return particles
         vfx = [create_vfx(i) for i in vfxnames]
