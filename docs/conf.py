@@ -89,8 +89,9 @@ with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
         if {'disabled', 'in_test'} & set(breed.required_tags):
             continue
         write(f'.. _breed-{breed.id}:\n')
-        write(breed.name)
-        write('-'*len(breed.name))
+        title = f'{breed.name} ({breed.id})'
+        write(title)
+        write('-' * len(title))
         write()
 
         for prop, value in breed.to_dict().items():
@@ -108,8 +109,9 @@ with open(f'{gen_dir}/jobs.rst', 'w') as rstfile:
         if {'disabled', 'in_test'} & set(job.required_tags):
             continue
         write(f'.. _job-{job.id}:\n')
-        write(job.name)
-        write('-'*len(job.name))
+        title = f'{job.name} ({job.id})'
+        write(title)
+        write('-' * len(title))
         write()
 
         write('Required Tags')
@@ -164,8 +166,9 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
 
     for ability in sorted(gdb['abilities'].values(), key=lambda x: x.name):
         write(f'.. _ability-{ability.id}:\n')
-        write(ability.name)
-        write('-'*len(ability.name))
+        title = f'{ability.name} ({ability.id})'
+        write(title)
+        write('-' * len(title))
         write()
 
         for prop, value in ability.to_dict().items():
