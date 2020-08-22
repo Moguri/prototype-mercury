@@ -94,10 +94,53 @@ with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
         write('-' * len(title))
         write()
 
-        for prop, value in breed.to_dict().items():
-            if prop in ('name', 'id'):
-                continue
-            write(f'* {prop}: {value}')
+        write('Default Job')
+        write('^^^^^^^^^^^\n')
+        write(f':ref:`job-{breed.default_job.id}`')
+        write()
+
+        write('Starting Tags')
+        write('^^^^^^^^^^^^^\n')
+        if breed.tags:
+            for tag in breed.tags:
+                write(f'* ``{tag}``')
+        else:
+            write('None')
+        write()
+
+        write('Required Tags')
+        write('^^^^^^^^^^^^^\n')
+        if breed.required_tags:
+            for tag in breed.required_tags:
+                write(f'* ``{tag}``')
+        else:
+            write('None')
+        write()
+
+        write('Stats')
+        write('^^^^^\n')
+        write('.. list-table::')
+        write('   :align: left')
+        write()
+        for stat in stat_names:
+            amount = getattr(breed, stat)
+            write(f'   * - {stat_names[stat]}')
+            write(f'     - {amount}')
+        write()
+
+        write('Skins')
+        write('^^^^^\n')
+        default_skin = breed.skins['default']
+        skins = dict(filter(lambda x: x[0] != 'default', breed.skins.items()))
+        write(f'Default: ``{default_skin["bam_file"]}/{default_skin["root_node"]}``')
+        write()
+        write('Others:')
+        if skins:
+            write()
+            for jobname, skin in skins.items():
+                write(f'* :ref:`job-{jobname}`: ``{skin["bam_file"]}/{skin["root_node"]}``')
+        else:
+            write('None')
         write()
 
 with open(f'{gen_dir}/jobs.rst', 'w') as rstfile:
