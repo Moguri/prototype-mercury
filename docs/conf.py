@@ -207,6 +207,15 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
     write('Abilities')
     write('=========\n')
 
+    table_items = {
+        'jp_cost': 'JP',
+        'mp_cost': 'MP',
+        'type': 'Type',
+        'power': 'Power',
+        'range': 'Range',
+        'hit_chance': 'Hit Chance',
+    }
+
     for ability in sorted(gdb['abilities'].values(), key=lambda x: x.name):
         write(f'.. _ability-{ability.id}:\n')
         title = f'{ability.name} ({ability.id})'
@@ -214,10 +223,28 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
         write('-' * len(title))
         write()
 
-        for prop, value in ability.to_dict().items():
-            if prop in ('name', 'id'):
-                continue
-            write(f'* {prop}: {value}')
+        write('.. list-table::')
+        write('   :align: left')
+        write()
+        for item, label in table_items.items():
+            if item is 'range':
+                rmin = ability.range_min
+                rmax = ability.range_max
+                if rmin == rmax:
+                    value = rmin
+                else:
+                    value = f'{rmin} - {rmax}'
+            else:
+                value = getattr(ability, item)
+            write(f'   * - {label}')
+            write(f'     - {value}')
+        write()
+
+        write('Effects')
+        write('^^^^^^^\n')
+        write()
+        for effect in ability.effects:
+            write(f'* ``{effect}``')
         write()
 
 with open(f'{gen_dir}/index.rst', 'w') as rstfile:
