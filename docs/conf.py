@@ -110,8 +110,8 @@ with open(f'{gen_dir}/jobs.rst', 'w') as rstfile:
 
 with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
     write = make_writer(rstfile)
-    write('Jobs')
-    write('====\n')
+    write('Abilities')
+    write('=========\n')
 
     for ability in sorted(gdb['abilities'].values(), key=lambda x: x.name):
         write(ability.name)
