@@ -67,6 +67,14 @@ GameDB.data_dir = os.path.join(GameDB.root_dir, 'data')
 GameDB.schema_dir = os.path.join(GameDB.data_dir, 'schemas')
 gdb = GameDB.get_instance()
 
+stat_names = {
+    'hp': 'HP',
+    'mp': 'MP',
+    'physical_attack': 'Physical Attack',
+    'magical_attack': 'Magical Attack',
+    'movement': 'Movement',
+}
+
 def make_writer(fileobj):
     def wrap(*args, **kwargs):
         print(*args, file=fileobj, **kwargs)
@@ -82,7 +90,7 @@ with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
             continue
         write(f'.. _breed-{breed.id}:\n')
         write(breed.name)
-        write('^'*len(breed.name))
+        write('-'*len(breed.name))
         write()
 
         for prop, value in breed.to_dict().items():
@@ -101,13 +109,52 @@ with open(f'{gen_dir}/jobs.rst', 'w') as rstfile:
             continue
         write(f'.. _job-{job.id}:\n')
         write(job.name)
-        write('^'*len(job.name))
+        write('-'*len(job.name))
         write()
 
-        for prop, value in job.to_dict().items():
-            if prop in ('name', 'id'):
-                continue
-            write(f'* {prop}: {value}')
+        write('Required Tags')
+        write('^^^^^^^^^^^^^\n')
+        if job.required_tags:
+            for tag in job.required_tags:
+                write(f'* ``{tag}``')
+        else:
+            write('None')
+        write()
+
+        write('Stat Offsets')
+        write('^^^^^^^^^^^^\n')
+        write('.. list-table::')
+        write('   :align: left')
+        write()
+        for stat in stat_names:
+            offset = getattr(job, f'{stat}_offset')
+            write(f'   * - {stat_names[stat]}')
+            write(f'     - {offset:+}')
+        write()
+
+        write('Stat Upgrades')
+        write('^^^^^^^^^^^^^\n')
+        write('.. list-table::')
+        write('   :align: left')
+        write()
+        for stat in stat_names:
+            num_upgrades = job.stat_upgrades.get(stat, None)
+            write(f'   * - {stat_names[stat]}')
+            write(f'     - {num_upgrades}')
+        write()
+
+        write('Abilities')
+        write('^^^^^^^^^\n')
+        write(f'Basic Attack: :ref:`ability-{job.basic_attack.id}`')
+        write()
+        write('Learned:')
+        if job.abilities:
+            write()
+            for ability in job.abilities:
+                write(f'* :ref:`ability-{ability}`')
+        else:
+            write('None')
+
         write()
 
 with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
@@ -118,7 +165,7 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
     for ability in sorted(gdb['abilities'].values(), key=lambda x: x.name):
         write(f'.. _ability-{ability.id}:\n')
         write(ability.name)
-        write('^'*len(ability.name))
+        write('-'*len(ability.name))
         write()
 
         for prop, value in ability.to_dict().items():
