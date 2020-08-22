@@ -31,7 +31,7 @@ class PlayerData:
         }
 
     def can_use_breed(self, breed):
-        return set(breed.required_tags).issubset(self.tags)
+        return set(breed.required_tags).issubset(self.personal_tags)
 
     @property
     def tags(self):
