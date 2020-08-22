@@ -29,7 +29,7 @@ This file is loaded after all over config so it will override the config in the 
 ### Getting started
 
 * Clone the repo
-* Setup a virtual environment (optional, but recommended)
+* Setup a [virtual environment](https://docs.python.org/3/tutorial/venv.html) (optional, but recommended)
 * Install dependencies: `pip install -r requirements.txt`
 * Run the game: `pman run` or `python main.py`
 
