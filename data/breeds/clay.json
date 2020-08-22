@@ -10,7 +10,7 @@
             "bam_file": "clay_golem",
             "root_node": "ClayGolemArm"
         },
-        "mage": {
+        "ruinsmith": {
             "bam_file": "mage_clay_golem",
             "root_node": "Armature"
         }
