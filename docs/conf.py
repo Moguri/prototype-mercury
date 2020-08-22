@@ -10,9 +10,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information -----------------------------------------------------
@@ -50,3 +50,92 @@ html_theme = 'alabaster'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+# -- Generate pages for data files -------------------------------------------
+import shutil
+
+from game.gamedb import GameDB
+
+gen_dir = '_gen'
+
+shutil.rmtree(gen_dir, ignore_errors=True)
+os.makedirs(gen_dir)
+
+GameDB.root_dir = os.path.abspath('..')
+GameDB.data_dir = os.path.join(GameDB.root_dir, 'data')
+GameDB.schema_dir = os.path.join(GameDB.data_dir, 'schemas')
+gdb = GameDB.get_instance()
+
+def make_writer(fileobj):
+    def wrap(*args, **kwargs):
+        print(*args, file=fileobj, **kwargs)
+    return wrap
+
+with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
+    write = make_writer(rstfile)
+    write('Breeds')
+    write('======\n')
+
+    for breed in sorted(gdb['breeds'].values(), key=lambda x: x.name):
+        if {'disabled', 'in_test'} & set(breed.required_tags):
+            continue
+        write(breed.name)
+        write('^'*len(breed.name))
+        write()
+
+        for prop, value in breed.to_dict().items():
+            if prop in ('name', 'id'):
+                continue
+            write(f'* {prop}: {value}')
+        write()
+
+with open(f'{gen_dir}/jobs.rst', 'w') as rstfile:
+    write = make_writer(rstfile)
+    write('Jobs')
+    write('====\n')
+
+    for job in sorted(gdb['jobs'].values(), key=lambda x: x.name):
+        if {'disabled', 'in_test'} & set(job.required_tags):
+            continue
+        write(job.name)
+        write('^'*len(job.name))
+        write()
+
+        for prop, value in job.to_dict().items():
+            if prop in ('name', 'id'):
+                continue
+            write(f'* {prop}: {value}')
+        write()
+
+with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
+    write = make_writer(rstfile)
+    write('Jobs')
+    write('====\n')
+
+    for ability in sorted(gdb['abilities'].values(), key=lambda x: x.name):
+        write(ability.name)
+        write('^'*len(ability.name))
+        write()
+
+        for prop, value in ability.to_dict().items():
+            if prop in ('name', 'id'):
+                continue
+            write(f'* {prop}: {value}')
+        write()
+
+with open(f'{gen_dir}/index.rst', 'w') as rstfile:
+    write = make_writer(rstfile)
+
+    write('Game Data')
+    write('=========\n')
+
+    write('.. toctree::')
+
+    datamodels = [
+        'breeds',
+        'jobs',
+        'abilities',
+    ]
+    for datamodel in datamodels:
+        write(f'   {datamodel}.rst')
