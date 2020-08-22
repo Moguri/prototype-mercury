@@ -33,6 +33,27 @@ This file is loaded after all over config so it will override the config in the 
 * Install dependencies: `pip install -r requirements.txt`
 * Run the game: `pman run` or `python main.py`
 
+### Configuration
+
+The game can be configured using [Panda3D PRC variables](https://docs.panda3d.org/1.10/python/programming/configuration/list-of-all-config-variables).
+A default configuration exists in `config` for user inputs (`config/inputs.prc`) and general game settings (`config/game.prc`).
+These files are submitted to version control and should only be modified when changing the defaults
+
+User configuration can be found in `config/user.prc` (make this file if it does not exist).
+This config file is loaded last, which means it can be used to override other config.
+
+In addition to the base Panda3D PRC variables, this project defines some custom ones
+
+* `msaa-samples` (int) - the number of samples to use for multisample anti-aliasing (default: `4`)
+* `enable-shadows` (bool) - enables shadow map shadows (default: `true`)
+* `audio-music-volume` (double) - the background music volume from 0.0 to 1.0 (default: `1.0`)
+* `audio-sfx-volume` (double) - the sound effect volume from 0.0 to 1.0 (default: `1.0`)
+* `mercury-initial-state` (string) - a state name to load instead of loading the title screen state (default: `Title`)
+* `mercury-default-breed` (string) - ID of which breed to use when generating the default monster used when skipping states (default: `clay`)
+* `mercury-default-monster` (string) - ID of a monster file to load for the default monster used when skipping states (default: `''`; overrides the default breed if set)
+* `mercury-allow-saves` (bool) - make the save/load system available (default: `false`; currently disabled since save files are not considered stable)
+* `mercury-saves-dire` (string) - the directory to store save files (default: `$MAIN_DIR/saves`)
+
 ### Using Pyenv
 
 The current release of cefpython3 [dynamically links against libpython](https://github.com/cztomczak/cefpython/issues/554) on Linux. By default, [Pyenv does not build a shared library for Python](https://github.com/pyenv/pyenv/issues/65). So, in short, when present with this error message while using Pyenv:
