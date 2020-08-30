@@ -4,6 +4,12 @@
     "tags": [
         "advanced_fighter"
     ],
+    "skins": {
+        "default": {
+            "bam_file": "armor_golem",
+            "root_node": "armorGolem"
+        }
+    },
     "hp": 140,
     "mp": 40,
     "physical_attack": 8,

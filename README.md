@@ -33,6 +33,14 @@ This file is loaded after all over config so it will override the config in the 
 * Install dependencies: `pip install -r requirements.txt`
 * Run the game: `pman run` or `python main.py`
 
+### To run after initial setup
+
+* Open Bash in root of GitRepo
+* Reactivate virtual environment: `. venv/Scripts/activate`
+* Install dependencies: `pip install -r requirements.txt`
+* Build the game: `pman build`
+* Run the game: `pman run` or `python main.py`
+
 ### Configuration
 
 The game can be configured using [Panda3D PRC variables](https://docs.panda3d.org/1.10/python/programming/configuration/list-of-all-config-variables).
