@@ -107,7 +107,7 @@ JP Cost
    How much JP is required to purchase this ability
 
 Type
-   Either ``physical`` or ``magical``
+   The damage type (either ``physical`` or ``magical``, but not both)
 
 Range (min and max)
    The number of tiles away the ability target can be from the ability user
