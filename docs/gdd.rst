@@ -4,8 +4,8 @@ Game Design Document
 Intro
 -----
 
-You are a Golem Master and you want to be the best there ever was.
-So, grab some Golems, raise them big and strong, and do battle with other Golem Masters in a tactical combat system.
+You are a Golemist and you want to be the best there ever was.
+So, grab some Golems, raise them big and strong, and do battle with other Golemists in a tactical combat system.
 
 This game is inspired by:
 
@@ -20,12 +20,12 @@ Jobs
 ^^^^
 
 This game utilizes a "job system."
-Each monster has access to a set of jobs and has a currently active job.
+Each golem has access to a set of jobs and has a currently active job.
 Different jobs can provide different stat boosts and access to certain abilities.
 Jobs can also have requirements that must be met before they can be used (e.g., a certain number of levels in another job).
 
-A monster gains "experience" in a job via "Job Points" (or JP).
-After acquiring enough JP, a monster will obtain a new level in the current job.
+A golem gains "experience" in a job via "Job Points" (or JP).
+After acquiring enough JP, a golem will obtain a new level in the current job.
 This is no limit to the number of levels that can be acquired for a job.
 However, job levels have no benefits themselves (e.g., stat gains).
 Instead, job levels can used to unlock new classes, and the JP earned can be spent on purchasing new :ref:`abilities`.
@@ -39,24 +39,24 @@ Tags
 Various requirements in the game are determined by "tags."
 Some examples of requirements include:
 
-* what jobs a Golem has access to
-* what breeds a trainer has access to
+* what jobs a golem has access to
+* what breeds a Golemist has access to
 
-Monsters and trainers each have a pool of tags.
+Golems and Golemists each have a pool of tags.
 To determine eligibility the item being checked for (e.g., a job) is compared to the appropriate tag pool.
 If all tags on the item are present in the tag pool, the requirements are met.
 In other words, the required tags are an "all of" relationship.
 
-A trainer's tag pool contains:
+A Golemist's tag pool contains:
 
 * Any "personal tags" acquired
 
-A monster's tag pool contains:
+A golem's tag pool contains:
 
-* The trainer's tags
+* The Golemist's tags
 * The breed's tags
 * A tag for each item in a Cartesian product of available jobs and their levels.
-  For example, a monster with three levels in :ref:`job-squire` and two levels in :ref:`job-ruinsmith` will have the following tags:
+  For example, a golem with three levels in :ref:`job-squire` and two levels in :ref:`job-ruinsmith` will have the following tags:
 
    * ``job_squire_1``
    * ``job_squire_2``
@@ -64,13 +64,13 @@ A monster's tag pool contains:
    * ``job_ruinsmith_1``
    * ``job_ruinsmith_2``
 
-Monster Stats
-^^^^^^^^^^^^^
+Golem Stats
+^^^^^^^^^^^
 
-The monster stats are:
+The golem stats are:
 
 Hit Points
-   The amount of damage a monster can take before going down
+   The amount of damage a golem can take before going down
 
 Magic Points
    A resource for using abilities
@@ -82,21 +82,21 @@ Magical Attack
    Multiplier for damage on ``magical`` abilities
 
 Movement
-   The number of tiles the monster can move in a single turn
+   The number of tiles the golem can move in a single turn
 
 .. _abilities:
 
 Abilities
 ^^^^^^^^^
 
-Monsters have access to a set of abilities.
-By default, all monsters have a "Basic Attack" as determined by their active job.
-In addition to this "Basic Attack," monsters have purchased abilities.
+Golems have access to a set of abilities.
+By default, all golems have a "Basic Attack" as determined by their active job.
+In addition to this "Basic Attack," golems have purchased abilities.
 Abilities can be purchased for the active job with JP earned while that job has been active.
 Different jobs have access to different abilities.
 
-Once an ability has been purchased, the monster will continue to have access to it even when changing jobs.
-This can lead to some fun and interesting monster builds.
+Once an ability has been purchased, the golem will continue to have access to it even when changing jobs.
+This can lead to some fun and interesting golem builds.
 
 Abilities have the following stats:
 
@@ -135,15 +135,15 @@ Combat
 
 This is the current focus of the game.
 The combat is turn-based.
-On each monster's turn, a monster may move up to their ``movement`` stat and use an ability (in any order).
+On each golem's turn, a golem may move up to their ``movement`` stat and use an ability (in any order).
 Movement can also be split before and after using an ability.
 
-Combat ends when one side no longer has any monsters above zero hit points.
+Combat ends when one side no longer has any golems above zero hit points.
 
 Golem Acquisition
 ^^^^^^^^^^^^^^^^^
 
-Monsters are currently acquired for free from the "Market."
+Golems are currently acquired for free from the "Market."
 This will be expanded on in the future (see :ref:`additional_ideas`).
 
 Golem Raising
@@ -214,21 +214,21 @@ Systematic Breakdown of Components
 Suggested Game Flow Diagram
 ---------------------------
 
-The main game loop is to participate in combats to gain resources to upgrade monsters.
+The main game loop is to participate in combats to gain resources to upgrade golems.
 Once the player completes the "final battle," they "win" the game, but they may continue to play.
 
 .. mermaid::
 
    graph TD
-      get_trainer(Create/Load Trainer) --> ranch{Ranch}
-      ranch -->get_monster(Get Monster from Market)
-      get_monster --> ranch
-      ranch --> review_monsters(Review/Upgrade Monsters)
-      review_monsters --> ranch
-      ranch --> combat
+      get_golemist(Create/Load Golemist) --> workshop{Workshop}
+      workshop -->get_golem(Get Golem from Foundry)
+      get_golem --> workshop
+      workshop --> review_golems(Review/Upgrade Golems)
+      review_golems --> workshop
+      workshop --> combat
       combat --> gain_jp(Gain JP)
-      gain_jp --> ranch
-      ranch --> boss(Boss Fight)
+      gain_jp --> workshop
+      workshop --> boss(Boss Fight)
       boss --> end_game[End Game]
 
 .. _additional_ideas:
@@ -236,25 +236,25 @@ Once the player completes the "final battle," they "win" the game, but they may 
 Additional Ideas and Possibilities
 ----------------------------------
 
-* Monster age and death
+* Golem age and death
 
    * Have set lifespans with events that can reduce the lifespan (e.g., losing combat, stress)
-   * Monsters behave differently depending on age?
+   * Golems behave differently depending on age?
 
-* Acquire monster "cores" or "fragments" upon monster death to improve newly created monsters
+* Acquire golem "cores" or "fragments" upon golem death to improve newly created golems
 * Player funds
 
    * Need ways to earn (winning combat/tournaments)
    * Need costs
 
       * Rent?
-      * Monster upkeep?
-      * Buying monsters or items?
+      * Golem upkeep?
+      * Buying golems or items?
 
-* Non-combat ways to improve monsters and/or acquire funds?
+* Non-combat ways to improve golems and/or acquire funds?
 * Items
 
-   * One or two "accessory" slots on monsters to give bonuses
+   * One or two "accessory" slots on golems to give bonuses
    * Make non-visible to reduce the amount of art required
    * Consumables?
 
@@ -264,9 +264,9 @@ Additional Ideas and Possibilities
    * For example: 50% PA and 50% MA
    * May just do "mixed" type of 50/50 instead of exposing a ratio
 
-* Control how many monsters a trainer can take into combat with some sort of spirit points (SP)
+* Control how many golems a Golemist can take into combat with some sort of spirit points (SP)
 
-   * The trainer would have a limit (one that could be increased) of SP to spend building a team
-   * Monsters would have different SP costs (with possible discounts)
+   * The Golemist would have a limit (one that could be increased) of SP to spend building a team
+   * Golems would have different SP costs (with possible discounts)
 
-* Some sort of skill tree or perks for trainers?
+* Some sort of skill tree or perks for Golemists?
