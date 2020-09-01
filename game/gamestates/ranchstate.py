@@ -352,7 +352,7 @@ class RanchState(GameState):
             self.menu_helper.set_menu('', [
                 ('Back', self.set_input_state, ['MAIN']),
                 ('Exit to Title Menu', base.change_state, ['Title']),
-                ('Exit Game', messenger.send, ['escape']),
+                ('Exit Game', messenger.send, ['quit']),
             ])
         else:
             raise RuntimeError(f'Unknown state {next_state}')
