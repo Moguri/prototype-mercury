@@ -4,6 +4,9 @@
         "mage",
         "advanced_fighter"
     ],
+    "required_tags": [
+      "disabled"
+    ],
     "default_job": "squire",
     "hp": 120,
     "mp": 120,
