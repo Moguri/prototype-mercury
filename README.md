@@ -30,16 +30,11 @@ This file is loaded after all over config so it will override the config in the 
 
 * Clone the repo
 * Setup a [virtual environment](https://docs.python.org/3/tutorial/venv.html) (optional, but recommended)
+  * Activate the virtual environment on Windows with `<venv-dir>\Scripts\activate.bat`
+  * Activate the virtual environment on Linux with `. <venv-dir>/bin/activate`
 * Install dependencies: `pip install -r requirements.txt`
-* Run the game: `pman run` or `python main.py`
-
-### To run after initial setup
-
-* Open Bash in root of GitRepo
-* Reactivate virtual environment: `. venv/Scripts/activate`
-* Install dependencies: `pip install -r requirements.txt`
-* Build the game: `pman build`
-* Run the game: `pman run` or `python main.py`
+* Run the game use `pman run` or `python main.py`
+* To build game assets without running use `pman build` (this is done automatically as part of `run`)
 
 ### Configuration
 
