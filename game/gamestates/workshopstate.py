@@ -114,7 +114,7 @@ class WorkshopState(GameState):
                 base.loader.load_texture('backgrounds/ranchbg.png'),
                 base.loader.load_texture('backgrounds/ranchfg.png'),
             ),
-            'market': (
+            'foundry': (
                 base.loader.load_texture('backgrounds/marketbg.png'),
                 base.loader.load_texture('backgrounds/marketfg.png'),
             ),
@@ -145,7 +145,7 @@ class WorkshopState(GameState):
         if self.player.monsters:
             self.input_state = 'MAIN'
         else:
-            self.input_state = 'MARKET'
+            self.input_state = 'FOUNDRY'
 
     def set_input_state(self, next_state):
         self.display_message('')
@@ -170,7 +170,7 @@ class WorkshopState(GameState):
                 ('Dismiss Monster', self.set_input_state, ['DISMISS']),
             ]
             if len(self.player.monsters) < self.player.max_monsters:
-                menu_items.insert(1, ('Market', self.set_input_state, ['MARKET']))
+                menu_items.insert(1, ('Foundry', self.set_input_state, ['FOUNDRY']))
             if base.allow_saves:
                 menu_items.extend([
                     ('Save Game', base.change_state, ['Save']),
@@ -197,7 +197,7 @@ class WorkshopState(GameState):
                 self.monster_selection = prev_selection
                 self.input_state = 'MAIN'
             self.accept('reject', reject_sel)
-        elif next_state == 'MARKET':
+        elif next_state == 'FOUNDRY':
             self.load_monster_models([])
             base.camera.set_x(0)
             def get_monster(breedid):
@@ -213,12 +213,12 @@ class WorkshopState(GameState):
                 for breed in gdb['breeds'].values()
                 if self.player.can_use_breed(breed)
             ]
-            def market_reject():
+            def foundry_reject():
                 if self.player.monsters:
                     self.load_monster_models()
                     back_to_main()
             if self.player.monsters:
-                menu_items.insert(0, ('Back', market_reject, []))
+                menu_items.insert(0, ('Back', foundry_reject, []))
             self.menu_helper.set_menu('Select a Breed', menu_items)
 
             def show_breed(_idx=None):
@@ -229,9 +229,9 @@ class WorkshopState(GameState):
                 self.load_monster_models([breed])
             show_breed()
             self.menu_helper.selection_change_cb = show_breed
-            self.menu_helper.reject_cb = market_reject
+            self.menu_helper.reject_cb = foundry_reject
             self.display_message('Select a breed')
-            self.set_background('market')
+            self.set_background('foundry')
         elif next_state == 'STATS':
             self.update_ui({
                 'show_stats': True,
@@ -346,7 +346,7 @@ class WorkshopState(GameState):
                     self.load_monster_models()
                     self.input_state = 'MAIN'
                 else:
-                    self.input_state = 'MARKET'
+                    self.input_state = 'FOUNDRY'
             self.accept('accept', accept_dismiss)
         elif next_state == 'QUIT':
             self.menu_helper.set_menu('', [
@@ -362,7 +362,7 @@ class WorkshopState(GameState):
     def update(self, dt):
         super().update(dt)
 
-        if self.input_state not in ('MARKET', 'JOBS'):
+        if self.input_state not in ('FOUNDRY', 'JOBS'):
             base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
     def load_monster_models(self, breeds=None, jobs=None):
