@@ -162,7 +162,7 @@ class AiController():
             target.tile_position
         )
         if sum(facing) != 0:
-            newfacing = math.degrees(math.atan2(facing[1], facing[0])) - 90
+            newfacing = math.degrees(math.atan2(facing[1], facing[0])) + 90
             sequence.append(
                 intervals.Func(combatant.set_h, newfacing)
             )
@@ -233,7 +233,7 @@ class CombatState(GameState):
                 placement,
                 True
             )
-            combatant.set_h(-90)
+            combatant.set_h(90)
 
         # Enemy Combatants
         default_combat_type = p3d.ConfigVariableString('mercury-default-combat-type', 'skirmish')
@@ -257,7 +257,7 @@ class CombatState(GameState):
                 placement,
                 True
             )
-            combatant.set_h(90)
+            combatant.set_h(-90)
         self.selected_ability = None
         self.current_combatant = None
         self.forfeit = False
@@ -609,7 +609,7 @@ class CombatState(GameState):
             )
             if sum(facing) != 0:
                 self.current_combatant.set_h(
-                    math.degrees(math.atan2(facing[1], facing[0])) - 90
+                    math.degrees(math.atan2(facing[1], facing[0])) + 90
                 )
 
         # Update tile color tints

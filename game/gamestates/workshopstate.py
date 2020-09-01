@@ -387,7 +387,7 @@ class WorkshopState(GameState):
         offset = 0
         for breed, jobid, labelstr in zip(breeds, jobs, labels):
             actor = MonsterActor(breed, self.monsters_root, jobid)
-            actor.set_h(-135)
+            actor.set_h(45)
             actor.set_pos(self.monsters_root, p3d.LVector3(offset, 0, 0))
             self.monster_actors.append(actor)
 
