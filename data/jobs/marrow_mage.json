@@ -1,7 +1,7 @@
 {
     "name": "Marrow Mage",
     "required_tags": [
-        "breed_bone",
+        "breed_tomb",
         "job_ruinsmith_3"
     ],
     "abilities": [
