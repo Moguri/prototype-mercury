@@ -270,3 +270,12 @@ Additional Ideas and Possibilities
    * Golems would have different SP costs (with possible discounts)
 
 * Some sort of skill tree or perks for Golemists?
+
+* Workshop upgrades
+
+   * Number of active golems
+   * Unlock new upgrades for golems?
+   * Different training options?
+
+* Golemists could join different guilds providing different story lines, abilities, prices, or golems
+* Story lines, or side quests outside of just arena fighting
