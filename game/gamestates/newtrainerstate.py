@@ -26,4 +26,4 @@ class NewTrainerState(GameState):
         player.name = data['name']
 
         base.blackboard['player'] = player
-        base.change_state('Ranch')
+        base.change_state('Workshop')

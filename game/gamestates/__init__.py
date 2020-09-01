@@ -2,7 +2,7 @@ import panda3d.core as p3d
 
 from .gamestate import GameState
 from .combatstate import CombatState
-from .ranchstate import RanchState
+from .workshopstate import WorkshopState
 from .titlestate import TitleState
 from .newtrainerstate import NewTrainerState
 from .savesstate import SaveState, LoadState
@@ -17,7 +17,7 @@ __all__ = [
 #pylint: disable=invalid-name
 states = {
     'Combat': CombatState,
-    'Ranch': RanchState,
+    'Workshop': WorkshopState,
     'Title': TitleState,
     'NewTrainer': NewTrainerState,
     'Save': SaveState,

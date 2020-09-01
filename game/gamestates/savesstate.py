@@ -68,4 +68,4 @@ class LoadState(BaseSavesState):
 
     def do_load(self, save):
         base.blackboard['player'] = save
-        base.change_state('Ranch')
+        base.change_state('Workshop')

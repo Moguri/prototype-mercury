@@ -64,7 +64,7 @@ void main() {
 """
 
 
-class RanchState(GameState):
+class WorkshopState(GameState):
     def __init__(self):
         super().__init__()
 
@@ -139,7 +139,7 @@ class RanchState(GameState):
         self.message = ""
         self.message_modal = False
 
-        self.load_ui('ranch')
+        self.load_ui('workshop')
 
         # Set initial input state
         if self.player.monsters:
@@ -177,7 +177,7 @@ class RanchState(GameState):
                     ('Load Game', base.change_state, ['Load']),
                 ])
             menu_items.append(('Quit', self.set_input_state, ['QUIT']))
-            self.menu_helper.set_menu('Ranch', menu_items)
+            self.menu_helper.set_menu('Workshop', menu_items)
         elif next_state == 'SELECT_MONSTER':
             self.display_message('Select a monster', modal=True)
             prev_selection = self.monster_selection
