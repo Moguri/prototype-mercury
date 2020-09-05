@@ -31,7 +31,7 @@ jobs:
         python -m pip install -r requirements.txt
     - name: Install Blender
       run: |
-        sudo snap install blender --classic
+        sudo snap install blender --channel=2.83lts/stable --classic
         echo "::add-path::/snap/bin"
     - name: Convert Assets
       run: |
@@ -66,7 +66,7 @@ jobs:
         python -m pip install -r requirements.txt
     - name: Install Blender
       run: |
-        sudo snap install blender --classic
+        sudo snap install blender --channel=2.83lts/stable --classic
         echo "::add-path::/snap/bin"
     - name: Build Binary Distributions
       run: |
