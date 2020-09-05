@@ -94,6 +94,7 @@ with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
         write(title)
         write('-' * len(title))
         write()
+        write(f'{breed.description}')
 
         write('Default Job')
         write('^^^^^^^^^^^\n')
@@ -157,6 +158,7 @@ with open(f'{gen_dir}/jobs.rst', 'w') as rstfile:
         write(title)
         write('-' * len(title))
         write()
+        write(f'{job.description}\n')
 
         write('Required Tags')
         write('^^^^^^^^^^^^^\n')
@@ -223,6 +225,8 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
         write(title)
         write('-' * len(title))
         write()
+        write(f'{ability.description}\n')
+
 
         write('.. list-table::')
         write('   :align: left')

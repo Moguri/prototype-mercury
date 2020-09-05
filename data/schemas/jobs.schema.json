@@ -4,6 +4,10 @@
         "id": {
             "type": "string"
         },
+        "description": {
+            "type": "string",
+            "default": ""
+        },
         "name": {
             "type": "string"
         },
