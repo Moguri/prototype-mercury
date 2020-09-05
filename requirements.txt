@@ -3,6 +3,8 @@ cefpanda
 cefpython3==66.0
 fastjsonschema
 appdirs
-panda3d_pman>=0.11
+panda3d-pman~=0.12
+panda3d-blend2bam~=0.14
+panda3d-gltf~=0.8
 panda3d-eventmapper~=0.2
-panda3d-simplepbr~=0.5
+panda3d-simplepbr~=0.6
