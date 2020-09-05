@@ -44,12 +44,13 @@ class MonsterActor:
 
         if hasattr(builtins, 'base'):
             model = base.loader.load_model('models/{}.bam'.format(skin['bam_file']))
-            self._path = Actor(model.find('**/{}'.format(skin['root_node'])))
-            if self._path.is_empty():
+            root_node = model.find('**/{}'.format(skin['root_node']))
+            if root_node.is_empty():
                 print(
                     f"Warning: root node ({skin['root_node']}) not found in "
                     f"bam_file ({skin['bam_file']}) for {breed.id}/{job}"
                 )
+            self._path = Actor(root_node)
             self.play_anim('idle', loop=True)
             if parent_node:
                 self._path.reparent_to(parent_node)
