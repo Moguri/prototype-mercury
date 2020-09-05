@@ -17,6 +17,10 @@ Then run the `mercury` binary (`mercury.exe` on Windows).
 Configuration is currently done by adding and modifying a `config/user.prc`.
 This file is loaded after all over config so it will override the config in the other `config/*.prc` files.
 
+## Documentation
+
+Documentation about the game can be found [here](https://mercury-game.readthedocs.io/en/latest/).
+
 ## Development
 
 ### Dependencies
