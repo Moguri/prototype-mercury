@@ -1,0 +1,15 @@
+{
+    "name": "Pin Down",
+    "power": 1,
+    "range_max": 4,
+    "type": "physical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "stat": "movement"
+            }
+        }
+    ]
+}
+

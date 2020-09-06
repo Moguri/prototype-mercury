@@ -1,0 +1,6 @@
+{
+    "name": "Attack",
+    "power": 7,
+    "range_max": 4,
+    "type": "physical"
+}
