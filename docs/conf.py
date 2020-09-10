@@ -102,7 +102,8 @@ with open(f'{gen_dir}/jobs_chart.rst', 'w') as rstfile:
         write(title)
         write('-' * len(title))
         write()
-        write('\n.. mermaid::\n')
+        write('\n.. mermaid::')
+        write('   :align: center\n')
         write('   graph LR')
 
         breed_tags = set(breed.tags) | {f'breed_{breed.id}'}
