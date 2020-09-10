@@ -46,6 +46,14 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 #
 html_theme = 'alabaster'
+html_theme_options = {
+    'fixed_sidebar': True,
+    'github_user': 'Moguri',
+    'github_repo': 'prototype-mercury',
+    'extra_nav_links': {
+        'Builds on itch.io': 'https://mogurijin.itch.io/mercury',
+    }
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
