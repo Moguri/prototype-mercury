@@ -81,6 +81,40 @@ def make_writer(fileobj):
         print(*args, file=fileobj, **kwargs)
     return wrap
 
+with open(f'{gen_dir}/jobs_chart.rst', 'w') as rstfile:
+    write = make_writer(rstfile)
+    write('Jobs Chart')
+    write('==========\n')
+
+    for breed in sorted(gdb['breeds'].values(), key=lambda x: x.name):
+        if {'disabled', 'in_test'} & set(breed.required_tags):
+            continue
+
+        title = breed.name
+        write(title)
+        write('-' * len(title))
+        write()
+        write('\n.. mermaid::\n')
+        write('   graph LR')
+
+        breed_tags = set(breed.tags) | {f'breed_{breed.id}'}
+        for job in gdb['jobs'].values():
+            non_job_tags = set([i for i in job.required_tags if not i.startswith('job_')])
+            if not non_job_tags.issubset(breed_tags):
+                continue
+            required_jobs = [
+                i.replace('job_', '').rsplit('_', 1)
+                for i in job.required_tags
+                if i.startswith('job_')
+            ]
+            # available_jobs[job.id] = required_jobs
+            for rjob, level in required_jobs:
+                write(f'   {rjob} -- {level} --> {job.id}["{job.name}"]')
+            write(f'   {job.id}["{job.name}"]')
+
+        write()
+
+
 with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
     write = make_writer(rstfile)
     write('Breeds')
@@ -259,6 +293,7 @@ with open(f'{gen_dir}/index.rst', 'w') as rstfile:
     write('=========\n')
 
     write('.. toctree::')
+    write('   jobs_chart.rst')
 
     datamodels = [
         'breeds',
