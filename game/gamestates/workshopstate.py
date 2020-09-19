@@ -163,11 +163,11 @@ class WorkshopState(GameState):
             self.set_background('base')
             menu_items = [
                 ('Battle', self.set_input_state, ['COMBAT']),
-                ('Select Monster', self.set_input_state, ['SELECT_MONSTER']),
-                ('Monster Stats', self.set_input_state, ['STATS']),
+                ('Select Golem', self.set_input_state, ['SELECT_MONSTER']),
+                ('Golem Stats', self.set_input_state, ['STATS']),
                 ('Change Job', self.set_input_state, ['JOBS']),
                 ('Abilities', self.set_input_state, ['ABILITIES']),
-                ('Dismiss Monster', self.set_input_state, ['DISMISS']),
+                ('Dismiss Golem', self.set_input_state, ['DISMISS']),
             ]
             if len(self.player.monsters) < self.player.max_monsters:
                 menu_items.insert(1, ('Foundry', self.set_input_state, ['FOUNDRY']))
@@ -179,7 +179,7 @@ class WorkshopState(GameState):
             menu_items.append(('Quit', self.set_input_state, ['QUIT']))
             self.menu_helper.set_menu('Workshop', menu_items)
         elif next_state == 'SELECT_MONSTER':
-            self.display_message('Select a monster', modal=True)
+            self.display_message('Select a golem', modal=True)
             prev_selection = self.monster_selection
 
             def update_monster_selection(delta):
