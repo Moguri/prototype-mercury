@@ -1,12 +1,9 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
-name: CI
+name: Pipeline
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  test_and_build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -41,33 +38,6 @@ jobs:
     - name: Run Tests
       run: |
         pman test
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Gen LFS Cache Key File
-      run: git lfs ls-files -l > lsf-cache-key
-    - name: Cache Git LFS
-      uses: actions/cache@v1
-      id: cache-git-lfs
-      with:
-        path: .git/lfs
-        key: ${{ runner.os }}-${{ hashFiles('**/lsf-cache-key') }}
-    - name: Git LFS
-      if: steps.cache-git-lfs.cache-hit != 'true'
-      run: git lfs pull
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r requirements.txt
-    - name: Install Blender
-      run: |
-        sudo snap install blender --classic
-        echo "::add-path::/snap/bin"
     - name: Build Binary Distributions
       run: |
         blender --version
