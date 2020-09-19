@@ -143,7 +143,7 @@ Combat ends when one side no longer has any golems above zero hit points.
 Golem Acquisition
 ^^^^^^^^^^^^^^^^^
 
-Golems are currently acquired for free from the "Market."
+Golems are currently acquired for free from the "Foundry."
 This will be expanded on in the future (see :ref:`additional_ideas`).
 
 Golem Raising
@@ -203,7 +203,7 @@ Systematic Breakdown of Components
 * Audio
 
    * Need both background music and sound effects
-   * This can be handled by Pandaand its built-in OpenAL support
+   * This can be handled by Panda and its built-in OpenAL support
    * Do we want to try something with adaptive audio?
 
 * Save/Load
