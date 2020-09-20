@@ -7,7 +7,7 @@ from . import settings
 class Menu():
     MENU_START = 0.7
     BUTTON_WIDTH = 0.75
-    BUTTON_HEIGHT = 0.175
+    BUTTON_HEIGHT = 0.15
     BUTTON_SPACING = 0
     TEXT_SCALE = settings.TEXT_SCALE
     TEXT_INACTIVE_COLOR = settings.TEXT_INACTIVE_COLOR
