@@ -1,8 +1,11 @@
 {
     "name": "Give MP",
+    "description": "Transfers MP from self to another.",
     "range_max": 3,
     "power": 10,
     "type": "magical",
+    "jp_cost": 200,
+    "mp_cost": 10,
     "effects": [
         {
             "type": "template_simple",

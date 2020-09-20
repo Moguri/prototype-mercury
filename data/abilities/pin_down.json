@@ -1,8 +1,10 @@
 {
     "name": "Pin Down",
+    "description": "The golem fires an arrow to slow down another golem's movement",
     "power": 1,
     "range_max": 4,
     "type": "physical",
+    "jp_cost": 50,
     "effects": [
         {
             "type": "template_simple",

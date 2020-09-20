@@ -1,5 +1,7 @@
 {
     "name": "Attack",
+    "description": "Medium physical attack",
     "power": 10,
-    "type": "physical"
+    "type": "physical",
+    "jp_cost": 100
 }
