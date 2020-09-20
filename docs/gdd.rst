@@ -104,7 +104,7 @@ MP Cost
    How much MP is required to use this ability (can be zero)
 
 JP Cost
-   How much JP is required to purchase this ability (For rough calculation on this value see below)
+   How much JP is required to purchase this ability (For calculation see :ref:`formula`)
 
 Type
    The damage type (either ``physical`` or ``magical``, but not both)
@@ -130,8 +130,9 @@ Some effects (e.g., damage) make use of a derived "strength" stat.
 This is the ability power (AP) multiplied by one of physical attack (PA) or magical attack (MA) depending on the ability type.
 For example the damage of a magical attack would be ``AP * MA``.
 
+.. _formula:
+
 Job Point (JP) formula
-	Current: The running total of the power so far.
 	Value: That base value of that power's attribute.
 * Power - Absolute(Value) x10 (targets attribute x2)
 * MP Cost - Value

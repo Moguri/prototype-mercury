@@ -1,6 +1,6 @@
 {
     "name": "Drain MP",
-    "description": "Drains the MP of another golem adding to itself.",
+    "description": "Drains the MP of another golem adding to itself",
     "range_max": 3,
     "power": 10,
     "type": "magical",

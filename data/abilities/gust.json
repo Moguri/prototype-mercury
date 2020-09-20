@@ -1,6 +1,6 @@
 {
     "name": "Gust",
-    "description": "Deals little damage but knocks back an adjacent opponent.",
+    "description": "Deals little damage but knocks back an adjacent opponent",
     "power": 1,
     "type": "magical",
     "jp_cost": 50,

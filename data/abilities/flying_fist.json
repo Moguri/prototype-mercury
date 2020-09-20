@@ -1,6 +1,6 @@
 {
     "name": "Flying Fist",
-    "description": "The golem bursts forward slamming their fist into an enemy for additional damage.",
+    "description": "The golem bursts forward slamming their fist into an enemy for additional damage",
     "range_min": 2,
     "range_max": 2,
     "power": 15,

@@ -1,6 +1,6 @@
 {
     "name": "Give HP",
-    "description": "A golem gives another golem within range HP.",
+    "description": "The golem gives another golem within range, HP",
     "range_max": 3,
     "power": 10,
     "type": "magical",

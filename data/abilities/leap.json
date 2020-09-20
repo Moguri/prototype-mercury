@@ -1,6 +1,6 @@
 {
     "name": "Leap",
-    "description": "Moves yourself to another location, that could've been out of reach.",
+    "description": "The golem jumps into the air, allowing to reach otherwise difficult to reach locations",
     "range_min": 2,
     "range_max": 4,
     "power": 1,

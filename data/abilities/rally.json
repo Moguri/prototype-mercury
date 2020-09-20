@@ -1,6 +1,6 @@
 {
     "name": "Rally",
-    "description": "The golem pumps itself up increasing its physical attack.",
+    "description": "The golem pulls magically energy from within to empower its physical attack",
     "power": -1,
     "range_min": 0,
     "range_max": 0,
