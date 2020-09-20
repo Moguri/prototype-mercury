@@ -135,7 +135,7 @@ Job Point (JP) formula
 	Value: That base value of that power's attribute.
 * Power - Absolute(Value) x10 (targets attribute x2)
 * MP Cost - Value
-* Range - ((Max Value - 1) x2 - (Min Value -1)) x5
+* Range - ((Max Value - 1) x2 - Min Value - 1) x5
 * Hit Chance - 100 - Value
 * Movement - 10 per square of movement x2 if usable on others
 
