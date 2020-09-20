@@ -96,9 +96,6 @@ class GameApp(ShowBase):
                 finishIval=ival
             )
 
-    def load_ui(self, uiname):
-        self.ui.load_file(p3d.Filename.expand_from(f'$MAIN_DIR/ui/{uiname}.html'))
-
 
 def main():
     app = GameApp()

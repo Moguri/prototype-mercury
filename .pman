@@ -2,7 +2,7 @@
 name = "mercury"
 
 [build]
-ignore_patterns = [ "*.blend1", "*.blend2","titlebg.webm"]
+ignore_patterns = [ "*.blend1", "*.blend2" ]
 converters = [ "blend2bam",]
 
 [blend2bam]
