@@ -1,12 +1,9 @@
 import random
 
-from . import gamedb
 from .monster import MonsterActor
 
 class Combatant:
     def __init__(self, monster, parent_node):
-        gdb = gamedb.get_instance()
-
         self._monster = monster
         breed = monster.breed
 
