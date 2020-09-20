@@ -1,6 +1,6 @@
 {
     "name": "Blast",
-    "description": "A concentrated eruption of magic centered on a golem. It deals immense damage."
+    "description": "A concentrated eruption of magic centered on a golem. It deals immense damage.",
     "range_max": 4,
     "power": 20,
     "hit_chance": 80,
