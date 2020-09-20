@@ -18,3 +18,6 @@ class TitleUI(CommonUI):
             pos=(0, 0.75, 0.0),
             fg=(0.8, 0.8, 0.8, 1.0)
         ))
+
+        # Move menu down
+        self.menu.root.set_z(-0.5)

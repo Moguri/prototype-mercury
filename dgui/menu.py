@@ -2,16 +2,18 @@ import panda3d.core as p3d
 
 from direct.gui.DirectGui import DirectLabel, DGG
 
+from . import settings
+
 class Menu():
-    MENU_START = 0.3
-    BUTTON_WIDTH = 0.55
+    MENU_START = 0.7
+    BUTTON_WIDTH = 0.75
     BUTTON_HEIGHT = 0.175
     BUTTON_SPACING = 0
-    TEXT_SCALE = 0.06
-    TEXT_INACTIVE_COLOR = (0.5, 0.5, 0.5, 1)
-    TEXT_ACTIVE_COLOR = (0, 0, 0, 1)
-    INACTIVE_COLOR = (0.8, 0.8, 0.8, 1)
-    ACTIVE_COLOR = (0.33, 0.68, 0.88, 1)
+    TEXT_SCALE = settings.TEXT_SCALE
+    TEXT_INACTIVE_COLOR = settings.TEXT_INACTIVE_COLOR
+    TEXT_ACTIVE_COLOR = settings.TEXT_ACTIVE_COLOR
+    INACTIVE_COLOR = settings.PRIMARY_COLOR
+    ACTIVE_COLOR = settings.SECONDARY_COLOR
 
     def __init__(self, showbase):
         self.showbase = showbase
