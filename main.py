@@ -3,7 +3,6 @@ import sys
 from direct.showbase.ShowBase import ShowBase
 from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
-import cefpanda
 import pman.shim
 import eventmapper
 import simplepbr
@@ -21,6 +20,7 @@ p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'inputs.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.USER_CONFIG_DIR, 'user.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'user.prc'))
 
+USE_CEF = p3d.ConfigVariableBool('mercury-use-cef', False).get_value()
 
 class GameApp(ShowBase):
     def __init__(self):
@@ -59,8 +59,10 @@ class GameApp(ShowBase):
         self.blackboard['player'].monsters = [default_monster]
 
         # UI
-        self.ui = cefpanda.CEFPanda()
-        self.ui.use_mouse = False
+        if USE_CEF:
+            import cefpanda
+            self.ui = cefpanda.CEFPanda()
+            self.ui.use_mouse = False
 
         # Game states
         initial_state = p3d.ConfigVariableString('mercury-initial-state', 'Title').get_value()
