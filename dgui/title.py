@@ -8,7 +8,7 @@ class TitleUI(CommonUI):
         super().__init__(base)
 
         # Background Image
-        self.roots.append(OnscreenImage(parent=showbase.render2d, image='backgrounds/titlebg.webm'))
+        self.roots.append(OnscreenImage(parent=showbase.render2d, image='backgrounds/titlebg.png'))
 
         # Title
         self.roots.append(OnscreenText(
