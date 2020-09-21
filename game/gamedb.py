@@ -41,13 +41,13 @@ class DataModel:
         }
 
     @classmethod
-    def validate(cls, _data):
+    def validate(cls, _data): # pylint: disable=unused-argument
         return True
 
     @classmethod
     def from_schema(cls, schema):
         validate_func = fastjsonschema.compile(schema)
-        def validate(cls, data):
+        def validate(cls, data): # pylint: disable=unused-argument
             try:
                 validate_func(data)
             except fastjsonschema.exceptions.JsonSchemaException:
