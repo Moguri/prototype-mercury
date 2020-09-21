@@ -1,4 +1,5 @@
 from direct.showbase.MessengerGlobal import messenger
+import panda3d.core as p3d
 
 from .gamestate import GameState
 
@@ -20,3 +21,9 @@ class TitleState(GameState):
 
         # Background Music
         self.play_bg_music('the_fall_of_arcana')
+
+        using_cef = p3d.ConfigVariableBool('mercury-use-cef', False).get_value()
+        if using_cef:
+            # Background Image
+            from direct.gui.OnscreenImage import OnscreenImage # pylint: disable=import-outside-toplevel
+            OnscreenImage(parent=self.root_node2d, image='backgrounds/titlebg.png')

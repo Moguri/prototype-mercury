@@ -59,8 +59,13 @@ class GameApp(ShowBase):
         self.blackboard['player'].monsters = [default_monster]
 
         # UI
+        default_font = self.loader.load_font(
+            'fonts/BalooThambi2-Medium.ttf',
+            pixelsPerUnit=90
+        )
+        p3d.TextNode.set_default_font(default_font)
         if USE_CEF:
-            import cefpanda
+            import cefpanda # pylint: disable=import-outside-toplevel
             self.ui = cefpanda.CEFPanda()
             self.ui.use_mouse = False
 

@@ -6,11 +6,15 @@ from setuptools import setup
 
 import pman.build_apps
 
+from main import USE_CEF
 
 class CustomBuildApps(pman.build_apps.BuildApps):
     def run(self):
         # Run regular build_apps
         super().run()
+
+        if not USE_CEF:
+            return
 
         # Post-build cleanup and fixes
         for platform in self.platforms:
@@ -71,10 +75,9 @@ setup(
                 CONFIG['build']['export_dir']+'/**',
                 'config/**',
                 'data/**',
-                'ui/**',
                 'CREDITS.md',
                 'LICENSE',
-            ],
+            ] + (['ui/**'] if USE_CEF else []),
             'exclude_patterns': [
                 'config/user.prc',
             ],
@@ -99,7 +102,7 @@ setup(
             'include_modules': {
                 APP_NAME: [
                     'direct.particles.ParticleManagerGlobal',
-                ]
+                ] + (['cefpanda'] if USE_CEF else [])
             },
             'exclude_modules': {
                 '*': [
@@ -107,7 +110,7 @@ setup(
                     'cefpython3.cefpython_py34',
                     'cefpython3.cefpython_py35',
                     'cefpython3.cefpython_py36',
-                ],
+                ] + (['cefpanda'] if not USE_CEF else []),
             },
             'platforms': [
                 'manylinux1_x86_64',
