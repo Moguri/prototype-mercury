@@ -1,5 +1,3 @@
-import json
-
 from direct.showbase.DirectObject import DirectObject
 import panda3d.core as p3d
 
@@ -37,16 +35,10 @@ class GameState(DirectObject):
             self.dgui.cleanup()
 
     def load_ui(self, name):
-        if hasattr(base, 'ui'):
-            base.ui.load_file(p3d.Filename.expand_from(f'$MAIN_DIR/ui/{name}.html'))
-        else:
-            self.dgui = dgui.UIS[name](base)
+        self.dgui = dgui.UIS[name](base)
 
     def update_ui(self, state_data):
-        if hasattr(base, 'ui'):
-            base.ui.execute_js('update_state({})'.format(json.dumps(state_data)), onload=True)
-        else:
-            self.dgui.update(state_data)
+        self.dgui.update(state_data)
 
     def play_bg_music(self, filename):
         bgmusic = base.loader.load_music(f'music/{filename}.opus')

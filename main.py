@@ -20,8 +20,6 @@ p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'inputs.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.USER_CONFIG_DIR, 'user.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'user.prc'))
 
-USE_CEF = p3d.ConfigVariableBool('mercury-use-cef', False).get_value()
-
 class GameApp(ShowBase):
     def __init__(self):
         ShowBase.__init__(self)
@@ -64,10 +62,6 @@ class GameApp(ShowBase):
             pixelsPerUnit=90
         )
         p3d.TextNode.set_default_font(default_font)
-        if USE_CEF:
-            import cefpanda # pylint: disable=import-outside-toplevel
-            self.ui = cefpanda.CEFPanda()
-            self.ui.use_mouse = False
 
         # Game states
         initial_state = p3d.ConfigVariableString('mercury-initial-state', 'Title').get_value()

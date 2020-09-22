@@ -1,6 +1,4 @@
 panda3d~=1.10.7
-cefpanda
-cefpython3==66.0
 fastjsonschema
 appdirs
 panda3d-pman~=0.12

@@ -7,4 +7,3 @@ mercury-saves-dir $MAIN_DIR/saves
 screenshot-extension png
 audio-music-volume 0.5
 audio-sfx-volume 0.8
-mercury-use-cef false

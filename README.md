@@ -61,25 +61,6 @@ In addition to the base Panda3D PRC variables, this project defines some custom 
 * `mercury-allow-saves` (bool) - make the save/load system available (default: `false`; currently disabled since save files are not considered stable)
 * `mercury-saves-dire` (string) - the directory to store save files (default: `$MAIN_DIR/saves`)
 
-### Using Pyenv
-
-The current release of cefpython3 [dynamically links against libpython](https://github.com/cztomczak/cefpython/issues/554) on Linux. By default, [Pyenv does not build a shared library for Python](https://github.com/pyenv/pyenv/issues/65). So, in short, when present with this error message while using Pyenv:
-
-```
-Traceback (most recent call last):
-  File "main.py", line 7, in <module>
-    import cefpanda
-  File ".../lib/python3.7/site-packages/cefpanda/__init__.py", line 8, in <module>
-    from cefpython3 import cefpython
-  File ".../lib/python3.7/site-packages/cefpython3/__init__.py", line 62, in <module>
-    from . import cefpython_py37 as cefpython
-ImportError: libpython3.7m.so.1.0: cannot open shared object file: No such file or directory
-```
-re-install Python 3.7 while telling Pyenv to build with shared libraris:
-```bash
-env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.7.7
-```
-
 ## License
 
 * Anything mentioned in [CREDITS.md](CREDITS.md) have licenses as specified in the file
