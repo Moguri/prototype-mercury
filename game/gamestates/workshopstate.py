@@ -311,7 +311,7 @@ class WorkshopState(GameState):
             ] + [
                 (
                     f'Upgrade {pretty_stat_names[stat]} {curr_ranks(stat)}/{max_rank} (100 JP)' + \
-                        ('★' if curr_ranks(stat) == max_rank else ''),
+                        ('*' if curr_ranks(stat) == max_rank else ''),
                     upgrade_stat,
                     [stat, max_rank]
                 )
@@ -319,7 +319,7 @@ class WorkshopState(GameState):
             ] + [
                 (
                     f'{ability.name} ({ability.jp_cost} JP)' + \
-                        ('★' if ability.id in learnedids else ''),
+                        ('*' if ability.id in learnedids else ''),
                     learn_ability,
                     [ability]
                 )
