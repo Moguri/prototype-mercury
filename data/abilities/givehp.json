@@ -1,8 +1,11 @@
 {
     "name": "Give HP",
+    "description": "The golem gives another golem within range, HP",
     "range_max": 3,
     "power": 10,
     "type": "magical",
+    "jp_cost": 200,
+    "mp_cost": 10,
     "effects": [
         {
             "type": "template_simple",

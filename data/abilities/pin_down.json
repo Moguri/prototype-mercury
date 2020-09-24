@@ -1,8 +1,11 @@
 {
     "name": "Pin Down",
+    "description": "The golem imbues an arrow with magical energy to slow another golem",
     "power": 1,
     "range_max": 4,
     "type": "physical",
+    "jp_cost": 50,
+    "mp_cost": 10,
     "effects": [
         {
             "type": "template_simple",

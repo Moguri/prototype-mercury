@@ -1,7 +1,9 @@
 {
     "name": "Sparkles",
+    "description": "Lightly tapping into its own magical energies, the golem unleashes a hail of sparks and energy",
     "range_max": 2,
     "power": 10,
+    "jp_cost": 110,
     "type": "magical"
 }
 

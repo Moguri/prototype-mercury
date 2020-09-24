@@ -1,7 +1,9 @@
 {
     "name": "Gust",
+    "description": "Deals little damage but knocks back an adjacent opponent",
     "power": 1,
     "type": "magical",
+    "jp_cost": 50,
     "effects": [
         {
             "type": "template_simple"
@@ -10,7 +12,7 @@
             "type": "move_to_range",
             "target": "other",
             "parameters": {
-                "range": 2,
+                "range": 3,
                 "is_hit_dependent": true
             }
         }
