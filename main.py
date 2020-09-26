@@ -28,6 +28,7 @@ class GameApp(ShowBase):
         gdb = gamedb.get_instance()
 
         # Render pipeline
+        self.set_background_color((0, 0, 0, 1))
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
         self.render_pipeline = simplepbr.init(
             msaa_samples=p3d.ConfigVariableInt('msaa-samples', 4).get_value(),

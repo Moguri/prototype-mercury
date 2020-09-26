@@ -4,6 +4,7 @@ from .gamestate import GameState
 from .combatstate import CombatState
 from .workshopstate import WorkshopState
 from .titlestate import TitleState
+from .newtrainerstate import NewTrainerState
 
 
 __all__ = [
@@ -17,6 +18,7 @@ states = {
     'Combat': CombatState,
     'Workshop': WorkshopState,
     'Title': TitleState,
+    'NewTrainer': NewTrainerState,
 }
 
 class StateManager:
