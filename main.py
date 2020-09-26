@@ -3,7 +3,6 @@ import sys
 from direct.showbase.ShowBase import ShowBase
 from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
-import cefpanda
 import pman.shim
 import eventmapper
 import simplepbr
@@ -20,7 +19,6 @@ p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'game.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'inputs.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.USER_CONFIG_DIR, 'user.prc'))
 p3d.load_prc_file(p3d.Filename(pathutils.CONFIG_DIR, 'user.prc'))
-
 
 class GameApp(ShowBase):
     def __init__(self):
@@ -59,8 +57,11 @@ class GameApp(ShowBase):
         self.blackboard['player'].monsters = [default_monster]
 
         # UI
-        self.ui = cefpanda.CEFPanda()
-        self.ui.use_mouse = False
+        default_font = self.loader.load_font(
+            'fonts/BalooThambi2-Medium.ttf',
+            pixelsPerUnit=90
+        )
+        p3d.TextNode.set_default_font(default_font)
 
         # Game states
         initial_state = p3d.ConfigVariableString('mercury-initial-state', 'Title').get_value()
@@ -95,9 +96,6 @@ class GameApp(ShowBase):
             self.transitions.fadeOut(
                 finishIval=ival
             )
-
-    def load_ui(self, uiname):
-        self.ui.load_file(p3d.Filename.expand_from(f'$MAIN_DIR/ui/{uiname}.html'))
 
 
 def main():

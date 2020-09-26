@@ -1,7 +1,7 @@
-import json
-
 from direct.showbase.DirectObject import DirectObject
 import panda3d.core as p3d
+
+import dgui
 
 from ..menuhelper import MenuHelper
 
@@ -13,6 +13,7 @@ class GameState(DirectObject):
         self.root_node.reparent_to(base.render)
         self.root_node2d = p3d.NodePath('State Root 2D')
         self.root_node2d.reparent_to(base.render2d)
+        self.dgui = None
         self.menu_helper = MenuHelper(self.update_ui)
         self._input_state = None
 
@@ -30,12 +31,14 @@ class GameState(DirectObject):
         self.root_node2d = None
         base.render.clear_light()
         self.menu_helper.cleanup()
+        if self.dgui:
+            self.dgui.cleanup()
 
     def load_ui(self, name):
-        base.load_ui(name)
+        self.dgui = dgui.UIS[name](base)
 
     def update_ui(self, state_data):
-        base.ui.execute_js('update_state({})'.format(json.dumps(state_data)), onload=True)
+        self.dgui.update(state_data)
 
     def play_bg_music(self, filename):
         bgmusic = base.loader.load_music(f'music/{filename}.opus')
