@@ -20,6 +20,8 @@ class MenuHelper(DirectObject):
         self.accept('move-left', self.move_selection, [-1])
         self.accept('accept', self.accept_selection)
         self.accept('reject', self.reject_selection)
+        self.accept('menu-hover', self.move_to_index)
+        self.accept('menu-click', self.accept_selection)
 
         self.sfx_select = base.loader.load_sfx('assets/sfx/ui-select.opus')
         self.sfx_accept = base.loader.load_sfx('assets/sfx/ui-accept.opus')
@@ -47,19 +49,12 @@ class MenuHelper(DirectObject):
     def cleanup(self):
         self.ignoreAll()
 
-    def move_selection(self, delta):
+    def move_to_index(self, newidx):
         if self.lock:
             return
 
-        self.selection_idx += delta
-
-        if self.selection_idx < 0:
-            self.selection_idx = len(self._menu_items) - 1
-        elif self.selection_idx >= len(self._menu_items):
-            self.selection_idx = 0
-
+        self.selection_idx = newidx % len(self._menu_items)
         self.sfx_select.play()
-
         self.update_ui({
             'selection_index': self.selection_idx,
         })
@@ -67,6 +62,19 @@ class MenuHelper(DirectObject):
         if self.selection_change_cb is not None:
             # pylint: disable=not-callable
             self.selection_change_cb(self.selection_idx)
+
+    def move_selection(self, delta):
+        if self.lock:
+            return
+
+        newidx = self.selection_idx + delta
+
+        if newidx < 0:
+            newidx = len(self._menu_items) - 1
+        elif newidx >= len(self._menu_items):
+            newidx = 0
+
+        self.move_to_index(newidx)
 
     def accept_selection(self):
         if not self._menu_items:
