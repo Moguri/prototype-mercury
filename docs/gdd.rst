@@ -191,15 +191,7 @@ Systematic Breakdown of Components
 
 * GUI
 
-   * Currently using CEF, which is rather overkill
-
-      * Keeps us stuck on Python 3.7
-      * Dynamically links against Python, which causes problems to work around
-      * 100+MB dependency
-      * Can be laggy and resource intensive
-      * As a pro, it allows us to use popular web front-end technologies and CSS animations look nice
-
-   * Mostly need to drive some menus, so DirectGUI (built-in Panda GUI library) may be sufficient
+  * Using DirectGUI, which is part of panda3d
 
 * Game Data
 
