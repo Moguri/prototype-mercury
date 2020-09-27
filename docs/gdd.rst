@@ -56,11 +56,11 @@ A golem's tag pool contains:
 * The Golemist's tags
 * The form's tags
 * A tag for each item in a Cartesian product of available jobs and their levels.
-  For example, a golem with three levels in :ref:`job-squire` and two levels in :ref:`job-ruinsmith` will have the following tags:
+  For example, a golem with three levels in :ref:`job-brawler` and two levels in :ref:`job-ruinsmith` will have the following tags:
 
-   * ``job_squire_1``
-   * ``job_squire_2``
-   * ``job_squire_3``
+   * ``job_brawler_1``
+   * ``job_brawler_2``
+   * ``job_brawler_3``
    * ``job_ruinsmith_1``
    * ``job_ruinsmith_2``
 

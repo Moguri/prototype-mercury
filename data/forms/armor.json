@@ -1,6 +1,6 @@
 {
     "name": "Armor",
-    "default_job": "squire",
+    "default_job": "brawler",
     "tags": [
         "advanced_fighter"
     ],

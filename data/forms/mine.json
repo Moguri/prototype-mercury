@@ -1,6 +1,6 @@
 {
     "name": "Mine",
-    "default_job": "squire",
+    "default_job": "brawler",
     "tags": [
         "mage",
         "advanced_fighter"

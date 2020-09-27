@@ -29,7 +29,7 @@ def test_job_assignment(monster, gdb):
     with pytest.raises(RuntimeError, match=r'tag requirements unsatisfied'):
         monster.job = job
 
-    monster.add_jp('squire', monster.JP_PER_LEVEL * 2)
+    monster.add_jp('brawler', monster.JP_PER_LEVEL * 2)
     assert monster.can_use_job(job)
     monster.job = job
 

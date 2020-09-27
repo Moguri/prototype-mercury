@@ -7,7 +7,7 @@
     "required_tags": [
       "disabled"
     ],
-    "default_job": "squire",
+    "default_job": "brawler",
     "hp": 120,
     "mp": 120,
     "physical_attack": 6,
