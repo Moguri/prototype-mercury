@@ -24,7 +24,7 @@ def test_save_load_no_monster(player):
 
 def test_tags(player):
     assert 'in_test' in player.tags
-    assert player.can_use_breed(player.monsters[0].breed)
+    assert player.can_use_form(player.monsters[0].form)
 
     player.personal_tags.remove('in_test')
-    assert not player.can_use_breed(player.monsters[0].breed)
+    assert not player.can_use_form(player.monsters[0].form)

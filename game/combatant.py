@@ -5,7 +5,7 @@ from .monster import MonsterActor
 class Combatant:
     def __init__(self, monster, parent_node):
         self._monster = monster
-        breed = monster.breed
+        form = monster.form
 
         self._current_hp = self.max_hp
         self.current_mp = self.max_mp
@@ -24,7 +24,7 @@ class Combatant:
 
         self.lock_controls = False
 
-        self._actor = MonsterActor(breed, parent_node, monster.job.id)
+        self._actor = MonsterActor(form, parent_node, monster.job.id)
 
     def __getattr__(self, name):
         if hasattr(self._monster, name):

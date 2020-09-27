@@ -40,7 +40,7 @@ Various requirements in the game are determined by "tags."
 Some examples of requirements include:
 
 * what jobs a golem has access to
-* what breeds a Golemist has access to
+* what forms a Golemist has access to
 
 Golems and Golemists each have a pool of tags.
 To determine eligibility the item being checked for (e.g., a job) is compared to the appropriate tag pool.
@@ -54,7 +54,7 @@ A Golemist's tag pool contains:
 A golem's tag pool contains:
 
 * The Golemist's tags
-* The breed's tags
+* The form's tags
 * A tag for each item in a Cartesian product of available jobs and their levels.
   For example, a golem with three levels in :ref:`job-squire` and two levels in :ref:`job-ruinsmith` will have the following tags:
 

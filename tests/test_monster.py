@@ -14,7 +14,7 @@ def test_level(monster):
     assert monster.level == 4
 
 def test_tags(monster):
-    assert 'breed_bobcatshark' in monster.tags
+    assert 'form_bobcatshark' in monster.tags
     monster.add_jp('bobcatshark', 1)
     assert 'job_bobcatshark_1' in monster.tags
 

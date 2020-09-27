@@ -30,8 +30,8 @@ class PlayerData:
             'last_access_time': self.last_access_time,
         }
 
-    def can_use_breed(self, breed):
-        return set(breed.required_tags).issubset(self.personal_tags)
+    def can_use_form(self, form):
+        return set(form.required_tags).issubset(self.personal_tags)
 
     @property
     def tags(self):

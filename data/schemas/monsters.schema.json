@@ -7,7 +7,7 @@
         "name": {
             "type": "string"
         },
-        "breed": {
+        "form": {
             "type": "string"
         },
         "job": {
@@ -42,7 +42,7 @@
         }
     },
     "links": {
-        "breed": "breeds",
+        "form": "forms",
         "job": "jobs"
     }
 }

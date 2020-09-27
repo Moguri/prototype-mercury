@@ -94,11 +94,11 @@ with open(f'{gen_dir}/jobs_chart.rst', 'w') as rstfile:
     write('Jobs Chart')
     write('==========\n')
 
-    for breed in sorted(gdb['breeds'].values(), key=lambda x: x.name):
-        if {'disabled', 'in_test'} & set(breed.required_tags):
+    for form in sorted(gdb['forms'].values(), key=lambda x: x.name):
+        if {'disabled', 'in_test'} & set(form.required_tags):
             continue
 
-        title = breed.name
+        title = form.name
         write(title)
         write('-' * len(title))
         write()
@@ -106,10 +106,10 @@ with open(f'{gen_dir}/jobs_chart.rst', 'w') as rstfile:
         write('   :align: center\n')
         write('   graph LR')
 
-        breed_tags = set(breed.tags) | {f'breed_{breed.id}'}
+        form_tags = set(form.tags) | {f'form_{form.id}'}
         for job in gdb['jobs'].values():
             non_job_tags = set([i for i in job.required_tags if not i.startswith('job_')])
-            if not non_job_tags.issubset(breed_tags):
+            if not non_job_tags.issubset(form_tags):
                 continue
             required_jobs = [
                 i.replace('job_', '').rsplit('_', 1)
@@ -124,30 +124,30 @@ with open(f'{gen_dir}/jobs_chart.rst', 'w') as rstfile:
         write()
 
 
-with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
+with open(f'{gen_dir}/forms.rst', 'w') as rstfile:
     write = make_writer(rstfile)
-    write('Breeds')
+    write('Forms')
     write('======\n')
 
-    for breed in sorted(gdb['breeds'].values(), key=lambda x: x.name):
-        if {'disabled', 'in_test'} & set(breed.required_tags):
+    for form in sorted(gdb['forms'].values(), key=lambda x: x.name):
+        if {'disabled', 'in_test'} & set(form.required_tags):
             continue
-        write(f'.. _breed-{breed.id}:\n')
-        title = f'{breed.name} ({breed.id})'
+        write(f'.. _form-{form.id}:\n')
+        title = f'{form.name} ({form.id})'
         write(title)
         write('-' * len(title))
         write()
-        write(f'{breed.description}')
+        write(f'{form.description}')
 
         write('Default Job')
         write('^^^^^^^^^^^\n')
-        write(f':ref:`job-{breed.default_job.id}`')
+        write(f':ref:`job-{form.default_job.id}`')
         write()
 
         write('Starting Tags')
         write('^^^^^^^^^^^^^\n')
-        if breed.tags:
-            for tag in breed.tags:
+        if form.tags:
+            for tag in form.tags:
                 write(f'* ``{tag}``')
         else:
             write('None')
@@ -155,8 +155,8 @@ with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
 
         write('Required Tags')
         write('^^^^^^^^^^^^^\n')
-        if breed.required_tags:
-            for tag in breed.required_tags:
+        if form.required_tags:
+            for tag in form.required_tags:
                 write(f'* ``{tag}``')
         else:
             write('None')
@@ -168,15 +168,15 @@ with open(f'{gen_dir}/breeds.rst', 'w') as rstfile:
         write('   :align: left')
         write()
         for stat in stat_names:
-            amount = getattr(breed, stat)
+            amount = getattr(form, stat)
             write(f'   * - {stat_names[stat]}')
             write(f'     - {amount}')
         write()
 
         write('Skins')
         write('^^^^^\n')
-        default_skin = breed.skins['default']
-        skins = dict(filter(lambda x: x[0] != 'default', breed.skins.items()))
+        default_skin = form.skins['default']
+        skins = dict(filter(lambda x: x[0] != 'default', form.skins.items()))
         write(f'Default: ``{default_skin["bam_file"]}/{default_skin["root_node"]}``')
         write()
         write('Others:')
@@ -305,7 +305,7 @@ with open(f'{gen_dir}/index.rst', 'w') as rstfile:
     write('   jobs_chart.rst')
 
     datamodels = [
-        'breeds',
+        'forms',
         'jobs',
         'abilities',
     ]

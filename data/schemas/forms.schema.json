@@ -1,5 +1,5 @@
 {
-    "title": "Breed",
+    "title": "Form",
     "properties": {
         "id" : {
             "type": "string"
@@ -31,7 +31,7 @@
             "type": "object",
             "default": {
                 "default": {
-                    "bam_file": "fallback_breed",
+                    "bam_file": "fallback_form",
                     "root_node": "ClayGolemArm"
                 }
             },

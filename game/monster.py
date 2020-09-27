@@ -35,12 +35,12 @@ RANDOM_NAMES = [
 class MonsterActor:
     _anim_warnings = collections.defaultdict(set)
 
-    def __init__(self, breed, parent_node=None, job=None):
-        self.breed = breed
+    def __init__(self, form, parent_node=None, job=None):
+        self.form = form
 
-        if job not in self.breed.skins:
+        if job not in self.form.skins:
             job = 'default'
-        skin = self.breed.skins[job]
+        skin = self.form.skins[job]
 
         if hasattr(builtins, 'base'):
             model = base.loader.load_model('models/{}.bam'.format(skin['bam_file']))
@@ -48,7 +48,7 @@ class MonsterActor:
             if root_node.is_empty():
                 print(
                     f"Warning: root node ({skin['root_node']}) not found in "
-                    f"bam_file ({skin['bam_file']}) for {breed.id}/{job}"
+                    f"bam_file ({skin['bam_file']}) for {form.id}/{job}"
                 )
             self._path = Actor(root_node)
             self.play_anim('idle', loop=True)
@@ -72,9 +72,9 @@ class MonsterActor:
             baseanim = anim
         else:
             baseanim = anim[-1]
-        if baseanim not in self._anim_warnings[self.breed.id]:
-            print(f'Warning: {self.breed.name} is missing an animation: {anim}')
-            self._anim_warnings[self.breed.id].add(baseanim)
+        if baseanim not in self._anim_warnings[self.form.id]:
+            print(f'Warning: {self.form.name} is missing an animation: {anim}')
+            self._anim_warnings[self.form.id].add(baseanim)
 
     def play_anim(self, anim, *, loop=False):
         self._path.stop()
@@ -94,8 +94,8 @@ class MonsterActor:
         for anim in anims:
             if anim in self._path.get_anim_names():
                 return anim
-            if anim in self.breed.anim_map:
-                return self.breed.anim_map[anim]
+            if anim in self.form.anim_map:
+                return self.form.anim_map[anim]
 
         return None
 
@@ -134,7 +134,7 @@ class Monster:
         if name == 'hit_points':
             name = 'hp'
         if name in self.BASE_STATS:
-            base_stat = getattr(self.breed, name)
+            base_stat = getattr(self.form, name)
             upgrades_contrib = self.upgrades_for_stat(name) * self.STAT_UPGRADE_AMOUNTS[name]
             jobs_contrib = getattr(self.job, f'{name}_offset')
             return base_stat + upgrades_contrib + jobs_contrib
@@ -163,25 +163,25 @@ class Monster:
         return random.choice(RANDOM_NAMES)
 
     @classmethod
-    def make_new(cls, monster_id, name=None, breed_id=None):
+    def make_new(cls, monster_id, name=None, form_id=None):
         gdb = gamedb.get_instance()
 
         if name is None:
             name = cls.get_random_name()
 
-        if breed_id is not None:
-            breed = gdb['breeds'][breed_id]
+        if form_id is not None:
+            form = gdb['forms'][form_id]
         else:
-            breed = random.choice([
-                i for i in gdb['breeds'].values()
+            form = random.choice([
+                i for i in gdb['forms'].values()
                 if not set(i.required_tags) & {'disabled', 'in_test'}
             ])
 
         monsterdata = gdb.schema_to_datamodel['monsters']({
             'id': monster_id,
             'name': name,
-            'breed': breed.id,
-            'job': breed.default_job.id,
+            'form': form.id,
+            'job': form.default_job.id,
         })
         monsterdata.link(gdb)
 
@@ -278,12 +278,12 @@ class Monster:
     @property
     def tags(self):
         return {
-            f'breed_{self.breed.id}',
+            f'form_{self.form.id}',
         } | {
             f'job_{job}_{level}'
             for job in self.jp_unspent
             for level in range(1, self.job_level(job) + 1)
-        } | set(self.breed.tags)
+        } | set(self.form.tags)
 
     def add_ability(self, ability):
         if isinstance(ability, str):

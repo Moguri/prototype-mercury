@@ -82,13 +82,13 @@ class WorkshopState(GameState):
         self.lights_root.set_h(45)
 
         # Pre-load all monster models
-        breeds = []
+        forms = []
         jobs = []
-        for breed in gdb['breeds'].values():
-            for skin in breed.skins:
-                breeds.append(breed)
+        for form in gdb['forms'].values():
+            for skin in form.skins:
+                forms.append(form)
                 jobs.append(skin)
-        self.load_monster_models(breeds, jobs)
+        self.load_monster_models(forms, jobs)
 
         # Load and display the player monster models
         self.load_monster_models()
@@ -200,18 +200,18 @@ class WorkshopState(GameState):
         elif next_state == 'FOUNDRY':
             self.load_monster_models([])
             base.camera.set_x(0)
-            def get_monster(breedid):
-                breed = gdb['breeds'][breedid]
+            def get_monster(formid):
+                form = gdb['forms'][formid]
                 self.player.monsters.append(
-                    Monster.make_new('player.monster', breed_id=breed.id)
+                    Monster.make_new('player.monster', form_id=form.id)
                 )
                 self.load_monster_models()
                 self.monster_selection = len(self.monster_actors) - 1
                 back_to_main()
             menu_items = [
-                (breed.name, get_monster, [breed.id])
-                for breed in gdb['breeds'].values()
-                if self.player.can_use_breed(breed)
+                (form.name, get_monster, [form.id])
+                for form in gdb['forms'].values()
+                if self.player.can_use_form(form)
             ]
             def foundry_reject():
                 if self.player.monsters:
@@ -219,32 +219,32 @@ class WorkshopState(GameState):
                     back_to_main()
             if self.player.monsters:
                 menu_items.insert(0, ('Back', foundry_reject, []))
-            self.menu_helper.set_menu('Select a Breed', menu_items)
+            self.menu_helper.set_menu('Select a Form', menu_items)
 
-            def show_breed(_idx=None):
+            def show_form(_idx=None):
                 selection = self.menu_helper.current_selection
                 if selection[0] == 'Back':
                     return
-                breed = gdb['breeds'][selection[2][0]]
-                self.load_monster_models([breed])
-            show_breed()
-            self.menu_helper.selection_change_cb = show_breed
+                form = gdb['forms'][selection[2][0]]
+                self.load_monster_models([form])
+            show_form()
+            self.menu_helper.selection_change_cb = show_form
             self.menu_helper.reject_cb = foundry_reject
-            self.display_message('Select a breed')
+            self.display_message('Select a form')
             self.set_background('foundry')
         elif next_state == 'STATS':
             self.update_ui({
                 'show_stats': True,
             })
             monsterdict = self.current_monster.to_dict()
-            monsterdict['breed'] = self.current_monster.breed.name
+            monsterdict['form'] = self.current_monster.form.name
             monsterdict['job'] = self.current_monster.job.name
             self.update_ui({
                 'monster': monsterdict
             })
             self.accept('accept', back_to_main)
         elif next_state == 'JOBS':
-            self.load_monster_models([self.current_monster.breed], [self.current_monster.job.id])
+            self.load_monster_models([self.current_monster.form], [self.current_monster.job.id])
             base.camera.set_x(0)
             def change_job(jobid):
                 gdb = gamedb.get_instance()
@@ -264,7 +264,7 @@ class WorkshopState(GameState):
                     jobid = self.current_monster.job.id
                 else:
                     jobid = selection[2][0]
-                self.load_monster_models([self.current_monster.breed], [jobid])
+                self.load_monster_models([self.current_monster.form], [jobid])
 
             self.menu_helper.set_menu('Select a Job', [
                 ('Back', job_reject, []),
@@ -365,28 +365,28 @@ class WorkshopState(GameState):
         if self.input_state not in ('FOUNDRY', 'JOBS'):
             base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
-    def load_monster_models(self, breeds=None, jobs=None):
+    def load_monster_models(self, forms=None, jobs=None):
         for monact in self.monster_actors:
             monact.cleanup()
             monact.remove_node()
         self.monster_actors = []
         labels = []
 
-        if breeds is None:
-            breeds = [i.breed for i in self.player.monsters]
+        if forms is None:
+            forms = [i.form for i in self.player.monsters]
             jobs = [i.job.id for i in self.player.monsters]
             labels = [i.name for i in self.player.monsters]
 
         if jobs is None:
-            jobs = [i.default_job for i in breeds]
+            jobs = [i.default_job for i in forms]
 
         if not labels:
             labels = itertools.repeat('')
 
         stride = 2
         offset = 0
-        for breed, jobid, labelstr in zip(breeds, jobs, labels):
-            actor = MonsterActor(breed, self.monsters_root, jobid)
+        for form, jobid, labelstr in zip(forms, jobs, labels):
+            actor = MonsterActor(form, self.monsters_root, jobid)
             actor.set_h(45)
             actor.set_pos(self.monsters_root, p3d.LVector3(offset, 0, 0))
             self.monster_actors.append(actor)

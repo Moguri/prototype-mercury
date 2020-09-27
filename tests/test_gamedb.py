@@ -4,7 +4,7 @@ def test_load(gdb):
 def test_keys(gdb):
     gdb_keys = [
         'abilities',
-        'breeds',
+        'forms',
         'monsters',
     ]
 
