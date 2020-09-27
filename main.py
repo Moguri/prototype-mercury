@@ -53,7 +53,7 @@ class GameApp(ShowBase):
         if default_monster_id:
             default_monster = Monster(gdb['monsters'][default_monster_id])
         else:
-            default_form = p3d.ConfigVariableString('mercury-default-form', 'clay').get_value()
+            default_form = p3d.ConfigVariableString('mercury-default-form', 'mine').get_value()
             default_monster = Monster.make_new('player_monster', form_id=default_form)
         self.blackboard['player'].monsters = [default_monster]
 

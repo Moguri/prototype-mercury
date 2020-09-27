@@ -86,7 +86,7 @@ def app():
             self.blackboard = {
                 'player': player,
             }
-            default_monster = Monster.make_new('player_monster', 'Default', 'clay')
+            default_monster = Monster.make_new('player_monster', 'Default', 'mine')
             self.blackboard['player'].monsters = [default_monster]
             self.camera = p3d.NodePath('camera')
             self.allow_saves = False

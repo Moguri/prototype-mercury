@@ -56,7 +56,7 @@ In addition to the base Panda3D PRC variables, this project defines some custom 
 * `audio-music-volume` (double) - the background music volume from 0.0 to 1.0 (default: `1.0`)
 * `audio-sfx-volume` (double) - the sound effect volume from 0.0 to 1.0 (default: `1.0`)
 * `mercury-initial-state` (string) - a state name to load instead of loading the title screen state (default: `Title`)
-* `mercury-default-form` (string) - ID of which form to use when generating the default monster used when skipping states (default: `clay`)
+* `mercury-default-form` (string) - ID of which form to use when generating the default monster used when skipping states (default: `mine`)
 * `mercury-default-monster` (string) - ID of a monster file to load for the default monster used when skipping states (default: `''`; overrides the default form if set)
 * `mercury-allow-saves` (bool) - make the save/load system available (default: `false`; currently disabled since save files are not considered stable)
 * `mercury-saves-dire` (string) - the directory to store save files (default: `$MAIN_DIR/saves`)
