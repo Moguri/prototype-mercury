@@ -108,7 +108,7 @@ class MonsterActor:
 
 
 class Monster:
-    JP_PER_LEVEL = 500
+    JP_PER_LEVEL = 200
 
     STAT_UPGRADE_COST = 100
 
