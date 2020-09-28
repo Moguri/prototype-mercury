@@ -10,7 +10,7 @@
             "root_node": "ArmorGolemArm"
         }
     },
-    "hp": 140,
+    "hp": 14,
     "ep": 4,
     "physical_attack": 8,
     "magical_attack": 1,

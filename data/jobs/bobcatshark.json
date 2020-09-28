@@ -10,7 +10,7 @@
         "form_bobcatshark",
         "in_test"
     ],
-    "hp_offset": 10,
+    "hp_offset": 1,
     "physical_attack_offset": 2,
     "magical_attack_offset": 1,
     "movement_offset": 1

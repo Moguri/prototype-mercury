@@ -15,7 +15,7 @@
         "hp": 2,
         "ep": 2
     },
-    "hp_offset": 20,
+    "hp_offset": 2,
     "ep_offset": 1
 }
 

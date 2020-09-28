@@ -34,7 +34,7 @@ def test_job_assignment(monster, gdb):
     monster.job = job
 
 def test_stats(monster):
-    assert monster.hit_points == 110
+    assert monster.hit_points == 11
     assert monster.physical_attack == 7
     assert monster.magical_attack == 6
     assert monster.movement == 6
@@ -42,7 +42,7 @@ def test_stats(monster):
 def test_stat_upgrade(monster):
     monster.upgrade_stat('hp')
     assert monster.upgrades_for_stat('hp') == 1
-    assert monster.hp == 120
+    assert monster.hp == 12
     assert monster.jp_unspent[monster.job.id] == 0
 
 def test_gen_random(monster):

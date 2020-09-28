@@ -12,6 +12,6 @@
         "hp": 3,
         "physical_attack": 2
     },
-    "hp_offset": 40,
+    "hp_offset": 4,
     "physical_attack_offset": 1
 }

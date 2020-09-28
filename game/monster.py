@@ -110,14 +110,6 @@ class MonsterActor:
 class Monster:
     JP_PER_LEVEL = 500
 
-    STAT_UPGRADE_AMOUNTS = {
-        'hp': 10,
-        'ep': 1,
-        'physical_attack': 1,
-        'magical_attack': 1,
-        'movement': 1,
-    }
-
     STAT_UPGRADE_COST = 100
 
     BASE_STATS = [
@@ -135,7 +127,7 @@ class Monster:
             name = 'hp'
         if name in self.BASE_STATS:
             base_stat = getattr(self.form, name)
-            upgrades_contrib = self.upgrades_for_stat(name) * self.STAT_UPGRADE_AMOUNTS[name]
+            upgrades_contrib = self.upgrades_for_stat(name)
             jobs_contrib = getattr(self.job, f'{name}_offset')
             return base_stat + upgrades_contrib + jobs_contrib
         return getattr(self._monsterdata, name)

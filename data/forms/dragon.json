@@ -8,8 +8,8 @@
       "disabled"
     ],
     "default_job": "brawler",
-    "hp": 120,
-    "ep": 120,
+    "hp": 12,
+    "ep": 12,
     "physical_attack": 6,
     "magical_attack": 6,
     "movement": 4

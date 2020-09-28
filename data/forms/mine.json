@@ -22,7 +22,7 @@
         "magic": "cg.Magic",
         "walk": "cg.Run"
     },
-    "hp": 100,
+    "hp": 10,
     "ep": 10,
     "physical_attack": 5,
     "magical_attack": 5,
