@@ -8,7 +8,7 @@ class Combatant:
         form = monster.form
 
         self._current_hp = self.max_hp
-        self.current_mp = self.max_mp
+        self.current_ep = self.max_ep
         self.current_ct = random.randrange(0, 10)
         self.move_max = self.movement
         self.move_current = 0
@@ -47,8 +47,8 @@ class Combatant:
         return self._monster.hit_points
 
     @property
-    def max_mp(self):
-        return self._monster.mp
+    def max_ep(self):
+        return self._monster.ep
 
     @property
     def is_dead(self):
@@ -59,8 +59,8 @@ class Combatant:
             'name': self.name,
             'hp_current': self.current_hp,
             'hp_max': self.max_hp,
-            'mp_current': self.current_mp,
-            'mp_max': self.max_mp,
+            'ep_current': self.current_ep,
+            'ep_max': self.max_ep,
             'ct_current': min(100, self.current_ct),
             'ct_max': 100,
         }

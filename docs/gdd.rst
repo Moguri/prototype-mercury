@@ -100,8 +100,8 @@ This can lead to some fun and interesting golem builds.
 
 Abilities have the following stats:
 
-MP Cost
-   How much MP is required to use this ability (can be zero)
+EP Cost
+   How much EP is required to use this ability (can be zero)
 
 JP Cost
    How much JP is required to purchase this ability (For calculation see :ref:`formula`)
@@ -135,17 +135,17 @@ For example the damage of a magical attack would be ``AP * MA``.
 Job Point (JP) formula
 	Value: That base value of that power's attribute.
 * Power - Absolute(Value) x10 (targets attribute x2)
-* MP Cost - Value
+* (1 - EP Cost) * 10 - Value
 * Range - ((Max Value - 1) x2 - Min Value - 1) x5
 * Hit Chance - 100 - Value
 * Movement - 10 per square of movement x2 if usable on others
 
-Power - (MP Cost) + Range - (Hit Chance) + Movement = Final Cost
+Power - (EP Cost) + Range - (Hit Chance) + Movement = Final Cost
 
 Example
 * Gust
 ** Power 1 = 10
-** MP Cost 0 = 0
+** EP Cost 1 = 0
 ** Range 1-1 = 0
 ** Hit Chance 100 = 0
 ** Movement 2 = 40

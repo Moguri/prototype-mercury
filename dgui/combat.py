@@ -37,7 +37,7 @@ class CombatUI(CommonUI):
                 statusstr = (
                     f'{monster["name"]}\n'
                     f'HP: {monster["hp_current"]} / {monster["hp_max"]}\n'
-                    f'MP: {monster["mp_current"]} / {monster["mp_max"]}\n'
+                    f'EP: {monster["ep_current"]} / {monster["ep_max"]}\n'
                     f'CT: {monster["ct_current"]} / {monster["ct_max"]}\n'
                 )
                 self.status_box['text'] = statusstr

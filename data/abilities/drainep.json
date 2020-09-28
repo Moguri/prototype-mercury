@@ -1,23 +1,22 @@
 {
-    "name": "Give MP",
-    "description": "The golem gives another golem within range, MP",
+    "name": "Drain EP",
+    "description": "Drains the EP of another golem adding to itself",
     "range_max": 3,
     "power": 10,
     "type": "magical",
     "jp_cost": 200,
-    "mp_cost": 10,
     "effects": [
         {
             "type": "template_simple",
-            "target": "self",
             "parameters": {
-                "stat": "current_mp"
+                "stat": "current_ep"
             }
         },
         {
             "type": "change_stat",
+            "target": "self",
             "parameters": {
-                "stat": "current_mp",
+                "stat": "current_ep",
                 "strength_factor": -1
             }
         }

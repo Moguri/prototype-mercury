@@ -100,6 +100,10 @@ class AiController():
     def update_combatant(self, combatant, enemy_combatants):
         sequence = intervals.Sequence()
 
+        if combatant.current_ep <= 1:
+            combatant.current_ep = combatant.max_ep
+            return sequence
+
         # Find a target
         target = self.targets.get(combatant, None)
         if target is None or target.is_dead():
@@ -120,7 +124,7 @@ class AiController():
         ability = random.choice([
             ability
             for ability in combatant.abilities
-            if ability.mp_cost <= combatant.current_mp
+            if ability.ep_cost <= combatant.current_ep
         ])
 
         # Find a tile to move to
@@ -149,6 +153,7 @@ class AiController():
                 dist_to_target = tile_dist
 
         if target_tile:
+            combatant.current_ep -= 1
             def update_selected():
                 self.controller.selected_tile = combatant.tile_position
             sequence.extend([
@@ -173,7 +178,7 @@ class AiController():
                 f'{combatant.name} is using {ability.name} '
                 f'on {target.name}'
             )
-            combatant.current_mp -= ability.mp_cost
+            combatant.current_ep -= ability.ep_cost
             combatant.target = target
             target.target = combatant
             sequence.extend([
@@ -338,12 +343,18 @@ class CombatState(GameState):
             self.display_message('Select a combatant')
         elif next_state == 'ACTION':
             def use_ability(ability):
-                if ability.mp_cost <= self.current_combatant.current_mp:
+                if ability.ep_cost <= self.current_combatant.current_ep:
                     self.selected_ability = ability
                     self.input_state = 'TARGET'
+            def rest():
+                self.current_combatant.current_ep = self.current_combatant.max_ep
+                self.input_state = 'END_TURN'
+            def end_combat():
+                self.forfeit = True
+                self.set_input_state('END_COMBAT')
 
             menu_items = []
-            if self.current_combatant.move_current > 0:
+            if self.current_combatant.move_current > 0 and self.current_combatant.current_ep > 0:
                 menu_items.append(('Move', self.set_input_state, ['MOVE']))
 
             if not self.current_combatant.ability_used:
@@ -353,12 +364,17 @@ class CombatState(GameState):
                     if not self.current_combatant.ability_used
                 ]
 
-            menu_items.append(('End Turn', self.set_input_state, ['END_TURN']))
+            allow_rest = (
+                self.current_combatant.move_current == self.current_combatant.move_max
+                and not self.current_combatant.ability_used
+            )
+            if allow_rest:
+                menu_items.append(('Rest', rest, []))
 
-            def end_combat():
-                self.forfeit = True
-                self.set_input_state('END_COMBAT')
-            menu_items.append(('End Combat', end_combat, []))
+            menu_items.extend([
+                ('End Turn', self.set_input_state, ['END_TURN']),
+                ('End Combat', end_combat, [])
+            ])
 
             self.menu_helper.set_menu(self.current_combatant.name, menu_items)
 
@@ -371,7 +387,7 @@ class CombatState(GameState):
                         0,
                         self.current_combatant.move_current
                     )
-                elif menu_item not in ('End Turn', 'End Combat'):
+                elif menu_item not in ('Rest', 'End Turn', 'End Combat'):
                     ability = menu_items[idx][2][0]
                     self.range_tiles = self.arena.find_tiles_in_range(
                         self.current_combatant.tile_position,
@@ -390,6 +406,7 @@ class CombatState(GameState):
                 self.current_combatant.move_current
             )
             def accept_move():
+                self.current_combatant.current_ep -= 1
                 selection = self.combatant_in_tile(self.selected_tile)
                 if selection == self.current_combatant:
                     selection = None
@@ -438,7 +455,7 @@ class CombatState(GameState):
                         f'{self.current_combatant.name} is using {self.selected_ability.name} '
                         f'on {selection.name}'
                     )
-                    self.current_combatant.current_mp -= self.selected_ability.mp_cost
+                    self.current_combatant.current_ep -= self.selected_ability.ep_cost
                     self.current_combatant.target = selection
                     selection.target = self.current_combatant
                     sequence = effects.sequence_from_ability(

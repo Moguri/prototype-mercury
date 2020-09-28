@@ -78,7 +78,7 @@ gdb = GameDB.get_instance()
 
 stat_names = {
     'hp': 'HP',
-    'mp': 'MP',
+    'ep': 'EP',
     'physical_attack': 'Physical Attack',
     'magical_attack': 'Magical Attack',
     'movement': 'Movement',
@@ -255,7 +255,7 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
 
     table_items = {
         'jp_cost': 'JP',
-        'mp_cost': 'MP',
+        'ep_cost': 'EP',
         'type': 'Type',
         'power': 'Power',
         'range': 'Range',

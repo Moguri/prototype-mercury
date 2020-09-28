@@ -5,7 +5,7 @@
     "power": 10,
     "type": "magical",
     "jp_cost": 200,
-    "mp_cost": 10,
+    "ep_cost": 2,
     "effects": [
         {
             "type": "template_simple"

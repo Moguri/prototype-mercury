@@ -300,7 +300,7 @@ class WorkshopState(GameState):
 
             pretty_stat_names = {
                 'hp': 'HP',
-                'mp': 'MP',
+                'ep': 'EP',
                 'physical_attack': 'PA',
                 'magical_attack': 'MA',
                 'movement': 'Movement',

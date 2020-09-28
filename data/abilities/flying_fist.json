@@ -6,7 +6,7 @@
     "power": 15,
     "type": "physical",
     "jp_cost": 150,
-    "mp_cost": 10,
+    "ep_cost": 2,
     "effects": [
         {
             "type": "template_simple",

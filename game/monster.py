@@ -112,7 +112,7 @@ class Monster:
 
     STAT_UPGRADE_AMOUNTS = {
         'hp': 10,
-        'mp': 10,
+        'ep': 1,
         'physical_attack': 1,
         'magical_attack': 1,
         'movement': 1,
@@ -122,7 +122,7 @@ class Monster:
 
     BASE_STATS = [
         'hp',
-        'mp',
+        'ep',
         'physical_attack',
         'magical_attack',
         'movement',

@@ -43,7 +43,7 @@
             "minimum": 0,
             "default": 0
         },
-        "mp_offset": {
+        "ep_offset": {
             "type": "integer",
             "minimum": 0,
             "default": 0

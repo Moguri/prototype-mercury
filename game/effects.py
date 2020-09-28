@@ -33,7 +33,7 @@ class SequenceBuilder:
 
     CHANGE_STATE_PREFIX = {
         'current_hp': 'HP: ',
-        'current_mp': 'MP: ',
+        'current_ep': 'EP: ',
         'physical_attack': 'PA: ',
         'magical_attack': 'MA: ',
         'movement': 'MOV: ',
@@ -123,7 +123,7 @@ class SequenceBuilder:
         local_str_fac = parameters.get('strength_factor', 1)
         seq = intervals.Sequence()
         strength = self.strength * local_str_fac
-        if stat not in ('current_hp', 'current_mp'):
+        if stat not in ('current_hp',):
             strength = max(round(abs(strength) * 0.1), 1)
             if self.strength * local_str_fac < 0:
                 strength *= -1

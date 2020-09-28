@@ -9,7 +9,7 @@
         "blast"
     ],
     "stat_upgrades": {
-        "mp": 3,
+        "ep": 3,
         "magical_attack": 3
     }
 }

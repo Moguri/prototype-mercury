@@ -28,7 +28,7 @@ class WorkshopUI(CommonUI):
             f'Form: {monsterdata["form"]}\n'
             f'Job: {monsterdata["job"]}\n'
             f'HP: {monsterdata["hit_points"]}\n'
-            f'MP: {monsterdata["mp"]}\n'
+            f'EP: {monsterdata["ep"]}\n'
             f'Phys. Attack: {monsterdata["physical_attack"]}\n'
             f'Mag. Attack: {monsterdata["magical_attack"]}\n'
             f'Movement: {monsterdata["movement"]}\n'

@@ -11,7 +11,7 @@
     },
     "default_job": "ruinsmith",
     "hp": 80,
-    "mp": 120,
+    "ep": 12,
     "physical_attack": 3,
     "magical_attack": 6,
     "movement": 4
