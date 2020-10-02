@@ -27,7 +27,7 @@ Documentation about the game can be found [here](https://mercury-game.readthedoc
 
 * Python 3.7
 * Python packages in `requirements.txt`
-* Blender 2.8+ (preferably on the system PATH)
+* Blender 2.90+ (preferably on the system PATH)
 * [Git LFS](https://git-lfs.github.com/)
 
 ### Getting started
