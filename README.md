@@ -25,7 +25,7 @@ Documentation about the game can be found [here](https://mercury-game.readthedoc
 
 ### Dependencies
 
-* Python 3.7
+* Python 3.7+
 * Python packages in `requirements.txt`
 * Blender 2.90+ (preferably on the system PATH)
 * [Git LFS](https://git-lfs.github.com/)
@@ -58,8 +58,6 @@ In addition to the base Panda3D PRC variables, this project defines some custom 
 * `mercury-initial-state` (string) - a state name to load instead of loading the title screen state (default: `Title`)
 * `mercury-default-form` (string) - ID of which form to use when generating the default monster used when skipping states (default: `mine`)
 * `mercury-default-monster` (string) - ID of a monster file to load for the default monster used when skipping states (default: `''`; overrides the default form if set)
-* `mercury-allow-saves` (bool) - make the save/load system available (default: `false`; currently disabled since save files are not considered stable)
-* `mercury-saves-dire` (string) - the directory to store save files (default: `$MAIN_DIR/saves`)
 
 ## License
 
