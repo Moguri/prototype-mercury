@@ -271,7 +271,7 @@ class WorkshopState(GameState):
             ] + [
                 (
                     f'{job.name} (lvl {self.current_monster.job_level(job)})' + \
-                        ('★' if job.id == self.current_monster.job.id else ''),
+                        ('*' if job.id == self.current_monster.job.id else ''),
                     change_job,
                     [job.id]
                 )
