@@ -94,13 +94,16 @@ class Menu():
             for i, item in enumerate(newitems)
         ]
 
-        for idx, button in enumerate(self.menu_buttons):
-            def menu_hover(bid, _event):
-                messenger.send('menu-hover', [bid])
-            button.bind(DGG.WITHIN, menu_hover, [idx])
-            def menu_click(_event):
-                messenger.send('menu-click')
-            button.bind(DGG.B1CLICK, menu_click)
+        cursor_hidden = p3d.ConfigVariableBool('cursor-hidden')
+
+        if not cursor_hidden:
+            for idx, button in enumerate(self.menu_buttons):
+                def menu_hover(bid, _event):
+                    messenger.send('menu-hover', [bid])
+                button.bind(DGG.WITHIN, menu_hover, [idx])
+                def menu_click(_event):
+                    messenger.send('menu-click')
+                button.bind(DGG.B1CLICK, menu_click)
 
         if newitems:
             self.update_selection(0)
