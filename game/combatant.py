@@ -1,5 +1,7 @@
 import random
 
+from direct.interval import IntervalGlobal as intervals
+
 from .monster import MonsterActor
 from . import effects
 
@@ -85,8 +87,12 @@ class Combatant:
             controller
         )
 
-    def rest(self):
+    def rest(self, controller):
+        controller.display_message(
+            f'{self.name} is resting'
+        )
         self.current_ep = self.max_ep
+        return intervals.WaitInterval(1)
 
     def can_move(self):
         return self.move_current > 0 and self.current_ep > 0

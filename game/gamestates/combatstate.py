@@ -123,7 +123,7 @@ class AiController():
         ]
 
         if combatant.current_ep <= 1 or not available_abilities:
-            combatant.rest()
+            sequence.append(combatant.rest(self.controller))
             return sequence
 
         ability = random.choice(available_abilities)
@@ -348,8 +348,12 @@ class CombatState(GameState):
                     self.selected_ability = ability
                     self.input_state = 'TARGET'
             def rest():
-                self.current_combatant.rest()
-                self.input_state = 'END_TURN'
+                self.menu_helper.show = False
+                sequence = intervals.Sequence(
+                    self.current_combatant.rest(self),
+                    intervals.Func(self.set_input_state, 'END_TURN')
+                )
+                sequence.start()
             def end_combat():
                 self.forfeit = True
                 self.set_input_state('END_COMBAT')
