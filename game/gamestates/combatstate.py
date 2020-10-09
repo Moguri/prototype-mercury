@@ -5,7 +5,6 @@ import random
 from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
 
-from .. import effects
 from ..monster import Monster
 from ..combatant import Combatant
 from ..commonlighting import CommonLighting
@@ -100,10 +99,6 @@ class AiController():
     def update_combatant(self, combatant, enemy_combatants):
         sequence = intervals.Sequence()
 
-        if combatant.current_ep <= 1:
-            combatant.current_ep = combatant.max_ep
-            return sequence
-
         # Find a target
         target = self.targets.get(combatant, None)
         if target is None or target.is_dead():
@@ -121,11 +116,26 @@ class AiController():
                 target = enemy
 
         # Pick an ability
-        ability = random.choice([
+        available_abilities = [
             ability
             for ability in combatant.abilities
-            if ability.ep_cost <= combatant.current_ep
-        ])
+            if combatant.can_use_ability(ability)
+        ]
+
+        if combatant.current_ep <= 1 or not available_abilities:
+            combatant.rest()
+            return sequence
+
+        ability = random.choice(available_abilities)
+
+        # Update facing
+        sequence.append(
+            intervals.Func(
+                self.controller.face_combatant_at_tile,
+                combatant,
+                target.tile_position
+            )
+        )
 
         # Find a tile to move to
         tiles = self.arena.find_tiles_in_range(
@@ -152,7 +162,7 @@ class AiController():
                 target_tile = tile
                 dist_to_target = tile_dist
 
-        if target_tile:
+        if target_tile and combatant.can_move():
             combatant.current_ep -= 1
             def update_selected():
                 self.controller.selected_tile = combatant.tile_position
@@ -162,31 +172,22 @@ class AiController():
             ])
 
         # Update facing
-        facing = self.arena.tile_get_facing_to(
-            combatant.tile_position,
-            target.tile_position
-        )
-        if sum(facing) != 0:
-            newfacing = math.degrees(math.atan2(facing[1], facing[0])) + 90
-            sequence.append(
-                intervals.Func(combatant.set_h, newfacing)
+        sequence.append(
+            intervals.Func(
+                self.controller.face_combatant_at_tile,
+                combatant,
+                target.tile_position
             )
+        )
 
         # Use an ability if able
         if ability.range_min <= dist_to_target <= ability.range_max:
-            self.controller.display_message(
-                f'{combatant.name} is using {ability.name} '
-                f'on {target.name}'
-            )
-            combatant.current_ep -= ability.ep_cost
-            combatant.target = target
-            target.target = combatant
             sequence.extend([
-                effects.sequence_from_ability(
-                    self.effects_root,
-                    combatant,
+                combatant.use_ability(
                     ability,
-                    self.controller
+                    target,
+                    self.controller,
+                    self.effects_root
                 ),
                 intervals.WaitInterval(1),
             ])
@@ -343,32 +344,27 @@ class CombatState(GameState):
             self.display_message('Select a combatant')
         elif next_state == 'ACTION':
             def use_ability(ability):
-                if ability.ep_cost <= self.current_combatant.current_ep:
+                if self.current_combatant.can_use_ability(ability):
                     self.selected_ability = ability
                     self.input_state = 'TARGET'
             def rest():
-                self.current_combatant.current_ep = self.current_combatant.max_ep
+                self.current_combatant.rest()
                 self.input_state = 'END_TURN'
             def end_combat():
                 self.forfeit = True
                 self.set_input_state('END_COMBAT')
 
             menu_items = []
-            if self.current_combatant.move_current > 0 and self.current_combatant.current_ep > 0:
+            if self.current_combatant.can_move():
                 menu_items.append(('Move (1)', self.set_input_state, ['MOVE']))
 
             if not self.current_combatant.ability_used:
                 menu_items += [
                     (f'{ability.name} ({ability.ep_cost})', use_ability, [ability])
                     for ability in self.current_combatant.abilities
-                    if not self.current_combatant.ability_used
                 ]
 
-            allow_rest = (
-                self.current_combatant.move_current == self.current_combatant.move_max
-                and not self.current_combatant.ability_used
-            )
-            if allow_rest:
+            if self.current_combatant.can_rest():
                 menu_items.append(('Rest', rest, []))
 
             menu_items.extend([
@@ -451,21 +447,13 @@ class CombatState(GameState):
                     self.selected_ability.range_max
                 )
                 if selection is not None and in_range:
-                    self.display_message(
-                        f'{self.current_combatant.name} is using {self.selected_ability.name} '
-                        f'on {selection.name}'
-                    )
-                    self.current_combatant.current_ep -= self.selected_ability.ep_cost
-                    self.current_combatant.target = selection
-                    selection.target = self.current_combatant
-                    sequence = effects.sequence_from_ability(
-                        self.root_node,
-                        self.current_combatant,
+                    sequence = self.current_combatant.use_ability(
                         self.selected_ability,
-                        self
+                        selection,
+                        self,
+                        self.root_node
                     )
                     def cleanup():
-                        self.current_combatant.ability_used = True
                         self.selected_tile = self.current_combatant.tile_position
                         if self.input_state != 'END_COMBAT':
                             self.input_state = 'ACTION'
@@ -586,6 +574,22 @@ class CombatState(GameState):
         new_pos = self.arena.vec_to_tile_coord(-direction * target_range + other_pos)
         return self.move_combatant_to_tile(combatant, new_pos)
 
+    def face_combatant_at_tile(self, combatant, tile):
+        facing = self.arena.tile_get_facing_to(
+            combatant.tile_position,
+            tile
+        )
+        self.change_combatant_facing(
+            combatant,
+            facing
+        )
+
+    def change_combatant_facing(self, combatant, facing):
+        if sum(facing) != 0:
+            combatant.set_h(
+                math.degrees(math.atan2(facing[1], facing[0])) + 90
+            )
+
     def display_message(self, msg):
         self.update_ui({
             'message': msg,
@@ -620,14 +624,10 @@ class CombatState(GameState):
 
         # Update combatant facing
         if self.input_state in ('MOVE', 'TARGET'):
-            facing = self.arena.tile_get_facing_to(
-                self.current_combatant.tile_position,
+            self.face_combatant_at_tile(
+                self.current_combatant,
                 self.selected_tile
             )
-            if sum(facing) != 0:
-                self.current_combatant.set_h(
-                    math.degrees(math.atan2(facing[1], facing[0])) + 90
-                )
 
         # Update tile color tints
         if self.input_state == 'MOVE':

@@ -1,6 +1,7 @@
 import random
 
 from .monster import MonsterActor
+from . import effects
 
 class Combatant:
     def __init__(self, monster, parent_node):
@@ -64,3 +65,36 @@ class Combatant:
             'ct_current': min(100, self.current_ct),
             'ct_max': 100,
         }
+
+    def use_ability(self, ability, target, controller, effect_node):
+        controller.display_message(
+            f'{self.name} is using {ability.name} '
+            f'on {target.name}'
+        )
+
+        self.current_ep -= ability.ep_cost
+        self.target = target
+        target.target = self
+
+        self.ability_used = True
+
+        return effects.sequence_from_ability(
+            effect_node,
+            self,
+            ability,
+            controller
+        )
+
+    def rest(self):
+        self.current_ep = self.max_ep
+
+    def can_move(self):
+        return self.move_current > 0 and self.current_ep > 0
+
+    def can_rest(self):
+        return self.move_current == self.move_max and not self.ability_used
+
+    def can_use_ability(self, ability):
+        if self.ability_used:
+            return False
+        return ability.ep_cost <= self.current_ep
