@@ -355,11 +355,11 @@ class CombatState(GameState):
 
             menu_items = []
             if self.current_combatant.move_current > 0 and self.current_combatant.current_ep > 0:
-                menu_items.append(('Move', self.set_input_state, ['MOVE']))
+                menu_items.append(('Move (1)', self.set_input_state, ['MOVE']))
 
             if not self.current_combatant.ability_used:
                 menu_items += [
-                    (ability.name, use_ability, [ability])
+                    (f'{ability.name} ({ability.ep_cost})', use_ability, [ability])
                     for ability in self.current_combatant.abilities
                     if not self.current_combatant.ability_used
                 ]
@@ -381,7 +381,7 @@ class CombatState(GameState):
             def update_ability(idx):
                 self.range_tiles = []
                 menu_item = menu_items[idx][0]
-                if menu_item == 'Move':
+                if menu_item == 'Move (1)':
                     self.range_tiles = self.arena.find_tiles_in_range(
                         self.current_combatant.tile_position,
                         0,
