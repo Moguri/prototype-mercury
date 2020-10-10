@@ -341,6 +341,11 @@ class CombatState(GameState):
         self.display_message('Select a combatant')
 
     def enter_action(self, combatant):
+        if combatant.ability_used and not combatant.can_move():
+            # Out of actions, auto end turn
+            self.set_input_state('END_TURN')
+            return
+
         def use_ability(ability):
             if combatant.can_use_ability(ability):
                 self.set_input_state('TARGET', combatant, ability)
