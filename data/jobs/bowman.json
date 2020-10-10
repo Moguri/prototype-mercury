@@ -4,7 +4,8 @@
         "job_brawler_2"
     ],
     "abilities": [
-      "pin_down"
+      "pin_down",
+      "multi_shot"
     ],
     "basic_attack": "ba_pa_range",
     "stat_upgrades": {

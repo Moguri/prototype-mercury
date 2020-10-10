@@ -1,0 +1,9 @@
+{
+    "name": "Multi-Shot",
+    "description": "Put multiple shots into the enemy for extra damage",
+    "power": 11,
+    "range_max": 4,
+    "type": "physical",
+    "ep_cost": 2,
+    "jp_cost": 140
+}
