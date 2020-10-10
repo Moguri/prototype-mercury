@@ -32,6 +32,9 @@ def combatant(monster, empty_nodepath):
     from game import combatant
     return combatant.Combatant(monster, empty_nodepath)
 
+target = combatant
+bystander = combatant
+
 @pytest.fixture
 def basic_attack(gdb):
     return gdb['abilities']['basic_attack']

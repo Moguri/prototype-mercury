@@ -52,7 +52,7 @@ class Arena:
 
     def tile_distance(self, tilea, tileb):
         distvec = p3d.LVector2(tilea) - p3d.LVector2(tileb)
-        return abs(distvec.x) + abs(distvec.y)
+        return int(abs(distvec.x) + abs(distvec.y))
 
     def tile_in_range(self, tile_coord, start, min_range, max_range):
         tiledist = self.tile_distance(start, tile_coord)
@@ -573,7 +573,7 @@ class CombatState(GameState):
             sequence.start()
         return sequence
 
-    def move_combatant_to_range(self, combatant, other, target_range):
+    def find_tile_at_range(self, combatant, other, target_range):
         distance = self.arena.tile_distance(
             combatant.tile_position,
             other.tile_position
@@ -581,12 +581,28 @@ class CombatState(GameState):
         if distance == target_range:
             return intervals.Sequence()
 
-        direction = p3d.LVector2(self.arena.tile_get_facing_to(
-            combatant.tile_position,
-            other.tile_position
-        ))
-        other_pos = p3d.LVector2(other.tile_position)
-        new_pos = self.arena.vec_to_tile_coord(-direction * target_range + other_pos)
+        inc = 1 if target_range < distance else -1
+
+        new_pos = combatant.tile_position
+        for target in range(target_range, distance, inc):
+            direction = p3d.LVector2(self.arena.tile_get_facing_to(
+                combatant.tile_position,
+                other.tile_position
+            ))
+            other_pos = p3d.LVector2(other.tile_position)
+            pos = self.arena.vec_to_tile_coord(-direction * target + other_pos)
+            pos_legal = (
+                self.arena.tile_coord_in_bounds(pos)
+                and not self.combatant_in_tile(pos)
+            )
+            if pos_legal:
+                new_pos = pos
+                break
+
+        return new_pos
+
+    def move_combatant_to_range(self, combatant, other, target_range):
+        new_pos = self.find_tile_at_range(combatant, other, target_range)
         return self.move_combatant_to_tile(combatant, new_pos)
 
     def face_combatant_at_tile(self, combatant, tile):
