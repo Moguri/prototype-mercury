@@ -49,12 +49,13 @@ class MenuHelper(DirectObject):
     def cleanup(self):
         self.ignoreAll()
 
-    def move_to_index(self, newidx):
+    def move_to_index(self, newidx, play_sfx=True):
         if self.lock:
             return
 
         self.selection_idx = newidx % len(self._menu_items)
-        self.sfx_select.play()
+        if play_sfx:
+            self.sfx_select.play()
         self.update_ui({
             'selection_index': self.selection_idx,
         })

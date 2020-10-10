@@ -147,10 +147,10 @@ class WorkshopState(GameState):
         else:
             self.input_state = 'FOUNDRY'
 
-    def set_input_state(self, next_state):
+    def enter_state(self):
+        super().enter_state()
+
         self.display_message('')
-        super().set_input_state(next_state)
-        gdb = gamedb.get_instance()
         self.update_ui({
             'show_stats': False,
         })
@@ -159,153 +159,162 @@ class WorkshopState(GameState):
             self.input_state = 'MAIN'
         self.menu_helper.reject_cb = back_to_main
 
-        if next_state == 'MAIN':
-            self.set_background('base')
-            menu_items = [
-                ('Battle', self.set_input_state, ['COMBAT']),
-                ('Select Golem', self.set_input_state, ['SELECT_MONSTER']),
-                ('Golem Stats', self.set_input_state, ['STATS']),
-                ('Change Job', self.set_input_state, ['JOBS']),
-                ('Abilities', self.set_input_state, ['ABILITIES']),
-                ('Dismiss Golem', self.set_input_state, ['DISMISS']),
-            ]
-            if len(self.player.monsters) < self.player.max_monsters:
-                menu_items.insert(1, ('Foundry', self.set_input_state, ['FOUNDRY']))
-            if base.allow_saves:
-                menu_items.extend([
-                    ('Save Game', base.change_state, ['Save']),
-                    ('Load Game', base.change_state, ['Load']),
-                ])
-            menu_items.append(('Quit', self.set_input_state, ['QUIT']))
-            self.menu_helper.set_menu('Workshop', menu_items)
-        elif next_state == 'SELECT_MONSTER':
-            self.display_message('Select a golem', modal=True)
-            prev_selection = self.monster_selection
-
-            def update_monster_selection(delta):
-                self.monster_selection += delta
-                if self.monster_selection < 0:
-                    self.monster_selection = len(self.monster_actors) - 1
-                elif self.monster_selection >= len(self.monster_actors):
-                    self.monster_selection = 0
-            self.accept('move-left', update_monster_selection, [-1])
-            self.accept('move-right', update_monster_selection, [1])
-
-            self.accept('accept', self.set_input_state, ['MAIN'])
-
-            def reject_sel():
-                self.monster_selection = prev_selection
-                self.input_state = 'MAIN'
-            self.accept('reject', reject_sel)
-        elif next_state == 'FOUNDRY':
-            self.load_monster_models([])
-            base.camera.set_x(0)
-            def get_monster(formid):
-                form = gdb['forms'][formid]
-                self.player.monsters.append(
-                    Monster.make_new('player.monster', form_id=form.id)
-                )
-                self.load_monster_models()
-                self.monster_selection = len(self.monster_actors) - 1
-                back_to_main()
-            menu_items = [
-                (form.name, get_monster, [form.id])
-                for form in gdb['forms'].values()
-                if self.player.can_use_form(form)
-            ]
-            def foundry_reject():
-                if self.player.monsters:
-                    self.load_monster_models()
-                    back_to_main()
-            if self.player.monsters:
-                menu_items.insert(0, ('Back', foundry_reject, []))
-            self.menu_helper.set_menu('Select a Form', menu_items)
-
-            def show_form(_idx=None):
-                selection = self.menu_helper.current_selection
-                if selection[0] == 'Back':
-                    return
-                form = gdb['forms'][selection[2][0]]
-                self.load_monster_models([form])
-            show_form()
-            self.menu_helper.selection_change_cb = show_form
-            self.menu_helper.reject_cb = foundry_reject
-            self.display_message('Select a form')
-            self.set_background('foundry')
-        elif next_state == 'STATS':
-            self.update_ui({
-                'show_stats': True,
-            })
-            monsterdict = self.current_monster.to_dict()
-            monsterdict['form'] = self.current_monster.form.name
-            monsterdict['job'] = self.current_monster.job.name
-            self.update_ui({
-                'monster': monsterdict
-            })
-            self.accept('accept', back_to_main)
-        elif next_state == 'JOBS':
-            self.load_monster_models([self.current_monster.form], [self.current_monster.job.id])
-            base.camera.set_x(0)
-            def change_job(jobid):
-                gdb = gamedb.get_instance()
-                job = gdb['jobs'][jobid]
-                self.current_monster.job = job
-                self.display_message('')
-                self.load_monster_models()
-                back_to_main()
-
-            def job_reject():
-                self.load_monster_models()
-                back_to_main()
-
-            def show_job(_idx):
-                selection = self.menu_helper.current_selection
-                if selection[0] == 'Back':
-                    jobid = self.current_monster.job.id
-                else:
-                    jobid = selection[2][0]
-                self.load_monster_models([self.current_monster.form], [jobid])
-
-            self.menu_helper.set_menu('Select a Job', [
-                ('Back', job_reject, []),
-            ] + [
-                (
-                    f'{job.name} (lvl {self.current_monster.job_level(job)})' + \
-                        ('*' if job.id == self.current_monster.job.id else ''),
-                    change_job,
-                    [job.id]
-                )
-                for job in self.current_monster.available_jobs
+    def enter_main(self):
+        self.set_background('base')
+        menu_items = [
+            ('Battle', self.set_input_state, ['COMBAT']),
+            ('Select Golem', self.set_input_state, ['SELECT_MONSTER']),
+            ('Golem Stats', self.set_input_state, ['STATS']),
+            ('Change Job', self.set_input_state, ['JOBS']),
+            ('Abilities', self.set_input_state, ['ABILITIES']),
+            ('Dismiss Golem', self.set_input_state, ['DISMISS']),
+        ]
+        if len(self.player.monsters) < self.player.max_monsters:
+            menu_items.insert(1, ('Foundry', self.set_input_state, ['FOUNDRY']))
+        if base.allow_saves:
+            menu_items.extend([
+                ('Save Game', base.change_state, ['Save']),
+                ('Load Game', base.change_state, ['Load']),
             ])
-            self.menu_helper.selection_change_cb = show_job
-            self.menu_helper.reject_cb = job_reject
-        elif next_state == 'ABILITIES':
-            unspentjp = self.current_monster.jp_unspent.get(self.current_monster.job.id, 0)
-            learnedids = [ability.id for ability in self.current_monster.abilities]
+        menu_items.append(('Quit', self.set_input_state, ['QUIT']))
+        self.menu_helper.set_menu('Workshop', menu_items)
 
-            def curr_ranks(stat):
+    def enter_select_monster(self):
+        self.display_message('Select a golem', modal=True)
+        prev_selection = self.monster_selection
+
+        def update_monster_selection(delta):
+            self.monster_selection += delta
+            if self.monster_selection < 0:
+                self.monster_selection = len(self.monster_actors) - 1
+            elif self.monster_selection >= len(self.monster_actors):
+                self.monster_selection = 0
+        self.accept('move-left', update_monster_selection, [-1])
+        self.accept('move-right', update_monster_selection, [1])
+
+        self.accept('accept', self.set_input_state, ['MAIN'])
+
+        def reject_sel():
+            self.monster_selection = prev_selection
+            self.input_state = 'MAIN'
+        self.accept('reject', reject_sel)
+
+    def enter_foundry(self):
+        gdb = gamedb.get_instance()
+        self.load_monster_models([])
+        base.camera.set_x(0)
+        def get_monster(formid):
+            form = gdb['forms'][formid]
+            self.player.monsters.append(
+                Monster.make_new('player.monster', form_id=form.id)
+            )
+            self.load_monster_models()
+            self.monster_selection = len(self.monster_actors) - 1
+            self.input_state = 'MAIN'
+        menu_items = [
+            (form.name, get_monster, [form.id])
+            for form in gdb['forms'].values()
+            if self.player.can_use_form(form)
+        ]
+        def foundry_reject():
+            if self.player.monsters:
+                self.load_monster_models()
+                self.input_state = 'MAIN'
+        if self.player.monsters:
+            menu_items.insert(0, ('Back', foundry_reject, []))
+        self.menu_helper.set_menu('Select a Form', menu_items)
+
+        def show_form(_idx=None):
+            selection = self.menu_helper.current_selection
+            if selection[0] == 'Back':
+                return
+            form = gdb['forms'][selection[2][0]]
+            self.load_monster_models([form])
+        show_form()
+        self.menu_helper.selection_change_cb = show_form
+        self.menu_helper.reject_cb = foundry_reject
+        self.display_message('Select a form')
+        self.set_background('foundry')
+
+    def enter_stats(self):
+        self.update_ui({
+            'show_stats': True,
+        })
+        monsterdict = self.current_monster.to_dict()
+        monsterdict['form'] = self.current_monster.form.name
+        monsterdict['job'] = self.current_monster.job.name
+        self.update_ui({
+            'monster': monsterdict
+        })
+        self.accept('accept', self.set_input_state, ['MAIN'])
+
+    def enter_jobs(self):
+        gdb = gamedb.get_instance()
+        self.load_monster_models([self.current_monster.form], [self.current_monster.job.id])
+        base.camera.set_x(0)
+        def change_job(jobid):
+            job = gdb['jobs'][jobid]
+            self.current_monster.job = job
+            self.display_message('')
+            self.load_monster_models()
+            self.input_state = 'MAIN'
+
+        def job_reject():
+            self.load_monster_models()
+            self.input_state = 'MAIN'
+
+        def show_job(_idx):
+            selection = self.menu_helper.current_selection
+            if selection[0] == 'Back':
                 jobid = self.current_monster.job.id
-                upgrades = self.current_monster.stat_upgrades.get(jobid, {})
-                return upgrades.get(stat, 0)
+            else:
+                jobid = selection[2][0]
+            self.load_monster_models([self.current_monster.form], [jobid])
 
-            def learn_ability(ability):
-                if unspentjp >= ability.jp_cost and ability.id not in learnedids:
-                    self.current_monster.add_ability(ability)
-                    self.input_state = 'ABILITIES' # Refresh menu
+        self.menu_helper.set_menu('Select a Job', [
+            ('Back', job_reject, []),
+        ] + [
+            (
+                f'{job.name} (lvl {self.current_monster.job_level(job)})' + \
+                    ('*' if job.id == self.current_monster.job.id else ''),
+                change_job,
+                [job.id]
+            )
+            for job in self.current_monster.available_jobs
+        ])
+        self.menu_helper.selection_change_cb = show_job
+        self.menu_helper.reject_cb = job_reject
 
-            def upgrade_stat(stat, max_rank):
-                if unspentjp >= 100 and curr_ranks(stat) < max_rank:
-                    self.current_monster.upgrade_stat(stat)
-                    self.input_state = 'ABILITIES' # Refresh menu
+    def enter_abilities(self):
+        gdb = gamedb.get_instance()
+        unspentjp = self.current_monster.jp_unspent.get(self.current_monster.job.id, 0)
+        learnedids = [ability.id for ability in self.current_monster.abilities]
 
-            pretty_stat_names = {
-                'hp': 'HP',
-                'ep': 'EP',
-                'physical_attack': 'PA',
-                'magical_attack': 'MA',
-                'movement': 'Movement',
-            }
+        def curr_ranks(stat):
+            jobid = self.current_monster.job.id
+            upgrades = self.current_monster.stat_upgrades.get(jobid, {})
+            return upgrades.get(stat, 0)
 
+        def learn_ability(ability):
+            if unspentjp >= ability.jp_cost and ability.id not in learnedids:
+                self.current_monster.add_ability(ability)
+                build_menu() # Refresh menu
+
+        def upgrade_stat(stat, max_rank):
+            if unspentjp >= 100 and curr_ranks(stat) < max_rank:
+                self.current_monster.upgrade_stat(stat)
+                build_menu() # Refresh menu
+
+        pretty_stat_names = {
+            'hp': 'HP',
+            'ep': 'EP',
+            'physical_attack': 'PA',
+            'magical_attack': 'MA',
+            'movement': 'Movement',
+        }
+
+        def build_menu():
+            prev_sel_idx = self.menu_helper.selection_idx
             self.menu_helper.set_menu(f'Available JP: {unspentjp}', [
                 ('Back', self.set_input_state, ['MAIN']),
             ] + [
@@ -325,39 +334,40 @@ class WorkshopState(GameState):
                 )
                 for ability in [gdb['abilities'][i] for i in self.current_monster.job.abilities]
             ])
-        elif next_state == 'COMBAT':
-            def enter_combat(ctype):
-                base.blackboard['combat_type'] = ctype
-                base.change_state('Combat')
-            self.menu_helper.set_menu('', [
-                ('Back', self.set_input_state, ['MAIN']),
-                ('Skirmish', enter_combat, ['skirmish']),
-                ('Boss Fight', enter_combat, ['boss']),
-            ])
-        elif next_state == 'DISMISS':
-            mon = self.player.monsters.pop(self.monster_selection)
-            self.display_message(f'Dismissed {mon.name}', modal=True)
+            self.menu_helper.move_to_index(prev_sel_idx, play_sfx=False)
+        build_menu()
 
-            def accept_dismiss():
-                self.monster_selection -= 1
-                if self.monster_selection < 0:
-                    self.monster_selection = 0
-                if self.current_monster:
-                    self.load_monster_models()
-                    self.input_state = 'MAIN'
-                else:
-                    self.input_state = 'FOUNDRY'
-            self.accept('accept', accept_dismiss)
-        elif next_state == 'QUIT':
-            self.menu_helper.set_menu('', [
-                ('Back', self.set_input_state, ['MAIN']),
-                ('Exit to Title Menu', base.change_state, ['Title']),
-                ('Exit Game', messenger.send, ['quit']),
-            ])
-        else:
-            raise RuntimeError(f'Unknown state {next_state}')
+    def enter_combat(self):
+        def enter_combat(ctype):
+            base.blackboard['combat_type'] = ctype
+            base.change_state('Combat')
+        self.menu_helper.set_menu('', [
+            ('Back', self.set_input_state, ['MAIN']),
+            ('Skirmish', enter_combat, ['skirmish']),
+            ('Boss Fight', enter_combat, ['boss']),
+        ])
 
-        self._input_state = next_state
+    def enter_dismiss(self):
+        mon = self.player.monsters.pop(self.monster_selection)
+        self.display_message(f'Dismissed {mon.name}', modal=True)
+
+        def accept_dismiss():
+            self.monster_selection -= 1
+            if self.monster_selection < 0:
+                self.monster_selection = 0
+            if self.current_monster:
+                self.load_monster_models()
+                self.input_state = 'MAIN'
+            else:
+                self.input_state = 'FOUNDRY'
+        self.accept('accept', accept_dismiss)
+
+    def enter_quit(self):
+        self.menu_helper.set_menu('', [
+            ('Back', self.set_input_state, ['MAIN']),
+            ('Exit to Title Menu', base.change_state, ['Title']),
+            ('Exit Game', messenger.send, ['quit']),
+        ])
 
     def update(self, dt):
         super().update(dt)

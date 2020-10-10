@@ -294,9 +294,39 @@ class CombatState(GameState):
             if not i.is_dead
         )
 
-    def set_input_state(self, next_state):
+    def setup_selection(self, accept_cb, reject_cb=None):
+        def accept_cb_wrap():
+            self.menu_helper.sfx_accept.play()
+            accept_cb()
+        def reject_cb_wrap():
+            self.menu_helper.sfx_reject.play()
+            if reject_cb is not None:
+                reject_cb()
+
+        def move_selection(vector):
+            selection = self.arena.vec_to_tile_coord(
+                p3d.LVector2(self.selected_tile) + p3d.LVector2(vector)
+            )
+            self.menu_helper.sfx_select.play()
+
+            if self.arena.tile_coord_in_bounds(selection):
+                self.selected_tile = selection
+        self.accept('move-up', move_selection, [(0, 1)])
+        self.accept('move-left', move_selection, [(-1, 0)])
+        self.accept('move-down', move_selection, [(0, -1)])
+        self.accept('move-right', move_selection, [(1, 0)])
+        self.accept('move-up-repeat', move_selection, [(0, 1)])
+        self.accept('move-left-repeat', move_selection, [(-1, 0)])
+        self.accept('move-down-repeat', move_selection, [(0, -1)])
+        self.accept('move-right-repeat', move_selection, [(1, 0)])
+        self.accept('accept', accept_cb_wrap)
+        self.accept('reject', reject_cb_wrap)
+
+    def enter_state(self):
+        super().enter_state()
+
         self.display_message('')
-        super().set_input_state(next_state)
+        self.range_tiles = []
 
         # Kill all enemies cheat
         # def kill_all():
@@ -305,233 +335,204 @@ class CombatState(GameState):
         #         combatant.current_hp = 0
         # self.accept('k', kill_all)
 
-        self.range_tiles = []
+    def enter_select(self):
+        def accept_selection():
+            selection = self.combatant_in_tile(self.selected_tile)
+            if selection and selection == self.current_combatant:
+                self.input_state = 'ACTION'
+        self.setup_selection(accept_selection)
+        self.display_message('Select a combatant')
 
-        def setup_selection(accept_cb, reject_cb=None):
-            def accept_cb_wrap():
-                self.menu_helper.sfx_accept.play()
-                accept_cb()
-            def reject_cb_wrap():
-                self.menu_helper.sfx_reject.play()
-                if reject_cb is not None:
-                    reject_cb()
-
-            def move_selection(vector):
-                selection = self.arena.vec_to_tile_coord(
-                    p3d.LVector2(self.selected_tile) + p3d.LVector2(vector)
-                )
-                self.menu_helper.sfx_select.play()
-
-                if self.arena.tile_coord_in_bounds(selection):
-                    self.selected_tile = selection
-            self.accept('move-up', move_selection, [(0, 1)])
-            self.accept('move-left', move_selection, [(-1, 0)])
-            self.accept('move-down', move_selection, [(0, -1)])
-            self.accept('move-right', move_selection, [(1, 0)])
-            self.accept('move-up-repeat', move_selection, [(0, 1)])
-            self.accept('move-left-repeat', move_selection, [(-1, 0)])
-            self.accept('move-down-repeat', move_selection, [(0, -1)])
-            self.accept('move-right-repeat', move_selection, [(1, 0)])
-            self.accept('accept', accept_cb_wrap)
-            self.accept('reject', reject_cb_wrap)
-
-        if next_state == 'SELECT':
-            def accept_selection():
-                selection = self.combatant_in_tile(self.selected_tile)
-                if selection and selection == self.current_combatant:
-                    self.input_state = 'ACTION'
-            setup_selection(accept_selection)
-            self.display_message('Select a combatant')
-        elif next_state == 'ACTION':
-            def use_ability(ability):
-                if self.current_combatant.can_use_ability(ability):
-                    self.selected_ability = ability
-                    self.input_state = 'TARGET'
-            def rest():
-                self.menu_helper.show = False
-                sequence = intervals.Sequence(
-                    self.current_combatant.rest(self),
-                    intervals.Func(self.set_input_state, 'END_TURN')
-                )
-                sequence.start()
-            def end_combat():
-                self.forfeit = True
-                self.set_input_state('END_COMBAT')
-
-            menu_items = []
-            if self.current_combatant.can_move():
-                menu_items.append(('Move (1)', self.set_input_state, ['MOVE']))
-
-            if not self.current_combatant.ability_used:
-                menu_items += [
-                    (f'{ability.name} ({ability.ep_cost})', use_ability, [ability])
-                    for ability in self.current_combatant.abilities
-                ]
-
-            if self.current_combatant.can_rest():
-                menu_items.append(('Rest', rest, []))
-
-            menu_items.extend([
-                ('End Turn', self.set_input_state, ['END_TURN']),
-                ('End Combat', end_combat, [])
-            ])
-
-            self.menu_helper.set_menu(self.current_combatant.name, menu_items)
-
-            def update_ability(idx):
-                self.range_tiles = []
-                menu_item = menu_items[idx][0]
-                if menu_item == 'Move (1)':
-                    self.range_tiles = self.arena.find_tiles_in_range(
-                        self.current_combatant.tile_position,
-                        0,
-                        self.current_combatant.move_current
-                    )
-                elif menu_item not in ('Rest', 'End Turn', 'End Combat'):
-                    ability = menu_items[idx][2][0]
-                    self.range_tiles = self.arena.find_tiles_in_range(
-                        self.current_combatant.tile_position,
-                        ability.range_min,
-                        ability.range_max
-                    )
-            update_ability(0)
-            self.menu_helper.selection_change_cb = update_ability
-            def action_reject():
-                self.input_state = 'SELECT'
-            self.menu_helper.reject_cb = action_reject
-        elif next_state == 'MOVE':
-            self.range_tiles = self.arena.find_tiles_in_range(
-                self.current_combatant.tile_position,
-                0,
-                self.current_combatant.move_current
+    def enter_action(self):
+        def use_ability(ability):
+            if self.current_combatant.can_use_ability(ability):
+                self.selected_ability = ability
+                self.input_state = 'TARGET'
+        def rest():
+            self.menu_helper.show = False
+            sequence = intervals.Sequence(
+                self.current_combatant.rest(self),
+                intervals.Func(self.set_input_state, 'END_TURN')
             )
-            def accept_move():
-                self.current_combatant.current_ep -= 1
-                selection = self.combatant_in_tile(self.selected_tile)
-                if selection == self.current_combatant:
-                    selection = None
-                in_range = self.arena.tile_in_range(
-                    self.selected_tile,
+            sequence.start()
+        def end_combat():
+            self.forfeit = True
+            self.set_input_state('END_COMBAT')
+
+        menu_items = []
+        if self.current_combatant.can_move():
+            menu_items.append(('Move (1)', self.set_input_state, ['MOVE']))
+
+        if not self.current_combatant.ability_used:
+            menu_items += [
+                (f'{ability.name} ({ability.ep_cost})', use_ability, [ability])
+                for ability in self.current_combatant.abilities
+            ]
+
+        if self.current_combatant.can_rest():
+            menu_items.append(('Rest', rest, []))
+
+        menu_items.extend([
+            ('End Turn', self.set_input_state, ['END_TURN']),
+            ('End Combat', end_combat, [])
+        ])
+
+        self.menu_helper.set_menu(self.current_combatant.name, menu_items)
+
+        def update_ability(idx):
+            self.range_tiles = []
+            menu_item = menu_items[idx][0]
+            if menu_item == 'Move (1)':
+                self.range_tiles = self.arena.find_tiles_in_range(
                     self.current_combatant.tile_position,
                     0,
                     self.current_combatant.move_current
                 )
-                if selection is None and in_range:
-                    dist = self.arena.tile_distance(
-                        self.current_combatant.tile_position,
+            elif menu_item not in ('Rest', 'End Turn', 'End Combat'):
+                ability = menu_items[idx][2][0]
+                self.range_tiles = self.arena.find_tiles_in_range(
+                    self.current_combatant.tile_position,
+                    ability.range_min,
+                    ability.range_max
+                )
+        update_ability(0)
+        self.menu_helper.selection_change_cb = update_ability
+        def action_reject():
+            self.input_state = 'SELECT'
+        self.menu_helper.reject_cb = action_reject
+
+    def enter_move(self):
+        self.range_tiles = self.arena.find_tiles_in_range(
+            self.current_combatant.tile_position,
+            0,
+            self.current_combatant.move_current
+        )
+        def accept_move():
+            self.current_combatant.current_ep -= 1
+            selection = self.combatant_in_tile(self.selected_tile)
+            if selection == self.current_combatant:
+                selection = None
+            in_range = self.arena.tile_in_range(
+                self.selected_tile,
+                self.current_combatant.tile_position,
+                0,
+                self.current_combatant.move_current
+            )
+            if selection is None and in_range:
+                dist = self.arena.tile_distance(
+                    self.current_combatant.tile_position,
+                    self.selected_tile
+                )
+                self.current_combatant.move_current -= dist
+                intervals.Sequence(
+                    self.move_combatant_to_tile(
+                        self.current_combatant,
                         self.selected_tile
-                    )
-                    self.current_combatant.move_current -= dist
-                    intervals.Sequence(
-                        self.move_combatant_to_tile(
-                            self.current_combatant,
-                            self.selected_tile
-                        ),
-                        intervals.Func(self.set_input_state, 'ACTION')
-                    ).start()
+                    ),
+                    intervals.Func(self.set_input_state, 'ACTION')
+                ).start()
 
-            def reject_move():
-                self.selected_tile = self.current_combatant.tile_position
-                self.input_state = 'ACTION'
+        def reject_move():
+            self.selected_tile = self.current_combatant.tile_position
+            self.input_state = 'ACTION'
 
-            setup_selection(accept_move, reject_move)
-            self.display_message('Select new location')
-        elif next_state == 'TARGET':
-            self.range_tiles = self.arena.find_tiles_in_range(
+        self.setup_selection(accept_move, reject_move)
+        self.display_message('Select new location')
+
+    def enter_target(self):
+        self.range_tiles = self.arena.find_tiles_in_range(
+            self.current_combatant.tile_position,
+            self.selected_ability.range_min,
+            self.selected_ability.range_max
+        )
+        def accept_target():
+            selection = self.combatant_in_tile(self.selected_tile)
+            in_range = self.arena.tile_in_range(
+                self.selected_tile,
                 self.current_combatant.tile_position,
                 self.selected_ability.range_min,
                 self.selected_ability.range_max
             )
-            def accept_target():
-                selection = self.combatant_in_tile(self.selected_tile)
-                in_range = self.arena.tile_in_range(
-                    self.selected_tile,
-                    self.current_combatant.tile_position,
-                    self.selected_ability.range_min,
-                    self.selected_ability.range_max
-                )
-                if selection is not None and in_range:
-                    sequence = self.current_combatant.use_ability(
-                        self.selected_ability,
-                        selection,
-                        self,
-                        self.root_node
-                    )
-                    def cleanup():
-                        self.selected_tile = self.current_combatant.tile_position
-                        if self.input_state != 'END_COMBAT':
-                            self.input_state = 'ACTION'
-                    sequence.append(
-                        intervals.Func(cleanup)
-                    )
-                    sequence.start()
-
-            def reject_target():
-                self.selected_tile = self.current_combatant.tile_position
-                self.input_state = 'ACTION'
-
-            setup_selection(accept_target, reject_target)
-            self.display_message('Select a target')
-        elif next_state == 'END_TURN':
-            self.selected_ability = None
-            if self.current_combatant:
-                self.current_combatant.current_ct = 0
-            combatants_by_ct = sorted(
-                list(self.combatants),
-                reverse=True,
-                key=lambda x: x.current_ct
-            )
-            self.current_combatant = combatants_by_ct[0]
-            self.current_combatant.move_current = self.current_combatant.move_max
-            self.current_combatant.ability_used = False
-            ctdiff = 100 - self.current_combatant.current_ct
-            if ctdiff > 0:
-                for combatant in self.combatants:
-                    combatant.current_ct += ctdiff
-            self.selected_tile = self.current_combatant.tile_position
-
-            if self.current_combatant in self.player_combatants:
-                self.input_state = 'ACTION'
-            else:
-                sequence = self.aicontroller.update_combatant(
-                    self.current_combatant,
-                    self.get_remaining_player_combatants()
+            if selection is not None and in_range:
+                sequence = self.current_combatant.use_ability(
+                    self.selected_ability,
+                    selection,
+                    self,
+                    self.root_node
                 )
                 def cleanup():
+                    self.selected_tile = self.current_combatant.tile_position
                     if self.input_state != 'END_COMBAT':
-                        self.input_state = 'END_TURN'
-                sequence.extend([
-                    intervals.Func(cleanup),
-                ])
-                sequence.start()
-        elif next_state == 'END_COMBAT':
-            results = []
-            jpgain = Monster.JP_PER_LEVEL * 0.5
-            isvictory = not self.get_remaining_enemy_combatants()
-            if self.forfeit:
-                self.display_message('Match was forfeited')
-                jpgain *= 0
-            elif isvictory:
-                self.display_message('Victory!')
-                results.append('Victory Bonus: 2x JP')
-                jpgain *= 2
-            else:
-                self.display_message('Defeat.')
-
-            jpgain = round(jpgain)
-            for mon in self.player_combatants:
-                mon.add_jp(mon.job, jpgain)
-                results.append(
-                    f'{mon.name} gained {jpgain} JP in {mon.job.name}'
+                        self.input_state = 'ACTION'
+                sequence.append(
+                    intervals.Func(cleanup)
                 )
+                sequence.start()
 
-            self.update_ui({'results': results})
-            self.accept('accept', base.change_to_previous_state)
-            self.accept('reject', base.change_to_previous_state)
+        def reject_target():
+            self.selected_tile = self.current_combatant.tile_position
+            self.input_state = 'ACTION'
+
+        self.setup_selection(accept_target, reject_target)
+        self.display_message('Select a target')
+
+    def enter_end_turn(self):
+        self.selected_ability = None
+        if self.current_combatant:
+            self.current_combatant.current_ct = 0
+        combatants_by_ct = sorted(
+            list(self.combatants),
+            reverse=True,
+            key=lambda x: x.current_ct
+        )
+        self.current_combatant = combatants_by_ct[0]
+        self.current_combatant.move_current = self.current_combatant.move_max
+        self.current_combatant.ability_used = False
+        ctdiff = 100 - self.current_combatant.current_ct
+        if ctdiff > 0:
+            for combatant in self.combatants:
+                combatant.current_ct += ctdiff
+        self.selected_tile = self.current_combatant.tile_position
+
+        if self.current_combatant in self.player_combatants:
+            self.input_state = 'ACTION'
         else:
-            raise RuntimeError(f'Unknown state {next_state}')
+            sequence = self.aicontroller.update_combatant(
+                self.current_combatant,
+                self.get_remaining_player_combatants()
+            )
+            def cleanup():
+                if self.input_state != 'END_COMBAT':
+                    self.input_state = 'END_TURN'
+            sequence.extend([
+                intervals.Func(cleanup),
+            ])
+            sequence.start()
 
-        self._input_state = next_state
+    def enter_end_combat(self):
+        results = []
+        jpgain = Monster.JP_PER_LEVEL * 0.5
+        isvictory = not self.get_remaining_enemy_combatants()
+        if self.forfeit:
+            self.display_message('Match was forfeited')
+            jpgain *= 0
+        elif isvictory:
+            self.display_message('Victory!')
+            results.append('Victory Bonus: 2x JP')
+            jpgain *= 2
+        else:
+            self.display_message('Defeat.')
+
+        jpgain = round(jpgain)
+        for mon in self.player_combatants:
+            mon.add_jp(mon.job, jpgain)
+            results.append(
+                f'{mon.name} gained {jpgain} JP in {mon.job.name}'
+            )
+
+        self.update_ui({'results': results})
+        self.accept('accept', base.change_to_previous_state)
+        self.accept('reject', base.change_to_previous_state)
 
     def combatant_in_tile(self, tile_pos):
         combatants = [
