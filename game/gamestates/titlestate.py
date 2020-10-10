@@ -8,15 +8,10 @@ class TitleState(GameState):
 
         # UI
         self.load_ui('title')
-        menu_items = [
+        self.menu_helper.set_menu('', [
+            ('Start', base.change_state, ['NewTrainer', True]),
             ('Quit', messenger.send, ['quit']),
-        ]
-        if base.allow_saves:
-            menu_items.insert(0, ('New Game', base.change_state, ['NewTrainer', True]))
-            menu_items.insert(1, ('Load Game', base.change_state, ['Load']))
-        else:
-            menu_items.insert(0, ('Start', base.change_state, ['NewTrainer', True]))
-        self.menu_helper.set_menu('', menu_items)
+        ])
 
         # Background Music
         self.play_bg_music('the_fall_of_arcana')

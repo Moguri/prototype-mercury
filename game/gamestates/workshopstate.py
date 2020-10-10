@@ -168,15 +168,10 @@ class WorkshopState(GameState):
             ('Change Job', self.set_input_state, ['JOBS']),
             ('Abilities', self.set_input_state, ['ABILITIES']),
             ('Dismiss Golem', self.set_input_state, ['DISMISS']),
+            ('Quit', self.set_input_state, ['QUIT']),
         ]
         if len(self.player.monsters) < self.player.max_monsters:
             menu_items.insert(1, ('Foundry', self.set_input_state, ['FOUNDRY']))
-        if base.allow_saves:
-            menu_items.extend([
-                ('Save Game', base.change_state, ['Save']),
-                ('Load Game', base.change_state, ['Load']),
-            ])
-        menu_items.append(('Quit', self.set_input_state, ['QUIT']))
         self.menu_helper.set_menu('Workshop', menu_items)
 
     def enter_select_monster(self):

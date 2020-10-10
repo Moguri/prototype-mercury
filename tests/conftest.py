@@ -89,7 +89,6 @@ def app():
             default_monster = Monster.make_new('player_monster', 'Default', 'mine')
             self.blackboard['player'].monsters = [default_monster]
             self.camera = p3d.NodePath('camera')
-            self.allow_saves = False
             class Pipeline:
                 def __init__(self):
                     self.exposure = 6
