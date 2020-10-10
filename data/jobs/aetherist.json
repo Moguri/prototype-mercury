@@ -12,8 +12,8 @@
     ],
     "basic_attack": "basic_attack",
     "stat_upgrades": {
-        "hp": 2,
-        "ep": 2
+        "hp": 1,
+        "ep": 1
     },
     "hp_offset": 2,
     "ep_offset": 1
