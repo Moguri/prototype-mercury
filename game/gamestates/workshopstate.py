@@ -293,12 +293,12 @@ class WorkshopState(GameState):
         def learn_ability(ability):
             if unspentjp >= ability.jp_cost and ability.id not in learnedids:
                 self.current_monster.add_ability(ability)
-                build_menu() # Refresh menu
+                self.input_state = 'ABILITIES'
 
         def upgrade_stat(stat, max_rank):
             if unspentjp >= 100 and curr_ranks(stat) < max_rank:
                 self.current_monster.upgrade_stat(stat)
-                build_menu() # Refresh menu
+                self.input_state = 'ABILITIES'
 
         pretty_stat_names = {
             'hp': 'HP',
