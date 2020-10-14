@@ -280,7 +280,7 @@ class WorkshopState(GameState):
         self.menu_helper.selection_change_cb = show_job
         self.menu_helper.reject_cb = job_reject
 
-    def enter_abilities(self):
+    def enter_abilities(self, menu_idx=0):
         gdb = gamedb.get_instance()
         unspentjp = self.current_monster.jp_unspent.get(self.current_monster.job.id, 0)
         learnedids = [ability.id for ability in self.current_monster.abilities]
@@ -293,12 +293,12 @@ class WorkshopState(GameState):
         def learn_ability(ability):
             if unspentjp >= ability.jp_cost and ability.id not in learnedids:
                 self.current_monster.add_ability(ability)
-                self.input_state = 'ABILITIES'
+                self.set_input_state('ABILITIES', menu_idx=self.menu_helper.selection_idx)
 
         def upgrade_stat(stat, max_rank):
             if unspentjp >= 100 and curr_ranks(stat) < max_rank:
                 self.current_monster.upgrade_stat(stat)
-                self.input_state = 'ABILITIES'
+                self.set_input_state('ABILITIES', menu_idx=self.menu_helper.selection_idx)
 
         pretty_stat_names = {
             'hp': 'HP',
@@ -309,7 +309,6 @@ class WorkshopState(GameState):
         }
 
         def build_menu():
-            prev_sel_idx = self.menu_helper.selection_idx
             self.menu_helper.set_menu(f'Available JP: {unspentjp}', [
                 ('Back', self.set_input_state, ['MAIN']),
             ] + [
@@ -329,7 +328,7 @@ class WorkshopState(GameState):
                 )
                 for ability in [gdb['abilities'][i] for i in self.current_monster.job.abilities]
             ])
-            self.menu_helper.move_to_index(prev_sel_idx, play_sfx=False)
+            self.menu_helper.move_to_index(menu_idx, play_sfx=False)
         build_menu()
 
     def enter_combat(self):
