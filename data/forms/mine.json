@@ -8,11 +8,11 @@
     "skins": {
         "default": {
             "bam_file": "clay_golem",
-            "root_node": "ClayGolemArm"
+            "root_node": "GolemSkeleton"
         },
         "ruinsmith": {
             "bam_file": "mage_clay_golem",
-            "root_node": "Armature"
+            "root_node": "GolemSkeleton"
         }
     },
     "anim_map": {

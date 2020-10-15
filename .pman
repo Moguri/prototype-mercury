@@ -7,3 +7,8 @@ converters = [ "blend2bam",]
 
 [blend2bam]
 material_mode = "pbr"
+animations = "skip"
+
+[[blend2bam.overrides]]
+pattern = "golem_animations.blend"
+animations = "embed"

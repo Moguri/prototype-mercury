@@ -32,7 +32,7 @@
             "default": {
                 "default": {
                     "bam_file": "fallback_form",
-                    "root_node": "ClayGolemArm"
+                    "root_node": "GolemSkeleton"
                 }
             },
             "additionalProperties": {

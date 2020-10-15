@@ -7,7 +7,7 @@
     "skins": {
         "default": {
             "bam_file": "armor_golem",
-            "root_node": "ArmorGolemArm"
+            "root_node": "GolemSkeleton"
         }
     },
     "hp": 14,

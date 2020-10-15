@@ -6,7 +6,7 @@
     "skins": {
         "default": {
             "bam_file": "tomb_golem",
-            "root_node": "TombGolemArm"
+            "root_node": "GolemSkeleton"
         }
     },
     "default_job": "ruinsmith",

@@ -2,6 +2,7 @@ import builtins
 import collections
 import random
 
+import panda3d.core as p3d
 from direct.actor.Actor import Actor
 from direct.interval import IntervalGlobal as intervals
 
@@ -34,6 +35,8 @@ RANDOM_NAMES = [
 
 class MonsterActor:
     _anim_warnings = collections.defaultdict(set)
+    _ANIMS = None
+    _ANIM_FILE = 'models/golem_animations.bam'
 
     def __init__(self, form, parent_node=None, job=None):
         self.form = form
@@ -41,6 +44,12 @@ class MonsterActor:
         if job not in self.form.skins:
             job = 'default'
         skin = self.form.skins[job]
+
+        if self._ANIMS is None:
+            anim_root = base.loader.load_model(self._ANIM_FILE)
+            self.__class__._ANIMS = p3d.NodePath('anims')
+            for bundle in anim_root.find_all_matches('**/+AnimBundleNode'):
+                bundle.reparent_to(self._ANIMS)
 
         if hasattr(builtins, 'base'):
             model = base.loader.load_model('models/{}.bam'.format(skin['bam_file']))
@@ -50,6 +59,8 @@ class MonsterActor:
                     f"Warning: root node ({skin['root_node']}) not found in "
                     f"bam_file ({skin['bam_file']}) for {form.id}/{job}"
                 )
+            else:
+                self._ANIMS.instance_to(root_node)
             self._path = Actor(root_node)
             self.play_anim('idle', loop=True)
             if parent_node:
