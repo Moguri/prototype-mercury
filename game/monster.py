@@ -37,6 +37,7 @@ class MonsterActor:
     _anim_warnings = collections.defaultdict(set)
     _ANIMS = None
     _ANIM_FILE = 'models/golem_animations.bam'
+    _WEAPONS_FILE = 'models/weapons.bam'
 
     def __init__(self, form, parent_node=None, job=None):
         self.form = form
@@ -45,13 +46,12 @@ class MonsterActor:
             job = 'default'
         skin = self.form.skins[job]
 
-        if self._ANIMS is None:
-            anim_root = base.loader.load_model(self._ANIM_FILE)
-            self.__class__._ANIMS = p3d.NodePath('anims')
-            for bundle in anim_root.find_all_matches('**/+AnimBundleNode'):
-                bundle.reparent_to(self._ANIMS)
-
         if hasattr(builtins, 'base'):
+            if self._ANIMS is None:
+                anim_root = base.loader.load_model(self._ANIM_FILE)
+                self.__class__._ANIMS = p3d.NodePath('anims')
+                for bundle in anim_root.find_all_matches('**/+AnimBundleNode'):
+                    bundle.reparent_to(self._ANIMS)
             model = base.loader.load_model('models/{}.bam'.format(skin['bam_file']))
             root_node = model.find('**/{}'.format(skin['root_node']))
             if root_node.is_empty():
@@ -62,6 +62,18 @@ class MonsterActor:
             else:
                 self._ANIMS.instance_to(root_node)
             self._path = Actor(root_node)
+            if skin['weapon']:
+                weapon_joint = self._path.expose_joint(None, 'modelRoot', 'weapon')
+                weapons = base.loader.load_model(self._WEAPONS_FILE)
+                weapon = weapons.find(f'**/{skin["weapon"]}')
+                if weapon.is_empty():
+                    print(f'Warning: could not find weapon {skin["weapon"]}')
+                    weapons.ls()
+                else:
+                    weapon.set_y(0.4)
+                    inv_scale = [1 / i for i in weapon_joint.get_scale()]
+                    weapon.set_scale(*inv_scale)
+                    weapon.instance_to(weapon_joint)
             self.play_anim('idle', loop=True)
             if parent_node:
                 self._path.reparent_to(parent_node)

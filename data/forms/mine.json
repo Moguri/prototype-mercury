@@ -7,10 +7,12 @@
     ],
     "skins": {
         "default": {
-            "bam_file": "clay_golem"
+            "bam_file": "clay_golem",
+            "weapon": "pickaxe"
         },
         "ruinsmith": {
-            "bam_file": "mage_clay_golem"
+            "bam_file": "mage_clay_golem",
+            "weapon": "staff"
         }
     },
     "anim_map": {

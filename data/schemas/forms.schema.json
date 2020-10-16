@@ -44,6 +44,10 @@
                     "root_node": {
                         "type": "string",
                         "default": "GolemSkeleton"
+                    },
+                    "weapon": {
+                        "type": "string",
+                        "default": ""
                     }
                 },
                 "minProperties": 1

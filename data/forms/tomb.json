@@ -5,7 +5,8 @@
     ],
     "skins": {
         "default": {
-            "bam_file": "tomb_golem"
+            "bam_file": "tomb_golem",
+            "weapon": "Khopesh"
         }
     },
     "default_job": "ruinsmith",

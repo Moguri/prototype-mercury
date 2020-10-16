@@ -6,7 +6,8 @@
     ],
     "skins": {
         "default": {
-            "bam_file": "armor_golem"
+            "bam_file": "armor_golem",
+            "weapon": "sword"
         }
     },
     "hp": 14,
