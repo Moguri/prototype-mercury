@@ -7,7 +7,18 @@
     "skins": {
         "default": {
             "bam_file": "armor_golem",
+            "weapon": "warMace"
+        },
+        "knight": {
+            "bam_file": "armor_golem",
             "weapon": "sword"
+        },
+        "bowman": {
+            "bam_file": "armor_golem",
+            "weapon": "crossbow"
+        },
+        "skirmisher": {
+            "bam_file": "armor_golem"
         }
     },
     "hp": 14,
