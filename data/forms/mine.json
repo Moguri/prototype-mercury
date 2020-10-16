@@ -7,12 +7,10 @@
     ],
     "skins": {
         "default": {
-            "bam_file": "clay_golem",
-            "root_node": "GolemSkeleton"
+            "bam_file": "clay_golem"
         },
         "ruinsmith": {
-            "bam_file": "mage_clay_golem",
-            "root_node": "GolemSkeleton"
+            "bam_file": "mage_clay_golem"
         }
     },
     "anim_map": {

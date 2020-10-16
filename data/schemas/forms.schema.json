@@ -42,7 +42,8 @@
                         "type": "string"
                     },
                     "root_node": {
-                        "type": "string"
+                        "type": "string",
+                        "default": "GolemSkeleton"
                     }
                 },
                 "minProperties": 1
