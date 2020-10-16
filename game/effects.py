@@ -100,6 +100,8 @@ class SequenceBuilder:
         textnp.set_depth_test(False)
         textnp.set_depth_write(False)
         textnp.set_shader_auto(True)
+        textnp.set_color_scale((0, 0, 0, 1))
+        textnp.set_light_off()
         textnp.hide()
 
         def func():

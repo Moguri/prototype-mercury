@@ -30,6 +30,12 @@ class CommonLighting:
         self.back_lightnp.look_at(targetpos)
         base.render.set_light(self.back_lightnp)
 
+        ambient_power = 0.1
+        self.ambient_light = p3d.AmbientLight('ambient')
+        self.ambient_light.color = (ambient_power, ambient_power, ambient_power, 1.0)
+        self.ambient_lightnp = rendernp.attach_new_node(self.ambient_light)
+        base.render.set_light(self.ambient_lightnp)
+
         # Shadows
         self.key_light.set_shadow_caster(True, 512, 512)
         if calc_shadow_bounds:

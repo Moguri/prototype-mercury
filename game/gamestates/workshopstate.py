@@ -406,6 +406,8 @@ class WorkshopState(GameState):
             labelnp.set_depth_test(False)
             labelnp.set_depth_write(False)
             labelnp.set_shader_auto(True)
+            labelnp.set_color_scale((0, 0, 0, 1))
+            labelnp.set_light_off()
 
             offset += stride
 
