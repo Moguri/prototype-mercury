@@ -31,6 +31,7 @@ class GameApp(ShowBase):
         self.set_background_color((0, 0, 0, 1))
         self.render.set_antialias(p3d.AntialiasAttrib.MAuto)
         self.render_pipeline = simplepbr.init(
+            max_lights=4,
             msaa_samples=p3d.ConfigVariableInt('msaa-samples', 4).get_value(),
             enable_shadows=p3d.ConfigVariableBool('enable-shadows', True).get_value(),
             exposure=6,
