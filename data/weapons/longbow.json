@@ -1,0 +1,20 @@
+{
+    "name": "Longbow",
+    "description": "A sizeable bow capable of firing quickly at long distance.",
+    "damage": 4,
+    "range_min": 2,
+    "range_max": 5,
+    "type": "physical"
+    "abilities": [
+        {
+            "name":"attack"
+        },
+        {
+            "name":"rapid_attack"
+        },
+        {
+            "name":"pin"
+        }
+    ]
+}
+

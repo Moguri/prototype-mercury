@@ -1,0 +1,17 @@
+{
+    "name": "Mace",
+    "description": "Heavy blunt weapon, designed to smash armor and knock opponents away.",
+    "damage": 4,
+    "range_min": 1,
+    "range_max": 1,
+    "type": "physical"
+    "abilities": [
+        {
+            "name":"heavy_attack"
+        },
+        {
+            "name":"push"
+        }
+    ]
+}
+

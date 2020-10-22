@@ -1,0 +1,20 @@
+{
+    "name": "Crossbow",
+    "description": "A heavy ranged weapon, fires slowly but deals great damage.",
+    "damage": 4,
+    "range_min": 2,
+    "range_max": 5,
+    "type": "physical"
+    "abilities": [
+        {
+            "name":"attack"
+        },
+        {
+            "name":"heavy_attack"
+        },
+        {
+            "name":"push"
+        }
+    ]
+}
+

@@ -1,0 +1,21 @@
+{
+    "name": "Staff",
+    "description": "A magical weapon, designed with close quarters in mind.",
+    "damage": 2,
+    "range_min": 1,
+    "range_max": 2,
+    "type": "magical"
+    "abilities": [
+        {
+            "name":"attack"
+        },
+        {
+            "name":"pin",
+            "description":"Magically slow an enemy"
+        },
+        {
+            "name":"blast"
+        }
+    ]
+}
+
