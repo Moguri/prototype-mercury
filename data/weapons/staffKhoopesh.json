@@ -1,6 +1,6 @@
 {
     "name": "staffKhoopesh",
-    "description": "Originally designed in burial rites, this long bladed spear is now used for attacking or Vitamancy",
+    "description": "Originally designed in burial rites, this weapon is capable at long range and can even pull and push health energy.",
     "damage": 2,
     "range_min": 2,
     "range_max": 3,
