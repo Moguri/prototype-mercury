@@ -6,15 +6,8 @@
     "range_max": 5,
     "type": "physical"
     "abilities": [
-        {
-            "name":"attack"
-        },
-        {
-            "name":"rapid_attack"
-        },
-        {
-            "name":"pin"
-        }
+        "rapid_shot",
+        "pinning_shot"
     ]
 }
 

@@ -6,12 +6,8 @@
     "range_max": 1,
     "type": "physical"
     "abilities": [
-        {
-            "name":"heavy_attack"
-        },
-        {
-            "name":"push"
-        }
+        "heavy_attack",
+        "bash_away"
     ]
 }
 

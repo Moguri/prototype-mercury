@@ -6,15 +6,8 @@
     "range_max": 5,
     "type": "physical"
     "abilities": [
-        {
-            "name":"attack"
-        },
-        {
-            "name":"heavy_attack"
-        },
-        {
-            "name":"push"
-        }
+        "impact_bolt",
+        "flaying_bolt"
     ]
 }
 

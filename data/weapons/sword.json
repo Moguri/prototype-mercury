@@ -6,16 +6,8 @@
     "range_max": 1,
     "type": "physical"
     "abilities": [
-        {
-            "name":"attack"
-        },
-        {
-            "name":"charge"
-        },
-        {
-            "name":"buff",
-            "stat":"physical_attack"
-        }
+        "charge",
+        "rally"
     ]
 }
 

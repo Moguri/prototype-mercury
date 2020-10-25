@@ -6,16 +6,8 @@
     "range_max": 2,
     "type": "magical"
     "abilities": [
-        {
-            "name":"attack"
-        },
-        {
-            "name":"pin",
-            "description":"Magically slow an enemy"
-        },
-        {
-            "name":"blast"
-        }
+        "slow_golem",
+        "fireball"
     ]
 }
 

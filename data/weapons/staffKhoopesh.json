@@ -6,15 +6,8 @@
     "range_max": 3,
     "type": "magical"
     "abilities": [
-        {
-            "name":"attack"
-        },
-        {
-            "name":"drain_hp"
-        },
-        {
-            "name":"give_hp"
-        }
+        "drain_hp",
+        "give_hp"
     ]
 }
 
