@@ -4,7 +4,7 @@
     "damage": 4,
     "range_min": 1,
     "range_max": 1,
-    "type": "physical"
+    "type": "physical",
     "abilities": [
         "heavy_attack",
         "bash_away"

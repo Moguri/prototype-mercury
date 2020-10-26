@@ -4,7 +4,7 @@
     "damage": 2,
     "range_min": 1,
     "range_max": 2,
-    "type": "magical"
+    "type": "magical",
     "abilities": [
         "slow_golem",
         "fireball"

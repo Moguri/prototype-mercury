@@ -4,7 +4,7 @@
     "damage": 4,
     "range_min": 2,
     "range_max": 5,
-    "type": "physical"
+    "type": "physical",
     "abilities": [
         "impact_bolt",
         "flaying_bolt"

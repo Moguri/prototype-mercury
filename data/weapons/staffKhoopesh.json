@@ -4,7 +4,7 @@
     "damage": 2,
     "range_min": 2,
     "range_max": 3,
-    "type": "magical"
+    "type": "magical",
     "abilities": [
         "drain_hp",
         "give_hp"
