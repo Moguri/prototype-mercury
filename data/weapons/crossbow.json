@@ -6,8 +6,5 @@
     "range_max": 5,
     "type": "physical",
     "abilities": [
-        "impact_bolt",
-        "flaying_bolt"
     ]
 }
-

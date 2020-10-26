@@ -33,10 +33,11 @@
             "type": "array",
             "items": {
                 "type": "string"
-            }
+            },
+            "uniqueItems": true
         }
     },
     "links": {
-        "weapon": "weapons"
+        "abilities": "abilities"
     }
 }

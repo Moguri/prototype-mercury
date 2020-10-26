@@ -6,8 +6,8 @@
     "range_max": 3,
     "type": "magical",
     "abilities": [
-        "drain_hp",
-        "give_hp"
+        "drainhp",
+        "givehp"
     ]
 }
 

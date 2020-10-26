@@ -6,8 +6,8 @@
     "range_max": 2,
     "type": "magical",
     "abilities": [
-        "slow_golem",
-        "fireball"
+        "gust",
+        "blast"
     ]
 }
 

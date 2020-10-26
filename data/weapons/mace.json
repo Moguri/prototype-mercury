@@ -7,7 +7,7 @@
     "type": "physical",
     "abilities": [
         "heavy_attack",
-        "bash_away"
+        "gust"
     ]
 }
 
