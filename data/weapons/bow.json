@@ -7,7 +7,7 @@
     "type": "physical",
     "abilities": [
         "multi_shot",
-        "pin"
+        "pin_down"
     ]
 }
 
