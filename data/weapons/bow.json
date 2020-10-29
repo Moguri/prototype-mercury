@@ -1,0 +1,13 @@
+{
+    "name": "Bow",
+    "description": "A bow capable of firing quickly.",
+    "damage": 2,
+    "range_min": 2,
+    "range_max": 5,
+    "type": "physical",
+    "abilities": [
+        "multi_shot",
+        "pin_down"
+    ]
+}
+

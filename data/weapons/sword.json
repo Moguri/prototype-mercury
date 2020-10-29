@@ -1,0 +1,13 @@
+{
+    "name": "Sword",
+    "description": "An edged one handed weapon. Capable of attacking and inspiring Golems nearby!",
+    "damage": 3,
+    "range_min": 1,
+    "range_max": 1,
+    "type": "physical",
+    "abilities": [
+        "flying_fist",
+        "rally"
+    ]
+}
+
