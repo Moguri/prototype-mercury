@@ -29,7 +29,14 @@ class DataModel:
     def link(self, gdb):
         for prop, gdbkey in self._links.items():
             linkname = getattr(self, prop)
-            setattr(self, prop, gdb[gdbkey][linkname])
+            if isinstance(linkname, list):
+                linkval = [
+                    gdb[gdbkey][i]
+                    for i in linkname
+                ]
+            else:
+                linkval = gdb[gdbkey][linkname]
+            setattr(self, prop, linkval)
 
     def to_dict(self):
         def _ga(prop):
