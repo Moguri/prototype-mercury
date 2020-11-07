@@ -1,7 +1,5 @@
 import random
 
-from direct.interval import IntervalGlobal as intervals
-
 from .monster import MonsterActor
 from . import effects
 
@@ -11,7 +9,6 @@ class Combatant:
         form = monster.form
 
         self._current_hp = self.max_hp
-        self.current_ep = self.max_ep
         self.current_ct = random.randrange(0, 10)
         self.move_max = self.movement
         self.move_current = 0
@@ -50,10 +47,6 @@ class Combatant:
         return self._monster.hit_points
 
     @property
-    def max_ep(self):
-        return self._monster.ep
-
-    @property
     def is_dead(self):
         return self.current_hp <= 0
 
@@ -62,8 +55,6 @@ class Combatant:
             'name': self.name,
             'hp_current': self.current_hp,
             'hp_max': self.max_hp,
-            'ep_current': self.current_ep,
-            'ep_max': self.max_ep,
             'ct_current': min(100, self.current_ct),
             'ct_max': 100,
         }
@@ -74,7 +65,6 @@ class Combatant:
             f'on {target.name}'
         )
 
-        self.current_ep -= ability.ep_cost
         self.target = target
         target.target = self
 
@@ -87,20 +77,13 @@ class Combatant:
             controller
         )
 
-    def rest(self, controller):
-        controller.display_message(
-            f'{self.name} is resting'
-        )
-        self.current_ep = self.max_ep
-        return intervals.WaitInterval(1)
-
     def can_move(self):
-        return self.move_current > 0 and self.current_ep > 0
+        return self.move_current > 0
 
     def can_rest(self):
         return self.move_current == self.move_max and not self.ability_used
 
-    def can_use_ability(self, ability):
+    def can_use_ability(self, _ability):
         if self.ability_used:
             return False
-        return ability.ep_cost <= self.current_ep
+        return True

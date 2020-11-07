@@ -10,7 +10,6 @@
     ],
     "default_job": "bobcatshark",
     "hp": 10,
-    "ep": 10,
     "physical_attack": 5,
     "magical_attack": 5,
     "movement": 5

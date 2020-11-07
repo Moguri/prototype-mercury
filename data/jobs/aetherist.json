@@ -6,16 +6,12 @@
     ],
     "abilities": [
         "drainhp",
-        "drainep",
-        "givehp",
-        "giveep"
+        "givehp"
     ],
     "basic_attack": "basic_attack",
     "stat_upgrades": {
-        "hp": 1,
-        "ep": 1
+        "hp": 1
     },
-    "hp_offset": 2,
-    "ep_offset": 1
+    "hp_offset": 2
 }
 

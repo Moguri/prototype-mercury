@@ -5,7 +5,6 @@
     "power": 20,
     "hit_chance": 80,
     "type": "magical",
-    "jp_cost": 200,
-    "ep_cost": 2
+    "jp_cost": 200
 }
 

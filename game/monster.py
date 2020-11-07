@@ -137,7 +137,6 @@ class Monster:
 
     BASE_STATS = [
         'hp',
-        'ep',
         'physical_attack',
         'magical_attack',
         'movement',

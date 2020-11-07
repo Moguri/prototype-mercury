@@ -71,10 +71,6 @@
             "type": "integer",
             "minimum": 1
         },
-        "ep": {
-            "type": "integer",
-            "minimum": 0
-        },
         "physical_attack": {
             "type": "integer",
             "minimum": 0

@@ -3,7 +3,6 @@
     "basic_attack": "ba_pa_med",
     "stat_upgrades": {
         "hp": 3,
-        "physical_attack": 2,
-        "ep": 1
+        "physical_attack": 2
     }
 }

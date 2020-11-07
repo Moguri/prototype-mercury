@@ -9,7 +9,6 @@
     ],
     "default_job": "brawler",
     "hp": 12,
-    "ep": 12,
     "physical_attack": 6,
     "magical_attack": 6,
     "movement": 4

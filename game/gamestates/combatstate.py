@@ -122,8 +122,7 @@ class AiController():
             if combatant.can_use_ability(ability)
         ]
 
-        if combatant.current_ep <= 1 or not available_abilities:
-            sequence.append(combatant.rest(self.controller))
+        if not available_abilities:
             return sequence
 
         ability = random.choice(available_abilities)
@@ -163,7 +162,6 @@ class AiController():
                 dist_to_target = tile_dist
 
         if target_tile and combatant.can_move():
-            combatant.current_ep -= 1
             def update_selected():
                 self.controller.selected_tile = combatant.tile_position
             sequence.extend([
@@ -349,28 +347,18 @@ class CombatState(GameState):
         def use_ability(ability):
             if combatant.can_use_ability(ability):
                 self.set_input_state('TARGET', combatant, ability)
-        def rest():
-            self.menu_helper.show = False
-            sequence = intervals.Sequence(
-                combatant.rest(self),
-                intervals.Func(self.set_input_state, 'END_TURN')
-            )
-            sequence.start()
         def end_combat():
             self.set_input_state('END_COMBAT', forfeit=True)
 
         menu_items = []
         if combatant.can_move():
-            menu_items.append(('Move (1)', self.set_input_state, ['MOVE', combatant]))
+            menu_items.append(('Move', self.set_input_state, ['MOVE', combatant]))
 
         if not combatant.ability_used:
             menu_items += [
-                (f'{ability.name} ({ability.ep_cost})', use_ability, [ability])
+                (f'{ability.name}', use_ability, [ability])
                 for ability in combatant.abilities
             ]
-
-        if combatant.can_rest():
-            menu_items.append(('Rest', rest, []))
 
         menu_items.extend([
             ('End Turn', self.set_input_state, ['END_TURN']),
@@ -382,7 +370,7 @@ class CombatState(GameState):
         def update_ability(idx):
             self.range_tiles = []
             menu_item = menu_items[idx][0]
-            if menu_item == 'Move (1)':
+            if menu_item == 'Move':
                 self.range_tiles = self.arena.find_tiles_in_range(
                     combatant.tile_position,
                     0,
@@ -408,7 +396,6 @@ class CombatState(GameState):
             combatant.move_current
         )
         def accept_move():
-            combatant.current_ep -= 1
             selection = self.combatant_in_tile(self.selected_tile)
             if selection == combatant:
                 selection = None

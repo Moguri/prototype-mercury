@@ -33,7 +33,6 @@ class SequenceBuilder:
 
     CHANGE_STATE_PREFIX = {
         'current_hp': 'HP: ',
-        'current_ep': 'EP: ',
         'physical_attack': 'PA: ',
         'magical_attack': 'MA: ',
         'movement': 'MOV: ',

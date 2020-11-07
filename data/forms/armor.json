@@ -22,7 +22,6 @@
         }
     },
     "hp": 14,
-    "ep": 8,
     "physical_attack": 8,
     "magical_attack": 1,
     "movement": 3
