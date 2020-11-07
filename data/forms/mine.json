@@ -1,6 +1,5 @@
 {
     "name": "Mine",
-    "default_job": "brawler",
     "tags": [
         "mage",
         "advanced_fighter"
@@ -9,21 +8,6 @@
         "default": {
             "bam_file": "clay_golem",
             "weapon": "pickaxe"
-        },
-        "ruinsmith": {
-            "bam_file": "mage_clay_golem",
-            "weapon": "staff"
-        },
-        "bowman": {
-            "bam_file": "clay_golem",
-            "weapon": "crossbow"
-        },
-        "knight": {
-            "bam_file": "clay_golem",
-            "weapon": "sword"
-        },
-        "skirmisher": {
-            "bam_file": "clay_golem"
         }
     },
     "anim_map": {

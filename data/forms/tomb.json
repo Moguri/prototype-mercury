@@ -7,21 +7,8 @@
         "default": {
             "bam_file": "tomb_golem",
             "weapon": "Khopesh"
-        },
-        "aetherist": {
-            "bam_file": "tomb_golem",
-            "weapon": "KhopeshStaff"
-        },
-        "brawler": {
-            "bam_file": "tomb_golem",
-            "weapon": "warMace"
-        },
-        "bowman": {
-            "bam_file": "tomb_golem",
-            "weapon": "longbow"
         }
     },
-    "default_job": "ruinsmith",
     "hp": 8,
     "physical_attack": 3,
     "magical_attack": 6,

@@ -7,7 +7,6 @@
     "required_tags": [
       "disabled"
     ],
-    "default_job": "brawler",
     "hp": 12,
     "physical_attack": 6,
     "magical_attack": 6,

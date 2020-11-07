@@ -39,12 +39,10 @@ class MonsterActor:
     _ANIM_FILE = 'models/golem_animations.bam'
     _WEAPONS_FILE = 'models/weapons.bam'
 
-    def __init__(self, form, parent_node=None, job=None):
+    def __init__(self, form, parent_node=None):
         self.form = form
 
-        if job not in self.form.skins:
-            job = 'default'
-        skin = self.form.skins[job]
+        skin = self.form.skins['default']
 
         if hasattr(builtins, 'base'):
             if self._ANIMS is None:
@@ -57,7 +55,7 @@ class MonsterActor:
             if root_node.is_empty():
                 print(
                     f"Warning: root node ({skin['root_node']}) not found in "
-                    f"bam_file ({skin['bam_file']}) for {form.id}/{job}"
+                    f"bam_file ({skin['bam_file']}) for {form.id}"
                 )
             else:
                 self._ANIMS.instance_to(root_node)
@@ -131,10 +129,6 @@ class MonsterActor:
 
 
 class Monster:
-    JP_PER_LEVEL = 200
-
-    STAT_UPGRADE_COST = 100
-
     BASE_STATS = [
         'hp',
         'physical_attack',
@@ -150,8 +144,7 @@ class Monster:
         if name in self.BASE_STATS:
             base_stat = getattr(self.form, name)
             upgrades_contrib = self.upgrades_for_stat(name)
-            jobs_contrib = getattr(self.job, f'{name}_offset')
-            return base_stat + upgrades_contrib + jobs_contrib
+            return base_stat + upgrades_contrib
         return getattr(self._monsterdata, name)
 
     def to_dict(self, skip_extras=False):
@@ -168,9 +161,6 @@ class Monster:
         })
 
         return data
-
-    def can_use_job(self, job):
-        return f'job_{job.id}' in self.tags or set(job.required_tags).issubset(self.tags)
 
     @classmethod
     def get_random_name(cls):
@@ -195,120 +185,22 @@ class Monster:
             'id': monster_id,
             'name': name,
             'form': form.id,
-            'job': form.default_job.id,
         })
         monsterdata.link(gdb)
 
         monster = cls(monsterdata)
-        for job in monster.available_jobs:
-            monster.add_jp(job, 100)
         return monster
 
     @classmethod
-    def gen_random(cls, monsterid, level):
-        gdb = gamedb.get_instance()
+    def gen_random(cls, monsterid, _level):
         mon = cls.make_new(monsterid)
-
-        while mon.level < level:
-            job = random.choice(mon.available_jobs)
-            mon.add_jp(job, cls.JP_PER_LEVEL)
-
-        def get_abilities(job):
-            jp_unspent = mon.jp_unspent.get(job.id, 0)
-            def allow_ability(ability):
-                return (
-                    ability not in mon.abilities and
-                    ability.jp_cost <= jp_unspent
-                )
-            return [
-                ability
-                for ability in (gdb['abilities'][i] for i in mon.job.abilities)
-                if allow_ability(ability)
-            ]
-
-        for job in mon.available_jobs:
-            mon.job = job
-            available_abilities = get_abilities(job)
-            while available_abilities:
-                ability = random.choice(available_abilities)
-                mon.add_ability(ability)
-                available_abilities = get_abilities(job)
-
-        mon.job = random.choice(mon.available_jobs)
         return mon
-
-    @property
-    def job(self):
-        return self._monsterdata.job
-
-    @job.setter
-    def job(self, value):
-        if not self.can_use_job(value):
-            raise RuntimeError(f'tag requirements unsatisfied: {value.required_tags}')
-        self._monsterdata.job = value
-
-    @property
-    def jp_spent(self):
-        gdb = gamedb.get_instance()
-        return {
-            jobid: sum([gdb['abilities'][abid].jp_cost for abid in abilities])
-            for jobid, abilities in self._monsterdata.abilities.items()
-        }
-
-    @property
-    def jp_totals(self):
-        return {
-            jobid: unspent + self.jp_spent.get(jobid, 0)
-            for jobid, unspent in self.jp_unspent.items()
-        }
-
-    def job_level(self, job):
-        if not isinstance(job, str):
-            job = job.id
-        totjp = self.jp_totals.get(job, 0)
-        return 1 + totjp // self.JP_PER_LEVEL
-
-    def add_jp(self, job, value):
-        if not isinstance(job, str):
-            job = job.id
-        if job in self.jp_unspent:
-            self.jp_unspent[job] += value
-        else:
-            self.jp_unspent[job] = value
-
-    @property
-    def level(self):
-        return 1 + sum((self.job_level(i) - 1 for i in self.jp_totals))
-
-    @property
-    def available_jobs(self):
-        gdb = gamedb.get_instance()
-        return [
-            job
-            for job in gdb['jobs'].values()
-            if self.can_use_job(job)
-        ]
 
     @property
     def tags(self):
         return {
             f'form_{self.form.id}',
-        } | {
-            f'job_{job}_{level}'
-            for job in self.jp_unspent
-            for level in range(1, self.job_level(job) + 1)
         } | set(self.form.tags)
-
-    def add_ability(self, ability):
-        if isinstance(ability, str):
-            gdb = gamedb.get_instance()
-            ability = gdb['abilities'][ability]
-        if self.job.id not in self.jp_unspent:
-            self._monsterdata.jp_unspent[self.job.id] = 0
-        self._monsterdata.jp_unspent[self.job.id] -= ability.jp_cost
-        if self.job.id not in self._monsterdata.abilities:
-            self._monsterdata.abilities[self.job.id] = []
-        self._monsterdata.abilities[self.job.id].append(ability.id)
 
     @property
     def abilities(self):
@@ -324,14 +216,3 @@ class Monster:
             upgrades.get(stat, 0)
             for upgrades in self.stat_upgrades.values()
         ])
-
-    def upgrade_stat(self, stat):
-        job = self.job.id
-        if job not in self.jp_unspent:
-            self._monsterdata.jp_unspent[job] = 0
-        self.jp_unspent[job] -= self.STAT_UPGRADE_COST
-        if job not in self.stat_upgrades:
-            self.stat_upgrades[job] = {}
-        if stat not in self.stat_upgrades[job]:
-            self.stat_upgrades[job][stat] = 0
-        self.stat_upgrades[job][stat] += 1

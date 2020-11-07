@@ -4,7 +4,6 @@
     "range_max": 3,
     "power": 10,
     "type": "magical",
-    "jp_cost": 200,
     "effects": [
         {
             "type": "template_simple"
@@ -19,4 +18,3 @@
         }
     ]
 }
-

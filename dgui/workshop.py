@@ -26,7 +26,6 @@ class WorkshopUI(CommonUI):
     def rebuild_stats(self, monsterdata):
         self.stats_box['text'] = (
             f'Form: {monsterdata["form"]}\n'
-            f'Job: {monsterdata["job"]}\n'
             f'HP: {monsterdata["hit_points"]}\n'
             f'Phys. Attack: {monsterdata["physical_attack"]}\n'
             f'Mag. Attack: {monsterdata["magical_attack"]}\n'

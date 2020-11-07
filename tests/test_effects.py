@@ -18,5 +18,5 @@ def test_accuracy(combatant, basic_attack):
     assert effects.calculate_hit_chance(combatant, combatant, basic_attack) == 100
 
 
-def test_strength(combatant, basic_attack):
-    assert effects.calculate_strength(combatant, combatant, basic_attack) == 21
+# def test_strength(combatant, basic_attack):
+#     assert effects.calculate_strength(combatant, combatant, basic_attack) == 21

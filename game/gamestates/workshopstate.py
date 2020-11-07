@@ -82,13 +82,8 @@ class WorkshopState(GameState):
         self.lights_root.set_h(45)
 
         # Pre-load all monster models
-        forms = []
-        jobs = []
-        for form in gdb['forms'].values():
-            for skin in form.skins:
-                forms.append(form)
-                jobs.append(skin)
-        self.load_monster_models(forms, jobs)
+        forms = gdb['forms'].values()
+        self.load_monster_models(forms)
 
         # Load and display the player monster models
         self.load_monster_models()
@@ -165,8 +160,6 @@ class WorkshopState(GameState):
             ('Battle', self.set_input_state, ['COMBAT']),
             ('Select Golem', self.set_input_state, ['SELECT_MONSTER']),
             ('Golem Stats', self.set_input_state, ['STATS']),
-            ('Change Job', self.set_input_state, ['JOBS']),
-            ('Abilities', self.set_input_state, ['ABILITIES']),
             ('Dismiss Golem', self.set_input_state, ['DISMISS']),
             ('Quit', self.set_input_state, ['QUIT']),
         ]
@@ -237,99 +230,10 @@ class WorkshopState(GameState):
         })
         monsterdict = self.current_monster.to_dict()
         monsterdict['form'] = self.current_monster.form.name
-        monsterdict['job'] = self.current_monster.job.name
         self.update_ui({
             'monster': monsterdict
         })
         self.accept('accept', self.set_input_state, ['MAIN'])
-
-    def enter_jobs(self):
-        gdb = gamedb.get_instance()
-        self.load_monster_models([self.current_monster.form], [self.current_monster.job.id])
-        base.camera.set_x(0)
-        def change_job(jobid):
-            job = gdb['jobs'][jobid]
-            self.current_monster.job = job
-            self.display_message('')
-            self.load_monster_models()
-            self.input_state = 'MAIN'
-
-        def job_reject():
-            self.load_monster_models()
-            self.input_state = 'MAIN'
-
-        def show_job(_idx):
-            selection = self.menu_helper.current_selection
-            if selection[0] == 'Back':
-                jobid = self.current_monster.job.id
-            else:
-                jobid = selection[2][0]
-            self.load_monster_models([self.current_monster.form], [jobid])
-
-        self.menu_helper.set_menu('Select a Job', [
-            ('Back', job_reject, []),
-        ] + [
-            (
-                f'{job.name} (lvl {self.current_monster.job_level(job)})' + \
-                    ('*' if job.id == self.current_monster.job.id else ''),
-                change_job,
-                [job.id]
-            )
-            for job in self.current_monster.available_jobs
-        ])
-        self.menu_helper.selection_change_cb = show_job
-        self.menu_helper.reject_cb = job_reject
-
-    def enter_abilities(self, menu_idx=0):
-        gdb = gamedb.get_instance()
-        unspentjp = self.current_monster.jp_unspent.get(self.current_monster.job.id, 0)
-        learnedids = [ability.id for ability in self.current_monster.abilities]
-
-        def curr_ranks(stat):
-            jobid = self.current_monster.job.id
-            upgrades = self.current_monster.stat_upgrades.get(jobid, {})
-            return upgrades.get(stat, 0)
-
-        def learn_ability(ability):
-            if unspentjp >= ability.jp_cost and ability.id not in learnedids:
-                self.current_monster.add_ability(ability)
-                self.set_input_state('ABILITIES', menu_idx=self.menu_helper.selection_idx)
-
-        def upgrade_stat(stat, max_rank):
-            if unspentjp >= 100 and curr_ranks(stat) < max_rank:
-                self.current_monster.upgrade_stat(stat)
-                self.set_input_state('ABILITIES', menu_idx=self.menu_helper.selection_idx)
-
-        pretty_stat_names = {
-            'hp': 'HP',
-            'ep': 'EP',
-            'physical_attack': 'PA',
-            'magical_attack': 'MA',
-            'movement': 'Movement',
-        }
-
-        def build_menu():
-            self.menu_helper.set_menu(f'Available JP: {unspentjp}', [
-                ('Back', self.set_input_state, ['MAIN']),
-            ] + [
-                (
-                    f'Upgrade {pretty_stat_names[stat]} {curr_ranks(stat)}/{max_rank} (100 JP)' + \
-                        ('*' if curr_ranks(stat) == max_rank else ''),
-                    upgrade_stat,
-                    [stat, max_rank]
-                )
-                for stat, max_rank in self.current_monster.job.stat_upgrades.items()
-            ] + [
-                (
-                    f'{ability.name} ({ability.jp_cost} JP)' + \
-                        ('*' if ability.id in learnedids else ''),
-                    learn_ability,
-                    [ability]
-                )
-                for ability in [gdb['abilities'][i] for i in self.current_monster.job.abilities]
-            ])
-            self.menu_helper.move_to_index(menu_idx, play_sfx=False)
-        build_menu()
 
     def enter_combat(self):
         def enter_combat(ctype):
@@ -366,10 +270,10 @@ class WorkshopState(GameState):
     def update(self, dt):
         super().update(dt)
 
-        if self.input_state not in ('FOUNDRY', 'JOBS'):
+        if self.input_state != 'FOUNDRY':
             base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
-    def load_monster_models(self, forms=None, jobs=None):
+    def load_monster_models(self, forms=None):
         for monact in self.monster_actors:
             monact.cleanup()
             monact.remove_node()
@@ -378,19 +282,15 @@ class WorkshopState(GameState):
 
         if forms is None:
             forms = [i.form for i in self.player.monsters]
-            jobs = [i.job.id for i in self.player.monsters]
             labels = [i.name for i in self.player.monsters]
-
-        if jobs is None:
-            jobs = [i.default_job for i in forms]
 
         if not labels:
             labels = itertools.repeat('')
 
         stride = 2
         offset = 0
-        for form, jobid, labelstr in zip(forms, jobs, labels):
-            actor = MonsterActor(form, self.monsters_root, jobid)
+        for form, labelstr in zip(forms, labels):
+            actor = MonsterActor(form, self.monsters_root)
             actor.set_h(45)
             actor.set_pos(self.monsters_root, p3d.LVector3(offset, 0, 0))
             self.monster_actors.append(actor)

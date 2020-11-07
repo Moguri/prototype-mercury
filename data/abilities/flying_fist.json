@@ -5,7 +5,6 @@
     "range_max": 2,
     "power": 15,
     "type": "physical",
-    "jp_cost": 150,
     "effects": [
         {
             "type": "template_simple",

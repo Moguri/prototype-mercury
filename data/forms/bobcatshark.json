@@ -8,7 +8,6 @@
         "advanced_fighter",
         "in_test"
     ],
-    "default_job": "bobcatshark",
     "hp": 10,
     "physical_attack": 5,
     "magical_attack": 5,

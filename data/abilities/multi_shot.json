@@ -3,6 +3,5 @@
     "description": "Put multiple shots into the enemy for extra damage",
     "power": 11,
     "range_max": 4,
-    "type": "physical",
-    "jp_cost": 140
+    "type": "physical"
 }

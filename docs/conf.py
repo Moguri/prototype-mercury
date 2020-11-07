@@ -88,41 +88,6 @@ def make_writer(fileobj):
         print(*args, file=fileobj, **kwargs)
     return wrap
 
-with open(f'{gen_dir}/jobs_chart.rst', 'w') as rstfile:
-    write = make_writer(rstfile)
-    write('Jobs Chart')
-    write('==========\n')
-
-    for form in sorted(gdb['forms'].values(), key=lambda x: x.name):
-        if {'disabled', 'in_test'} & set(form.required_tags):
-            continue
-
-        title = form.name
-        write(title)
-        write('-' * len(title))
-        write()
-        write('\n.. mermaid::')
-        write('   :align: center\n')
-        write('   graph LR')
-
-        form_tags = set(form.tags) | {f'form_{form.id}'}
-        for job in gdb['jobs'].values():
-            non_job_tags = set([i for i in job.required_tags if not i.startswith('job_')])
-            if not non_job_tags.issubset(form_tags):
-                continue
-            required_jobs = [
-                i.replace('job_', '').rsplit('_', 1)
-                for i in job.required_tags
-                if i.startswith('job_')
-            ]
-            # available_jobs[job.id] = required_jobs
-            for rjob, level in required_jobs:
-                write(f'   {rjob} -- {level} --> {job.id}["{job.name}"]')
-            write(f'   {job.id}["{job.name}"]')
-
-        write()
-
-
 with open(f'{gen_dir}/forms.rst', 'w') as rstfile:
     write = make_writer(rstfile)
     write('Forms')
@@ -137,10 +102,6 @@ with open(f'{gen_dir}/forms.rst', 'w') as rstfile:
         write('-' * len(title))
         write()
         write(f'{form.description}')
-
-        write('Default Job')
-        write('^^^^^^^^^^^\n')
-        write(f':ref:`job-{form.default_job.id}`')
         write()
 
         write('Starting Tags')
@@ -178,74 +139,6 @@ with open(f'{gen_dir}/forms.rst', 'w') as rstfile:
         skins = dict(filter(lambda x: x[0] != 'default', form.skins.items()))
         write(f'Default: ``{default_skin["bam_file"]}/{default_skin["root_node"]}``')
         write()
-        write('Others:')
-        if skins:
-            write()
-            for jobname, skin in skins.items():
-                write(f'* :ref:`job-{jobname}`: ``{skin["bam_file"]}/{skin["root_node"]}``')
-        else:
-            write('None')
-        write()
-
-with open(f'{gen_dir}/jobs.rst', 'w') as rstfile:
-    write = make_writer(rstfile)
-    write('Jobs')
-    write('====\n')
-
-    for job in sorted(gdb['jobs'].values(), key=lambda x: x.name):
-        if {'disabled', 'in_test'} & set(job.required_tags):
-            continue
-        write(f'.. _job-{job.id}:\n')
-        title = f'{job.name} ({job.id})'
-        write(title)
-        write('-' * len(title))
-        write()
-        write(f'{job.description}\n')
-
-        write('Required Tags')
-        write('^^^^^^^^^^^^^\n')
-        if job.required_tags:
-            for tag in job.required_tags:
-                write(f'* ``{tag}``')
-        else:
-            write('None')
-        write()
-
-        write('Stat Offsets')
-        write('^^^^^^^^^^^^\n')
-        write('.. list-table::')
-        write('   :align: left')
-        write()
-        for stat in stat_names:
-            offset = getattr(job, f'{stat}_offset')
-            write(f'   * - {stat_names[stat]}')
-            write(f'     - {offset:+}')
-        write()
-
-        write('Stat Upgrades')
-        write('^^^^^^^^^^^^^\n')
-        write('.. list-table::')
-        write('   :align: left')
-        write()
-        for stat in stat_names:
-            num_upgrades = job.stat_upgrades.get(stat, None)
-            write(f'   * - {stat_names[stat]}')
-            write(f'     - {num_upgrades}')
-        write()
-
-        write('Abilities')
-        write('^^^^^^^^^\n')
-        write(f'Basic Attack: :ref:`ability-{job.basic_attack.id}`')
-        write()
-        write('Learned:')
-        if job.abilities:
-            write()
-            for ability in job.abilities:
-                write(f'* :ref:`ability-{ability}`')
-        else:
-            write('None')
-
-        write()
 
 with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
     write = make_writer(rstfile)
@@ -253,7 +146,6 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
     write('=========\n')
 
     table_items = {
-        'jp_cost': 'JP',
         'type': 'Type',
         'power': 'Power',
         'range': 'Range',
@@ -300,11 +192,9 @@ with open(f'{gen_dir}/index.rst', 'w') as rstfile:
     write('=========\n')
 
     write('.. toctree::')
-    write('   jobs_chart.rst')
 
     datamodels = [
         'forms',
-        'jobs',
         'abilities',
     ]
     for datamodel in datamodels:

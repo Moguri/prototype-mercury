@@ -53,9 +53,6 @@
                 "minProperties": 1
             }
         },
-        "default_job" : {
-            "type": "string"
-        },
         "anim_map": {
             "type": "object",
             "default": {
@@ -83,8 +80,5 @@
             "type": "integer",
             "minimum": 1
         }
-    },
-    "links": {
-        "default_job": "jobs"
     }
 }

@@ -10,16 +10,6 @@
         "form": {
             "type": "string"
         },
-        "job": {
-            "type": "string"
-        },
-        "jp_unspent": {
-            "type": "object",
-            "default": {},
-            "additionalProperties": {
-                "type": "integer"
-            }
-        },
         "abilities": {
             "type": "object",
             "default": {},
@@ -42,7 +32,6 @@
         }
     },
     "links": {
-        "form": "forms",
-        "job": "jobs"
+        "form": "forms"
     }
 }

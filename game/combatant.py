@@ -2,9 +2,11 @@ import random
 
 from .monster import MonsterActor
 from . import effects
+from . import gamedb
 
 class Combatant:
     def __init__(self, monster, parent_node):
+        gdb = gamedb.get_instance()
         self._monster = monster
         form = monster.form
 
@@ -15,7 +17,7 @@ class Combatant:
         self.ability_used = False
 
         self.abilities = [
-            monster.job.basic_attack
+            gdb['abilities']['basic_attack']
         ] + monster.abilities
 
         self.range_index = 0
@@ -24,7 +26,7 @@ class Combatant:
 
         self.lock_controls = False
 
-        self._actor = MonsterActor(form, parent_node, monster.job.id)
+        self._actor = MonsterActor(form, parent_node)
 
     def __getattr__(self, name):
         if hasattr(self._monster, name):
