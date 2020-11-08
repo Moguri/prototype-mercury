@@ -5,6 +5,9 @@
     "range_min": 2,
     "range_max": 5,
     "type": "physical",
+    "mesh": {
+        "root_node": "longbow"
+    },
     "abilities": [
         "multi_shot",
         "pin_down"

@@ -37,7 +37,6 @@ class MonsterActor:
     _anim_warnings = collections.defaultdict(set)
     _ANIMS = None
     _ANIM_FILE = 'models/golem_animations.bam'
-    _WEAPONS_FILE = 'models/weapons.bam'
 
     def __init__(self, form, parent_node=None, weapon=None):
         self.form = form
@@ -69,17 +68,23 @@ class MonsterActor:
             self._path = Actor()
 
     def update_weapon(self, weapon):
+        if isinstance(weapon,str):
+            gdb = gamedb.get_instance()
+            weapon = gdb['weapons'][weapon]
+        meshname = weapon.mesh['root_node']
+        if meshname == '':
+            return
         weapon_joint = self._path.expose_joint(None, 'modelRoot', 'weapon')
-        weapons = base.loader.load_model(self._WEAPONS_FILE)
-        weapon = weapons.find(f'**/{weapon}')
-        if weapon.is_empty():
-            print(f'Warning: could not find weapon {weapon}')
-            weapons.ls()
+        modelroot = base.loader.load_model('models/{}.bam'.format(weapon.mesh['bam_file']))
+        mesh = modelroot.find(f'**/{meshname}')
+        if mesh.is_empty():
+            print(f'Warning: could not find weapon {meshname}')
+            modelroot.ls()
         else:
-            weapon.set_y(0.4)
+            mesh.set_y(0.4)
             inv_scale = [1 / i for i in weapon_joint.get_scale()]
-            weapon.set_scale(*inv_scale)
-            weapon.instance_to(weapon_joint)
+            mesh.set_scale(*inv_scale)
+            mesh.instance_to(weapon_joint)
 
     def __getattr__(self, name):
         return getattr(self._path, name)
@@ -162,6 +167,8 @@ class Monster:
             prop: getattr(self, prop)
             for prop in extras
         })
+        if self.weapon is not None:
+            data['weapon'] = self.weapon.to_dict()
 
         return data
 
@@ -188,15 +195,33 @@ class Monster:
             'id': monster_id,
             'name': name,
             'form': form.id,
+            'weapon': 'unarmed'
         })
         monsterdata.link(gdb)
 
         monster = cls(monsterdata)
         return monster
 
+    @property
+    def weapon(self):
+        return self._monsterdata.weapon
+
+    @weapon.setter
+    def weapon(self, value):
+        if value is None:
+            value = 'unarmed'
+
+        if isinstance(value, str):
+            gdb = gamedb.get_instance()
+            value = gdb['weapons'][value]
+
+        self._monsterdata.weapon = value
+
     @classmethod
     def gen_random(cls, monsterid, _level):
+        gdb = gamedb.get_instance()
         mon = cls.make_new(monsterid)
+        mon.weapon = random.choice(list(gdb['weapons'].values()))
         return mon
 
     @property
@@ -210,8 +235,7 @@ class Monster:
         gdb = gamedb.get_instance()
         return [
             gdb['abilities'][abid]
-            for ablist in self._monsterdata.abilities.values()
-            for abid in ablist
+            for abid in self._monsterdata.weapon.abilities
         ]
 
     def upgrades_for_stat(self, stat):

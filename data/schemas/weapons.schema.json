@@ -10,6 +10,19 @@
         "description": {
             "type": "string"
         },
+        "mesh": {
+            "properties": {
+                "bam_file": {
+                    "type": "string",
+                    "default": "weapons"
+                },
+                "root_node": {
+                    "type": "string",
+                    "default": ""
+                }
+            },
+            "default": {}
+        },
         "damage": {
             "type": "integer",
             "minimum": 0
@@ -36,8 +49,5 @@
             },
             "uniqueItems": true
         }
-    },
-    "links": {
-        "abilities": "abilities"
     }
 }

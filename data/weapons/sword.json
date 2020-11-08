@@ -5,6 +5,9 @@
     "range_min": 1,
     "range_max": 1,
     "type": "physical",
+    "mesh": {
+        "root_node": "sword"
+    },
     "abilities": [
         "flying_fist",
         "rally"

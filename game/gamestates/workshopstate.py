@@ -160,6 +160,7 @@ class WorkshopState(GameState):
             ('Battle', self.set_input_state, ['COMBAT']),
             ('Select Golem', self.set_input_state, ['SELECT_MONSTER']),
             ('Golem Stats', self.set_input_state, ['STATS']),
+            ('Set Weapon', self.set_input_state, ['WEAPON']),
             ('Dismiss Golem', self.set_input_state, ['DISMISS']),
             ('Quit', self.set_input_state, ['QUIT']),
         ]
@@ -235,6 +236,43 @@ class WorkshopState(GameState):
         })
         self.accept('accept', self.set_input_state, ['MAIN'])
 
+
+    def enter_weapon(self):
+        gdb = gamedb.get_instance()
+        self.load_monster_models([self.current_monster.form], [self.current_monster.weapon.id])
+        base.camera.set_x(0)
+        def change_weapon(wepid):
+            self.current_monster.weapon = wepid
+            self.input_state = 'MAIN'
+
+        def reject():
+            self.input_state = 'MAIN'
+
+        def select(_idx):
+            selection = self.menu_helper.current_selection
+            if selection[0] == 'Back':
+                wepid = self.current_monster.weapon.id
+            else:
+                wepid = selection[2][0]
+            self.load_monster_models([self.current_monster.form], [wepid])
+
+        self.menu_helper.set_menu('Select a Weapon', [
+            ('Back', reject, []),
+        ] + [
+            (
+                f'{weapon.name}' + \
+                    ('*' if weapon.id == self.current_monster.weapon.id else ''),
+                change_weapon,
+                [weapon.id]
+            )
+            for weapon in sorted(gdb['weapons'].values(), key=lambda x: x.name)
+        ])
+        self.menu_helper.selection_change_cb = select
+        self.menu_helper.reject_cb = reject
+
+    def exit_weapon(self):
+        self.load_monster_models()
+
     def enter_combat(self):
         def enter_combat(ctype):
             base.blackboard['combat_type'] = ctype
@@ -273,7 +311,7 @@ class WorkshopState(GameState):
         if self.input_state != 'FOUNDRY':
             base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
-    def load_monster_models(self, forms=None):
+    def load_monster_models(self, forms=None, weapons=None):
         for monact in self.monster_actors:
             monact.cleanup()
             monact.remove_node()
@@ -283,14 +321,18 @@ class WorkshopState(GameState):
         if forms is None:
             forms = [i.form for i in self.player.monsters]
             labels = [i.name for i in self.player.monsters]
+            weapons = [i.weapon for i in self.player.monsters]
 
         if not labels:
             labels = itertools.repeat('')
 
+        if weapons is None:
+            weapons = itertools.repeat(None)
+
         stride = 2
         offset = 0
-        for form, labelstr in zip(forms, labels):
-            actor = MonsterActor(form, self.monsters_root)
+        for form, weapon, labelstr in zip(forms, weapons, labels):
+            actor = MonsterActor(form, self.monsters_root, weapon)
             actor.set_h(45)
             actor.set_pos(self.monsters_root, p3d.LVector3(offset, 0, 0))
             self.monster_actors.append(actor)

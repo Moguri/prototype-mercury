@@ -26,7 +26,7 @@ class Combatant:
 
         self.lock_controls = False
 
-        self._actor = MonsterActor(form, parent_node)
+        self._actor = MonsterActor(form, parent_node, monster.weapon)
 
     def __getattr__(self, name):
         if hasattr(self._monster, name):

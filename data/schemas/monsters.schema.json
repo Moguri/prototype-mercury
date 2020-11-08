@@ -10,16 +10,6 @@
         "form": {
             "type": "string"
         },
-        "abilities": {
-            "type": "object",
-            "default": {},
-            "additionalProperties": {
-                "type": "array",
-                "items": {
-                    "type": "string"
-                }
-            }
-        },
         "stat_upgrades": {
             "type": "object",
             "default": {},
@@ -29,9 +19,14 @@
                     "type": "integer"
                 }
             }
+        },
+        "weapon": {
+          "type": "string",
+          "default": "unarmed"
         }
     },
     "links": {
-        "form": "forms"
+        "form": "forms",
+        "weapon": "weapons"
     }
 }

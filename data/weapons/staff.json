@@ -5,6 +5,9 @@
     "range_min": 1,
     "range_max": 2,
     "type": "magical",
+    "mesh": {
+        "root_node": "staff"
+    },
     "abilities": [
         "gust",
         "blast"

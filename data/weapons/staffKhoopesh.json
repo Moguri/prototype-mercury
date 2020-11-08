@@ -1,10 +1,13 @@
 {
-    "name": "staffKhoopesh",
+    "name": "Khopesh Staff",
     "description": "Originally designed in burial rites, this weapon is capable at long range and can even pull and push health energy.",
     "damage": 2,
     "range_min": 2,
     "range_max": 3,
     "type": "magical",
+    "mesh": {
+        "root_node": "KhopeshStaff"
+    },
     "abilities": [
         "drainhp",
         "givehp"
