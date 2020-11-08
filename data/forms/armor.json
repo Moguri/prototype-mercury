@@ -3,11 +3,8 @@
     "tags": [
         "advanced_fighter"
     ],
-    "skins": {
-        "default": {
-            "bam_file": "armor_golem",
-            "weapon": "warMace"
-        }
+    "mesh": {
+        "bam_file": "armor_golem"
     },
     "hp": 14,
     "physical_attack": 8,

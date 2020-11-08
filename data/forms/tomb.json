@@ -3,11 +3,8 @@
     "tags": [
         "mage"
     ],
-    "skins": {
-        "default": {
-            "bam_file": "tomb_golem",
-            "weapon": "Khopesh"
-        }
+    "mesh": {
+        "bam_file": "tomb_golem"
     },
     "hp": 8,
     "physical_attack": 3,

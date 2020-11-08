@@ -4,11 +4,8 @@
         "mage",
         "advanced_fighter"
     ],
-    "skins": {
-        "default": {
-            "bam_file": "clay_golem",
-            "weapon": "pickaxe"
-        }
+    "mesh": {
+        "bam_file": "clay_golem"
     },
     "anim_map": {
         "idle": "cg.Idle",

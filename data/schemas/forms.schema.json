@@ -27,31 +27,18 @@
             "uniqueItems": true,
             "default": []
         },
-        "skins": {
-            "type": "object",
-            "default": {
-                "default": {
-                    "bam_file": "fallback_form",
-                    "root_node": "GolemSkeleton"
+        "mesh": {
+            "properties": {
+                "bam_file": {
+                    "type": "string",
+                    "default": "fallback_form"
+                },
+                "root_node": {
+                    "type": "string",
+                    "default": "GolemSkeleton"
                 }
             },
-            "additionalProperties": {
-                "type": "object",
-                "properties": {
-                    "bam_file": {
-                        "type": "string"
-                    },
-                    "root_node": {
-                        "type": "string",
-                        "default": "GolemSkeleton"
-                    },
-                    "weapon": {
-                        "type": "string",
-                        "default": ""
-                    }
-                },
-                "minProperties": 1
-            }
+            "default": {}
         },
         "anim_map": {
             "type": "object",

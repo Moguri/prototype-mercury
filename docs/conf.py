@@ -133,11 +133,10 @@ with open(f'{gen_dir}/forms.rst', 'w') as rstfile:
             write(f'     - {amount}')
         write()
 
-        write('Skins')
-        write('^^^^^\n')
-        default_skin = form.skins['default']
-        skins = dict(filter(lambda x: x[0] != 'default', form.skins.items()))
-        write(f'Default: ``{default_skin["bam_file"]}/{default_skin["root_node"]}``')
+        write('Mesh')
+        write('^^^^\n')
+        mesh = form.mesh
+        write(f'``{mesh["bam_file"]}/{mesh["root_node"]}``')
         write()
 
 with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:

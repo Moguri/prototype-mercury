@@ -39,10 +39,10 @@ class MonsterActor:
     _ANIM_FILE = 'models/golem_animations.bam'
     _WEAPONS_FILE = 'models/weapons.bam'
 
-    def __init__(self, form, parent_node=None):
+    def __init__(self, form, parent_node=None, weapon=None):
         self.form = form
 
-        skin = self.form.skins['default']
+        mesh = self.form.mesh
 
         if hasattr(builtins, 'base'):
             if self._ANIMS is None:
@@ -50,33 +50,36 @@ class MonsterActor:
                 self.__class__._ANIMS = p3d.NodePath('anims')
                 for bundle in anim_root.find_all_matches('**/+AnimBundleNode'):
                     bundle.reparent_to(self._ANIMS)
-            model = base.loader.load_model('models/{}.bam'.format(skin['bam_file']))
-            root_node = model.find('**/{}'.format(skin['root_node']))
+            model = base.loader.load_model('models/{}.bam'.format(mesh['bam_file']))
+            root_node = model.find('**/{}'.format(mesh['root_node']))
             if root_node.is_empty():
                 print(
-                    f"Warning: root node ({skin['root_node']}) not found in "
-                    f"bam_file ({skin['bam_file']}) for {form.id}"
+                    f"Warning: root node ({mesh['root_node']}) not found in "
+                    f"bam_file ({mesh['bam_file']}) for {form.id}"
                 )
             else:
                 self._ANIMS.instance_to(root_node)
             self._path = Actor(root_node)
-            if skin['weapon']:
-                weapon_joint = self._path.expose_joint(None, 'modelRoot', 'weapon')
-                weapons = base.loader.load_model(self._WEAPONS_FILE)
-                weapon = weapons.find(f'**/{skin["weapon"]}')
-                if weapon.is_empty():
-                    print(f'Warning: could not find weapon {skin["weapon"]}')
-                    weapons.ls()
-                else:
-                    weapon.set_y(0.4)
-                    inv_scale = [1 / i for i in weapon_joint.get_scale()]
-                    weapon.set_scale(*inv_scale)
-                    weapon.instance_to(weapon_joint)
+            if weapon:
+                self.update_weapon(weapon)
             self.play_anim('idle', loop=True)
             if parent_node:
                 self._path.reparent_to(parent_node)
         else:
             self._path = Actor()
+
+    def update_weapon(self, weapon):
+        weapon_joint = self._path.expose_joint(None, 'modelRoot', 'weapon')
+        weapons = base.loader.load_model(self._WEAPONS_FILE)
+        weapon = weapons.find(f'**/{weapon}')
+        if weapon.is_empty():
+            print(f'Warning: could not find weapon {weapon}')
+            weapons.ls()
+        else:
+            weapon.set_y(0.4)
+            inv_scale = [1 / i for i in weapon_joint.get_scale()]
+            weapon.set_scale(*inv_scale)
+            weapon.instance_to(weapon_joint)
 
     def __getattr__(self, name):
         return getattr(self._path, name)
