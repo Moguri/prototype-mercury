@@ -1,7 +1,0 @@
-{
-    "name": "Attack",
-    "description": "Basic Ranged attack",
-    "power": 7,
-    "range_max": 4,
-    "type": "physical"
-}

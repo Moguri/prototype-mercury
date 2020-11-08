@@ -11,14 +11,19 @@ def calculate_hit_chance(_combatant, _target, ability):
     return ability.hit_chance
 
 
-def calculate_strength(combatant, _target, ability):
+def calculate_strength(combatant, ability):
     attack_stat = (
         combatant.physical_attack
         if ability.type == 'physical'
         else combatant.magical_attack
     )
 
-    return round(attack_stat * ability.power)
+    if ability.power == 'weapon':
+        ability_power = combatant.weapon.damage
+    else:
+        ability_power = ability.power
+
+    return round(attack_stat * ability_power)
 
 class SequenceBuilder:
     ALLOWED_EFFECTS = [
@@ -48,7 +53,7 @@ class SequenceBuilder:
         roll = random.randrange(0, 99)
         self.is_hit = hit_chance > roll
         #print(hit, hit_chance, die)
-        self.strength = calculate_strength(combatant, combatant.target, ability)
+        self.strength = calculate_strength(combatant, ability)
 
         self.sequence = intervals.Sequence()
 

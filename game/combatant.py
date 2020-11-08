@@ -34,6 +34,14 @@ class Combatant:
         return getattr(self._actor, name)
 
     @property
+    def weapon(self):
+        return self._monster.weapon
+
+    @weapon.setter
+    def weapon(self, value):
+        self._monster.weapon = value
+
+    @property
     def current_hp(self):
         return self._current_hp
 

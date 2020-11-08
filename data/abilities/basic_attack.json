@@ -1,6 +1,8 @@
 {
     "name": "Attack",
     "description": "Simple basic attack available to non-martial golems",
-    "power": 3,
+    "power": "weapon",
+    "range_min": "weapon",
+    "range_max": "weapon",
     "type": "physical"
 }

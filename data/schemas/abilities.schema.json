@@ -12,17 +12,36 @@
             "type": "string"
         },
         "range_min": {
-            "type": "integer",
             "default": 1,
-            "minimum": 0
+            "oneOf": [
+                {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                {
+                     "type": "string",
+                     "enum": ["weapon"]
+                }
+            ]
         },
         "range_max": {
-            "type": "integer",
             "default": 1,
-            "minimum": 0
+            "oneOf": [
+                {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                {
+                     "type": "string",
+                     "enum": ["weapon"]
+                }
+            ]
         },
         "power": {
-            "type": "integer"
+            "oneOf": [
+                { "type": "integer" },
+                { "type": "string", "enum": ["weapon"] }
+            ]
         },
         "hit_chance": {
             "type": "integer",

@@ -148,12 +148,13 @@ class AiController():
             combatant.tile_position,
             target.tile_position
         )
+        range_min, range_max = self.controller.get_ability_range(combatant, ability)
         for tile in tiles:
             tile_dist = self.arena.tile_distance(
                 tile,
                 target.tile_position
             )
-            if ability.range_min <= tile_dist <= ability.range_max:
+            if range_min <= tile_dist <= range_max:
                 target_tile = tile
                 dist_to_target = tile_dist
                 break
@@ -179,7 +180,7 @@ class AiController():
         )
 
         # Use an ability if able
-        if ability.range_min <= dist_to_target <= ability.range_max:
+        if range_min <= dist_to_target <= range_max:
             sequence.extend([
                 combatant.use_ability(
                     ability,
@@ -380,8 +381,7 @@ class CombatState(GameState):
                 ability = menu_items[idx][2][0]
                 self.range_tiles = self.arena.find_tiles_in_range(
                     combatant.tile_position,
-                    ability.range_min,
-                    ability.range_max
+                    *self.get_ability_range(combatant, ability)
                 )
         update_ability(0)
         self.menu_helper.selection_change_cb = update_ability
@@ -435,16 +435,14 @@ class CombatState(GameState):
     def enter_target(self, combatant, ability):
         self.range_tiles = self.arena.find_tiles_in_range(
             combatant.tile_position,
-            ability.range_min,
-            ability.range_max
+            *self.get_ability_range(combatant, ability)
         )
         def accept_target():
             selection = self.combatant_in_tile(self.selected_tile)
             in_range = self.arena.tile_in_range(
                 self.selected_tile,
                 combatant.tile_position,
-                ability.range_min,
-                ability.range_max
+                *self.get_ability_range(combatant, ability)
             )
             if selection is not None and in_range:
                 sequence = combatant.use_ability(
@@ -596,6 +594,19 @@ class CombatState(GameState):
             combatant.set_h(
                 math.degrees(math.atan2(facing[1], facing[0])) + 90
             )
+
+    def get_ability_range(self, combatant, ability):
+        if ability.range_min == 'weapon':
+            range_min = combatant.weapon.range_min
+        else:
+            range_min = ability.range_min
+
+        if ability.range_max == 'weapon':
+            range_max = combatant.weapon.range_max
+        else:
+            range_max = ability.range_max
+
+        return (range_min, range_max)
 
     def display_message(self, msg):
         self.update_ui({
