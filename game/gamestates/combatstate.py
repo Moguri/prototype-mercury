@@ -163,11 +163,9 @@ class AiController():
                 dist_to_target = tile_dist
 
         if target_tile and combatant.can_move():
-            def update_selected():
-                self.controller.selected_tile = combatant.tile_position
+            self.controller.selected_tile = target_tile
             sequence.extend([
                 self.controller.move_combatant_to_tile(combatant, target_tile),
-                intervals.Func(update_selected)
             ])
 
         # Update facing
@@ -182,6 +180,7 @@ class AiController():
         # Use an ability if able
         if range_min <= dist_to_target <= range_max:
             sequence.extend([
+                intervals.WaitInterval(0.25),
                 combatant.use_ability(
                     ability,
                     target,
