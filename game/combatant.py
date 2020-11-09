@@ -1,5 +1,7 @@
 import random
 
+from direct.interval import IntervalGlobal as intervals
+
 from .monster import MonsterActor
 from . import effects
 from . import gamedb
@@ -70,21 +72,23 @@ class Combatant:
         }
 
     def use_ability(self, ability, target, controller, effect_node):
-        controller.display_message(
-            f'{self.name} is using {ability.name} '
-            f'on {target.name}'
-        )
-
         self.target = target
         target.target = self
 
         self.ability_used = True
 
-        return effects.sequence_from_ability(
-            effect_node,
-            self,
-            ability,
-            controller
+        return intervals.Sequence(
+            intervals.Func(
+                controller.display_message,
+                f'{self.name} is using {ability.name} '
+                f'on {target.name}'
+            ),
+            effects.sequence_from_ability(
+                effect_node,
+                self,
+                ability,
+                controller
+            )
         )
 
     def can_move(self):
