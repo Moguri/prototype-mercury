@@ -98,7 +98,6 @@ class SequenceBuilder:
         textnode.set_text(value)
 
         textnp = self.rendernp.attach_new_node(textnode)
-        textnp.set_pos(target.as_nodepath, 0, 0, 2)
         textnp.set_billboard_point_eye()
         textnp.set_bin("fixed", 0)
         textnp.set_depth_test(False)
@@ -109,6 +108,7 @@ class SequenceBuilder:
         textnp.hide()
 
         def func():
+            textnp.set_pos(target.as_nodepath, 0, 0, 2)
             intervals.Sequence(
                 intervals.Func(textnp.show),
                 intervals.LerpPosInterval(
