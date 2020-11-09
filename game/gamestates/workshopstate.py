@@ -308,7 +308,7 @@ class WorkshopState(GameState):
     def update(self, dt):
         super().update(dt)
 
-        if self.input_state != 'FOUNDRY':
+        if self.input_state not in ('FOUNDRY', 'WEAPON'):
             base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
     def load_monster_models(self, forms=None, weapons=None):
