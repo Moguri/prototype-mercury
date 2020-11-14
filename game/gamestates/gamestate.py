@@ -41,7 +41,8 @@ class GameState(DirectObject):
         self.dgui = dgui.UIS[name](base)
 
     def update_ui(self, state_data):
-        self.dgui.update(state_data)
+        if self.dgui:
+            self.dgui.update(state_data)
 
     def play_bg_music(self, filename):
         bgmusic = base.loader.load_music(f'music/{filename}.opus')
