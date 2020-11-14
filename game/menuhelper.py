@@ -16,8 +16,6 @@ class MenuHelper(DirectObject):
 
         self.accept('move-down', self.move_selection, [1])
         self.accept('move-up', self.move_selection, [-1])
-        self.accept('move-right', self.move_selection, [1])
-        self.accept('move-left', self.move_selection, [-1])
         self.accept('accept', self.accept_selection)
         self.accept('reject', self.reject_selection)
         self.accept('menu-hover', self.move_to_index)
