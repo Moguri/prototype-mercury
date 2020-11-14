@@ -1,6 +1,7 @@
 import itertools
 
 from direct.showbase.MessengerGlobal import messenger
+from direct.interval import IntervalGlobal as intervals
 import panda3d.core as p3d
 
 from .. import gamedb
@@ -173,11 +174,17 @@ class WorkshopState(GameState):
                 self.monster_selection = len(self.monster_actors) - 1
             elif self.monster_selection >= len(self.monster_actors):
                 self.monster_selection = 0
+            campos = base.camera.get_pos()
+            campos.x = self.monster_actors[self.monster_selection].get_x(self.root_node)
+            intervals.LerpPosInterval(
+                base.camera,
+                0.1,
+                campos,
+                blendType='easeInOut'
+            ).start()
+        update_monster_selection(0)
         self.accept('move-left', update_monster_selection, [-1])
         self.accept('move-right', update_monster_selection, [1])
-
-    def update_main(self, _dt):
-        base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
     def enter_foundry(self):
         gdb = gamedb.get_instance()
@@ -218,16 +225,27 @@ class WorkshopState(GameState):
         self.set_background('foundry')
 
     def enter_stats(self):
+        self.set_background('base')
+
+        self.load_monster_models([self.current_monster.form], [self.current_monster.weapon.id])
+        campos = base.camera.get_pos()
+        campos.x = base.get_aspect_ratio() * 1.25
+        intervals.LerpPosInterval(
+            base.camera,
+            0.1,
+            campos,
+            blendType='easeInOut'
+        ).start()
+
         self.update_ui({
             'show_stats': True,
+            'monster': self.current_monster.to_dict()
         })
-        monsterdict = self.current_monster.to_dict()
-        monsterdict['form'] = self.current_monster.form.name
-        self.update_ui({
-            'monster': monsterdict
-        })
-        self.accept('accept', self.set_input_state, ['MAIN'])
 
+        self.display_message('')
+
+    def exit_stats(self):
+        self.load_monster_models()
 
     def enter_weapon(self):
         gdb = gamedb.get_instance()

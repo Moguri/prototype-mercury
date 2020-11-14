@@ -18,7 +18,7 @@ class CommonUI():
             (0, -0.85)
         )
         self.message_box['frameColor'] = (
-            *settings.PRIMARY_COLOR[:3], 0.8
+            *settings.PRIMARY_COLOR[:3], 0.9
         )
         self.message_box.hide()
         self.roots.append(self.message_box)
@@ -48,7 +48,7 @@ class CommonUI():
             text_mayChange=True,
             text_scale=settings.TEXT_SCALE,
             text_fg=settings.TEXT_ACTIVE_COLOR,
-            text_align=p3d.TextNode.ALeft,
+            text_align=p3d.TextNode.A_left,
             text_pos=(
                 -box_width / 2 + box_padding,
                 box_height / 2 - box_padding - settings.TEXT_SCALE / 2

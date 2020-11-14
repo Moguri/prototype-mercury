@@ -167,6 +167,7 @@ class Monster:
             prop: getattr(self, prop)
             for prop in extras
         })
+        data['form'] = self.form.to_dict()
         if self.weapon is not None:
             data['weapon'] = self.weapon.to_dict()
 
@@ -232,11 +233,7 @@ class Monster:
 
     @property
     def abilities(self):
-        gdb = gamedb.get_instance()
-        return [
-            gdb['abilities'][abid]
-            for abid in self._monsterdata.weapon.abilities
-        ]
+        return self._monsterdata.weapon.abilities
 
     def upgrades_for_stat(self, stat):
         return sum([

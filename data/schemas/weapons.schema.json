@@ -49,5 +49,8 @@
             },
             "uniqueItems": true
         }
+    },
+    "links": {
+      "abilities" : "abilities"
     }
 }
