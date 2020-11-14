@@ -10,9 +10,16 @@ class CommonUI():
         self.roots = []
         self.showbase = showbase
         self.menu = Menu(showbase)
+        self.display_width = self.showbase.get_aspect_ratio() * 2
 
         # Message Box
-        self.message_box = self.create_box(1.80, 0.3, (0, -0.8))
+        self.message_box = self.create_box(
+            self.display_width * 0.9, 0.125,
+            (0, -0.85)
+        )
+        self.message_box['frameColor'] = (
+            *settings.PRIMARY_COLOR[:3], 0.8
+        )
         self.message_box.hide()
         self.roots.append(self.message_box)
 
