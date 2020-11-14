@@ -5,8 +5,6 @@ class CombatUI(CommonUI):
     def __init__(self, showbase):
         super().__init__(base)
 
-        self.message_box.set_pos((0, 0, 0.8))
-
         self.results_box = self.create_box(1.3, 1.0, (0, -0.2))
         self.results_box['frameColor'] = (
             *settings.PRIMARY_COLOR[:3], 0.8
