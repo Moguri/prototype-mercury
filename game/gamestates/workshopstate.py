@@ -145,7 +145,7 @@ class WorkshopState(GameState):
     def enter_state(self):
         super().enter_state()
 
-        self.display_message('')
+        self.display_message(None)
         self.update_ui({
             'show_stats': False,
         })
@@ -219,6 +219,7 @@ class WorkshopState(GameState):
                 return
             form = gdb['forms'][selection[2][0]]
             self.load_monster_models([form])
+            self.display_message(form.description)
         show_form()
         self.menu_helper.selection_change_cb = show_form
         self.menu_helper.reject_cb = foundry_reject
@@ -363,7 +364,8 @@ class WorkshopState(GameState):
     def display_message(self, msg, modal=False):
         self.message = msg
         self.message_modal = modal
-        self.menu_helper.lock = modal
+        if modal:
+            self.menu_helper.lock = True
         self.update_ui({
             'message': self.message,
             'message_modal': self.message_modal,

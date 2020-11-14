@@ -34,7 +34,7 @@ class CommonUI():
 
         if 'message' in statedata:
             msg = statedata['message']
-            if msg:
+            if msg is not None:
                 self.message_box['text'] = msg
                 self.message_box.show()
             else:
