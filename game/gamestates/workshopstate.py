@@ -158,7 +158,6 @@ class WorkshopState(GameState):
         self.set_background('base')
         menu_items = [
             ('Battle', self.set_input_state, ['COMBAT']),
-            ('Select Golem', self.set_input_state, ['SELECT_MONSTER']),
             ('Golem Stats', self.set_input_state, ['STATS']),
             ('Set Weapon', self.set_input_state, ['WEAPON']),
             ('Dismiss Golem', self.set_input_state, ['DISMISS']),
@@ -167,10 +166,6 @@ class WorkshopState(GameState):
         if len(self.player.monsters) < self.player.max_monsters:
             menu_items.insert(1, ('Foundry', self.set_input_state, ['FOUNDRY']))
         self.menu_helper.set_menu('Workshop', menu_items)
-
-    def enter_select_monster(self):
-        self.display_message('Select a golem', modal=True)
-        prev_selection = self.monster_selection
 
         def update_monster_selection(delta):
             self.monster_selection += delta
@@ -181,12 +176,8 @@ class WorkshopState(GameState):
         self.accept('move-left', update_monster_selection, [-1])
         self.accept('move-right', update_monster_selection, [1])
 
-        self.accept('accept', self.set_input_state, ['MAIN'])
-
-        def reject_sel():
-            self.monster_selection = prev_selection
-            self.input_state = 'MAIN'
-        self.accept('reject', reject_sel)
+    def update_main(self, _dt):
+        base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
     def enter_foundry(self):
         gdb = gamedb.get_instance()
@@ -305,12 +296,6 @@ class WorkshopState(GameState):
             ('Exit to Title Menu', base.change_state, ['Title']),
             ('Exit Game', messenger.send, ['quit']),
         ])
-
-    def update(self, dt):
-        super().update(dt)
-
-        if self.input_state not in ('FOUNDRY', 'WEAPON'):
-            base.camera.set_x(self.monster_actors[self.monster_selection].get_x(self.root_node))
 
     def load_monster_models(self, forms=None, weapons=None):
         for monact in self.monster_actors:
