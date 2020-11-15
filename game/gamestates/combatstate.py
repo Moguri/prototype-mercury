@@ -320,7 +320,7 @@ class CombatState(GameState):
     def enter_state(self):
         super().enter_state()
 
-        self.display_message('')
+        self.display_message(None)
         self.range_tiles = []
 
         # Kill all enemies cheat

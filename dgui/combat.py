@@ -12,7 +12,10 @@ class CombatUI(CommonUI):
         self.results_box.hide()
         self.roots.append(self.results_box)
 
-        self.status_box = self.create_box(1.0, 0.4, (1, -0.6))
+        self.status_box = self.create_box(
+            1.0, 0.4,
+            (self.display_width / 2 - 0.65, -0.5)
+        )
         self.roots.append(self.status_box)
 
     def update(self, statedata):
