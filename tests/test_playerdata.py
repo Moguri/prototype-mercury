@@ -35,3 +35,13 @@ def test_max_monsters(player):
     prev_limit = player.max_monsters
     player.rank += 1
     assert player.max_monsters > prev_limit
+
+def test_rank_tag(player):
+    '''Player should have tags based on their current rank'''
+    assert 'rank_1' in player.tags
+    assert 'rank_2' not in player.tags
+
+    player.rank = 3
+    assert 'rank_2' in player.tags
+    assert 'rank_3' in player.tags
+    assert 'rank_4' not in player.tags

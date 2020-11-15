@@ -32,6 +32,8 @@ class PlayerData:
     def tags(self):
         return self.personal_tags | {
             tag for monster in self.monsters for tag in monster.tags
+        } | {
+            f'rank_{i}' for i in range(self.rank+1)
         }
 
     def save(self, file_object):
