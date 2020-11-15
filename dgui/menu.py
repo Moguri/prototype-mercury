@@ -23,6 +23,13 @@ class Menu():
         self.heading = None
         self._item_text = []
         self._heading_text = ''
+        self._left_edge = 0
+
+    def show(self):
+        self.root.show()
+
+    def hide(self):
+        self.root.hide()
 
     def cleanup(self):
         self.root.remove_node()
@@ -49,25 +56,40 @@ class Menu():
         self.menu_buttons[index]['frameColor'] = self.ACTIVE_COLOR
         self.menu_buttons[index]['text_fg'] = self.TEXT_ACTIVE_COLOR
 
+    def build_buttons(self, items, has_heading, common_kwargs):
+        return [
+            DirectButton(
+                pos=(
+                    self._left_edge,
+                    0,
+                    self.MENU_START- (self.BUTTON_HEIGHT + self.BUTTON_SPACING) * (i+has_heading)
+                ),
+                text=item,
+                text_align=p3d.TextNode.ALeft,
+                **common_kwargs
+            )
+            for i, item in enumerate(items)
+        ]
+
     def rebuild_menu(self, newitems, heading):
-        left_edge = -self.showbase.get_aspect_ratio() + 0.2
+        self._left_edge = -self.showbase.get_aspect_ratio() + 0.2
         common_kwargs = {
             'parent': self.root,
             'text_scale': self.TEXT_SCALE,
             'relief': DGG.FLAT,
-            'frameSize': (
+            'frameSize': [
                 -0.05,
                 self.BUTTON_WIDTH - 0.05,
                 -0.05,
                 self.BUTTON_HEIGHT - 0.05
-            ),
+            ],
         }
 
         has_heading = bool(heading)
         if has_heading:
             self.heading = DirectLabel(
                 pos=(
-                    left_edge,
+                    self._left_edge,
                     0,
                     self.MENU_START
                 ),
@@ -80,19 +102,7 @@ class Menu():
 
         for button in self.menu_buttons:
             button.remove_node()
-        self.menu_buttons = [
-            DirectButton(
-                pos=(
-                    left_edge,
-                    0,
-                    self.MENU_START- (self.BUTTON_HEIGHT + self.BUTTON_SPACING) * (i+has_heading)
-                ),
-                text=item,
-                text_align=p3d.TextNode.ALeft,
-                **common_kwargs
-            )
-            for i, item in enumerate(newitems)
-        ]
+        self.menu_buttons = self.build_buttons(newitems, has_heading, common_kwargs)
 
         cursor_hidden = p3d.ConfigVariableBool('cursor-hidden')
 

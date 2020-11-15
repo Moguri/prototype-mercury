@@ -160,7 +160,6 @@ class WorkshopState(GameState):
         menu_items = [
             ('Battle', self.set_input_state, ['COMBAT']),
             ('Golem Stats', self.set_input_state, ['STATS']),
-            ('Set Weapon', self.set_input_state, ['WEAPON']),
             ('Dismiss Golem', self.set_input_state, ['DISMISS']),
             ('Quit', self.set_input_state, ['QUIT']),
         ]
@@ -242,7 +241,50 @@ class WorkshopState(GameState):
             'monster': self.current_monster.to_dict()
         })
 
-        self.display_message('')
+        def add_power():
+            pass
+
+        def toggle_ability(_ability):
+            pass
+
+        def change_weapon():
+            self.set_input_state('WEAPON')
+
+        menu_items = [
+            ('Add', add_power, []),
+            *[
+                (ability.name, toggle_ability, [ability])
+                for ability in self.current_monster.form.abilities
+            ],
+            (self.current_monster.weapon.name, change_weapon, []),
+            *[
+                (ability.name, toggle_ability, [ability])
+                for ability in self.current_monster.weapon.abilities
+            ],
+        ]
+
+        self.update_ui({
+            'num_form_abilities': len(self.current_monster.form.abilities),
+            'num_weapon_abilities': len(self.current_monster.weapon.abilities),
+        })
+
+        def select(idx):
+            item = menu_items[idx]
+            item_func_name = item[1].__name__
+            if item_func_name == 'add_power':
+                self.display_message(
+                    'Add more power to this golem'
+                )
+            elif item_func_name == 'change_weapon':
+                self.display_message(
+                    'Select a different weapon for this golem'
+                )
+            else:
+                ability = item[2][0]
+                self.display_message(ability.description)
+        select(0)
+        self.menu_helper.selection_change_cb = select
+        self.menu_helper.set_menu('', menu_items)
 
     def exit_stats(self):
         self.load_monster_models()
@@ -253,10 +295,10 @@ class WorkshopState(GameState):
         base.camera.set_x(0)
         def change_weapon(wepid):
             self.current_monster.weapon = wepid
-            self.input_state = 'MAIN'
+            self.input_state = 'STATS'
 
         def reject():
-            self.input_state = 'MAIN'
+            self.input_state = 'STATS'
 
         def select(_idx):
             selection = self.menu_helper.current_selection

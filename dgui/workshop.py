@@ -1,9 +1,10 @@
 import panda3d.core as p3d
 
-from direct.gui.DirectGui import DirectLabel
+from direct.gui.DirectGui import DirectLabel, DirectButton
 from direct.interval import IntervalGlobal as intervals
 
 from .commonui import CommonUI
+from .menu import Menu
 from . import settings
 
 class WorkshopUI(CommonUI):
@@ -48,9 +49,32 @@ class WorkshopUI(CommonUI):
             pos=(-1, 0, -0.3),
             **common_kwargs
         )
+        self._stats_menu = Menu(showbase)
+        self._stats_num_fabilities = 0
+        self._stats_num_wabilities = 0
+        self._stats_menu.build_buttons = self._stats_build_buttons
+        self._stats_menu.INACTIVE_COLOR = common_kwargs['frameColor']
+        self._stats_menu.ACTIVE_COLOR = (
+            *settings.SECONDARY_COLOR[:3], 0.9
+        )
+        self._stats_menu.BUTTON_WIDTH = 0.5
+        self._stats_menu.BUTTON_HEIGHT = 0.125
+
+    def cleanup(self):
+        super().cleanup()
+        self.menu.cleanup()
 
     def update(self, statedata):
+        if not self.stats_box.is_hidden():
+            self._stats_menu.update(statedata)
+            statedata.pop('show_menu', None)
         super().update(statedata)
+
+        if 'num_form_abilities' in statedata:
+            self._stats_num_fabilities = statedata['num_form_abilities']
+
+        if 'num_weapon_abilities' in statedata:
+            self._stats_num_wabilities = statedata['num_weapon_abilities']
 
         if 'monster' in statedata:
             self.rebuild_stats(statedata['monster'])
@@ -68,8 +92,71 @@ class WorkshopUI(CommonUI):
                     blendType='easeInOut'
                 ).start()
                 self.stats_box.show()
+                self.menu.hide()
             elif not show:
                 self.stats_box.hide()
+                self.menu.show()
+
+    def _stats_build_buttons(self, items, _has_heading, common_kwargs):
+        common_kwargs['parent'] = self.stats_box
+        common_kwargs['text_align'] = p3d.TextNode.A_left
+        button_height = self._stats_menu.BUTTON_HEIGHT
+        button_spacing = self._stats_menu.BUTTON_SPACING
+        common_kwargs['frameSize'][2] = -0.025
+
+        add_power_item = items[0]
+        fability_items = items[1:self._stats_num_fabilities+1]
+        change_weapon_item = items[self._stats_num_fabilities+1]
+        wability_items = items[
+            self._stats_num_fabilities+2:len(items)
+        ]
+
+        buttons = []
+
+        for idx, item in enumerate(fability_items):
+            buttons.append(
+                DirectButton(
+                    pos=(
+                        -0.95,
+                        0,
+                        0.07 - (button_height + button_spacing) * idx
+                    ),
+                    text=item,
+                    **common_kwargs
+                )
+            )
+
+        buttons.append(
+            DirectButton(
+                pos=(-0.7, 0, -0.3),
+                text=change_weapon_item,
+                **common_kwargs
+            )
+        )
+
+        for idx, item in enumerate(wability_items):
+            buttons.append(
+                DirectButton(
+                    pos=(
+                        -0.95,
+                        0,
+                        -0.5 - (button_height + button_spacing) * idx
+                    ),
+                    text=item,
+                    **common_kwargs
+                )
+            )
+
+        common_kwargs['frameSize'][1] = 0.15
+        buttons.insert(0,
+            DirectButton(
+                pos=(-0.95, 0, 0.35),
+                text=add_power_item,
+                **common_kwargs
+            )
+        )
+
+        return buttons
 
     def rebuild_stats(self, monsterdata):
         self._stats_header['text'] = monsterdata["name"]
@@ -80,28 +167,19 @@ class WorkshopUI(CommonUI):
             f'Magical Attack: {monsterdata["magical_attack"]}\n'
             'Power:'
         )
+
         form = monsterdata['form']
-        fabilities = [
-            'HP Up',
-            'Mov Up',
-            'PA Up',
-        ]
         self._stats_form['text'] = (
             f'Form: {form["name"]}\n'
-            f'  Abilities:\n'
-            f'    {fabilities[0]}\n'
-            f'    {fabilities[1]}\n'
-            f'    {fabilities[2]}\n'
+            f'  Abilities:'
         )
+
         weapon = monsterdata['weapon']
-        wabilities = [i.name for i in weapon['abilities']]
-        while len(wabilities) < 3:
-            wabilities.append('')
         self._stats_weapon['text'] = (
-            f'Weapon: {weapon["name"]}\n'
+            f'Weapon:\n'
             f'  Abilities:\t\tStats:\n'
-            f'    {wabilities[0]:30}\t  Power: {weapon["damage"]}\n'
-            f'    {wabilities[1]:30}\t  Type: {weapon["type"]}\n'
-            f'    {wabilities[2]:30}\t  Range Min: {weapon["range_min"]}\n'
+            f'  \t\t  Power: {weapon["damage"]}\n'
+            f'  \t\t  Type: {weapon["type"]}\n'
+            f'  \t\t  Range Min: {weapon["range_min"]}\n'
             f'  \t\t  Range Max: {weapon["range_max"]}\n'
         )
