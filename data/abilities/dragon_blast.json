@@ -1,0 +1,8 @@
+{
+    "name": "Dragon Blast",
+    "description": "The magical remnants of the dragon are unleashed in a ball of fiery fury.",
+    "range_min": 1,
+    "range_max": 2,
+    "power": 16,
+    "type": "magical"
+}
