@@ -8,7 +8,8 @@
             "type": "string"
         },
         "description": {
-            "type": "string"
+            "type": "string",
+            "default": ""
         },
         "mesh": {
             "properties": {
@@ -29,26 +30,30 @@
         },
         "range_min": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "default": 1
         },
         "range_max": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "default": 1
         },
         "type": {
             "type": "string",
             "enum": [
                 "physical",
                 "magical"
-            ]
+            ],
+            "default": "physical"
         },
         "abilities": {
             "type": "array",
             "items": {
                 "type": "string"
             },
+            "uniqueItems": true,
             "maxItems": 3,
-            "uniqueItems": true
+            "default": []
         }
     },
     "links": {

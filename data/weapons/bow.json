@@ -4,7 +4,6 @@
     "damage": 2,
     "range_min": 2,
     "range_max": 5,
-    "type": "physical",
     "mesh": {
         "root_node": "longbow"
     },
