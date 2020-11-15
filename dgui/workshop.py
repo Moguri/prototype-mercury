@@ -150,7 +150,7 @@ class WorkshopUI(CommonUI):
         common_kwargs['frameSize'][1] = 0.15
         buttons.insert(0,
             DirectButton(
-                pos=(-0.95, 0, 0.35),
+                pos=(-0.95, 0, 0.375),
                 text=add_power_item,
                 **common_kwargs
             )
@@ -165,7 +165,8 @@ class WorkshopUI(CommonUI):
             f'Physical Attack: {monsterdata["physical_attack"]}\n'
             f'Movement: {monsterdata["movement"]}\t'
             f'Magical Attack: {monsterdata["magical_attack"]}\n'
-            'Power:'
+            'Power:\n'
+            f'\t{monsterdata["power_spent"]}/{monsterdata["power_available"]}'
         )
 
         form = monsterdata['form']

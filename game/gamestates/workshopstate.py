@@ -243,13 +243,22 @@ class WorkshopState(GameState):
         })
 
         def add_power():
-            pass
+            if self.current_monster.power_available < self.current_monster.MAX_POWER:
+                self.current_monster.power_available += 1
+            else:
+                self.menu_helper.sfx_reject.play()
+            self.update_ui({
+                'monster': self.current_monster.to_dict()
+            })
 
         def toggle_ability(ability, learned_list):
             if ability.id in learned_list:
                 learned_list.remove(ability.id)
-            else:
+            elif self.current_monster.power_spent < self.current_monster.power_available:
                 learned_list.append(ability.id)
+            else:
+                self.menu_helper.sfx_reject.play()
+
             self.update_ui({
                 'monster': self.current_monster.to_dict()
             })

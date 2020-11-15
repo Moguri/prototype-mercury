@@ -24,6 +24,11 @@
           "type": "string",
           "default": "unarmed"
         },
+        "power_available": {
+          "type": "integer",
+          "default": 1,
+          "minimum": 1
+        },
         "abilities_learned_form": {
             "type": "array",
             "default": [],

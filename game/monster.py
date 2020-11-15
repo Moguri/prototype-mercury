@@ -143,6 +143,7 @@ class Monster:
         'magical_attack',
         'movement',
     ]
+    MAX_POWER = 6
     def __init__(self, monsterdata):
         self._monsterdata = monsterdata
 
@@ -162,6 +163,7 @@ class Monster:
 
         extras = [
             'hit_points',
+            'power_spent',
         ] + self.BASE_STATS
         data.update({
             prop: getattr(self, prop)
@@ -241,3 +243,18 @@ class Monster:
             upgrades.get(stat, 0)
             for upgrades in self.stat_upgrades.values()
         ])
+
+    @property
+    def power_available(self):
+        return self._monsterdata.power_available
+
+    @power_available.setter
+    def power_available(self, value):
+        self._monsterdata.power_available = value
+
+    @property
+    def power_spent(self):
+        return (
+            len(self._monsterdata.abilities_learned_weapon)
+            + len(self._monsterdata.abilities_learned_form)
+        )
