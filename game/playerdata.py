@@ -24,13 +24,6 @@ class PlayerData:
             'last_access_time': self.last_access_time,
         }
 
-    def to_metadata_dict(self):
-        return {
-            'id': self.saveid,
-            'trainer_name': self.name,
-            'last_access_time': self.last_access_time,
-        }
-
     def can_use_form(self, form):
         return set(form.required_tags).issubset(self.personal_tags)
 
