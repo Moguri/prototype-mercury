@@ -233,7 +233,7 @@ class Monster:
 
     @property
     def abilities(self):
-        return self._monsterdata.weapon.abilities
+        return self.weapon.abilities + self.form.abilities
 
     def upgrades_for_stat(self, stat):
         return sum([
