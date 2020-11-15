@@ -19,6 +19,7 @@ class PlayerData:
         return {
             'name': self.name,
             'saveid': self.saveid,
+            'personal_tags': list(self.personal_tags),
             'monsters': [i.to_dict(skip_extras=True) for i in self.monsters],
             'last_access_time': self.last_access_time,
         }
@@ -49,7 +50,9 @@ class PlayerData:
         player = cls()
         data = json.load(file_object)
 
-        player.name = str(data['name'])
+        player.name = data['name']
+        player.saveid = data['saveid']
+        player.personal_tags = set(data['personal_tags'])
         for monster_data in data['monsters']:
             monster = gdb.schema_to_datamodel['monsters'](monster_data)
             monster.link(gdb)
