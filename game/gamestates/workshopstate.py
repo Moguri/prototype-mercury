@@ -173,14 +173,9 @@ class WorkshopState(GameState):
                 self.monster_selection = len(self.monster_actors) - 1
             elif self.monster_selection >= len(self.monster_actors):
                 self.monster_selection = 0
-            campos = base.camera.get_pos()
-            campos.x = self.monster_actors[self.monster_selection].get_x(self.root_node)
-            intervals.LerpPosInterval(
-                base.camera,
-                0.1,
-                campos,
-                blendType='easeInOut'
-            ).start()
+            self.set_camera_x(
+                self.monster_actors[self.monster_selection].get_x(self.root_node)
+            )
         update_monster_selection(0)
         self.accept('move-left', update_monster_selection, [-1])
         self.accept('move-right', update_monster_selection, [1])
@@ -188,7 +183,7 @@ class WorkshopState(GameState):
     def enter_foundry(self):
         gdb = gamedb.get_instance()
         self.load_monster_models([])
-        base.camera.set_x(0)
+        self.set_camera_x(0)
         def get_monster(formid):
             form = gdb['forms'][formid]
             self.player.monsters.append(
@@ -227,14 +222,7 @@ class WorkshopState(GameState):
         self.set_background('base')
 
         self.load_monster_models([self.current_monster.form], [self.current_monster.weapon.id])
-        campos = base.camera.get_pos()
-        campos.x = base.get_aspect_ratio() * 1.25
-        intervals.LerpPosInterval(
-            base.camera,
-            0.1,
-            campos,
-            blendType='easeInOut'
-        ).start()
+        self.set_camera_x(base.get_aspect_ratio() * 1.25)
 
         self.update_ui({
             'show_stats': True,
@@ -292,7 +280,7 @@ class WorkshopState(GameState):
     def enter_weapon(self):
         gdb = gamedb.get_instance()
         self.load_monster_models([self.current_monster.form], [self.current_monster.weapon.id])
-        base.camera.set_x(0)
+        self.set_camera_x(0)
         def change_weapon(wepid):
             self.current_monster.weapon = wepid
             self.input_state = 'STATS'
@@ -405,6 +393,16 @@ class WorkshopState(GameState):
     def set_background(self, bgname):
         self.background_image.set_shader_input('tex', self.background_textures[bgname][0])
         self.foreground_image.set_shader_input('tex', self.background_textures[bgname][1])
+
+    def set_camera_x(self, newx):
+        campos = base.camera.get_pos()
+        campos.x = newx
+        intervals.LerpPosInterval(
+            base.camera,
+            0.1,
+            campos,
+            blendType='easeInOut'
+        ).start()
 
     def display_message(self, msg, modal=False):
         self.message = msg
