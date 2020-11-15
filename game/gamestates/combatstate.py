@@ -367,22 +367,22 @@ class CombatState(GameState):
 
         self.menu_helper.set_menu(combatant.name, menu_items)
 
-        def update_ability(idx):
+        def update_ability(menu_item):
             self.range_tiles = []
-            menu_item = menu_items[idx][0]
-            if menu_item == 'Move':
+            item_name = menu_item[0]
+            if item_name == 'Move':
                 self.range_tiles = self.arena.find_tiles_in_range(
                     combatant.tile_position,
                     0,
                     combatant.move_current
                 )
-            elif menu_item not in ('Rest', 'End Turn', 'End Combat'):
-                ability = menu_items[idx][2][0]
+            elif item_name not in ('Rest', 'End Turn', 'End Combat'):
+                ability = menu_item[2][0]
                 self.range_tiles = self.arena.find_tiles_in_range(
                     combatant.tile_position,
                     *self.get_ability_range(combatant, ability)
                 )
-        update_ability(0)
+        update_ability(self.menu_helper.current_selection)
         self.menu_helper.selection_change_cb = update_ability
         def action_reject():
             self.set_input_state('SELECT', combatant)
