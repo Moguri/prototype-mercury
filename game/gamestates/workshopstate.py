@@ -205,14 +205,13 @@ class WorkshopState(GameState):
             menu_items.insert(0, ('Back', foundry_reject, []))
         self.menu_helper.set_menu('Select a Form', menu_items)
 
-        def show_form(_idx=None):
-            selection = self.menu_helper.current_selection
+        def show_form(selection):
             if selection[0] == 'Back':
                 return
             form = gdb['forms'][selection[2][0]]
             self.load_monster_models([form])
             self.display_message(form.description)
-        show_form()
+        show_form(self.menu_helper.current_selection)
         self.menu_helper.selection_change_cb = show_form
         self.menu_helper.reject_cb = foundry_reject
         self.display_message('Select a form')
@@ -246,32 +245,52 @@ class WorkshopState(GameState):
         def add_power():
             pass
 
-        def toggle_ability(_ability):
-            pass
+        def toggle_ability(ability, learned_list):
+            if ability.id in learned_list:
+                learned_list.remove(ability.id)
+            else:
+                learned_list.append(ability.id)
+            self.update_ui({
+                'monster': self.current_monster.to_dict()
+            })
+            prev_idx = self.menu_helper.selection_idx
+            self.menu_helper.set_menu('', build_menu())
+            self.menu_helper.move_to_index(prev_idx, play_sfx=False)
 
         def change_weapon():
             self.set_input_state('WEAPON')
 
-        menu_items = [
-            ('Add', add_power, []),
-            *[
-                (ability.name, toggle_ability, [ability])
-                for ability in self.current_monster.form.abilities
-            ],
-            (self.current_monster.weapon.name, change_weapon, []),
-            *[
-                (ability.name, toggle_ability, [ability])
-                for ability in self.current_monster.weapon.abilities
-            ],
-        ]
+        def gen_ability_menu(abilities, learned):
+            items = []
+
+            for ability in abilities:
+                is_learned = ability.id in learned
+                aname = ability.name
+                if is_learned:
+                    aname += '*'
+                items.append((aname, toggle_ability, (ability, learned)))
+            return items
+
+        def build_menu():
+            return [
+                ('Add', add_power, []),
+                *gen_ability_menu(
+                    self.current_monster.form.abilities,
+                    self.current_monster.abilities_learned_form
+                ),
+                (self.current_monster.weapon.name, change_weapon, []),
+                *gen_ability_menu(
+                    self.current_monster.weapon.abilities,
+                    self.current_monster.abilities_learned_weapon
+                ),
+            ]
 
         self.update_ui({
             'num_form_abilities': len(self.current_monster.form.abilities),
             'num_weapon_abilities': len(self.current_monster.weapon.abilities),
         })
 
-        def select(idx):
-            item = menu_items[idx]
+        def select(item):
             item_func_name = item[1].__name__
             if item_func_name == 'add_power':
                 self.display_message(
@@ -284,9 +303,9 @@ class WorkshopState(GameState):
             else:
                 ability = item[2][0]
                 self.display_message(ability.description)
-        select(0)
         self.menu_helper.selection_change_cb = select
-        self.menu_helper.set_menu('', menu_items)
+        self.menu_helper.set_menu('', build_menu())
+        select(self.menu_helper.current_selection)
 
     def exit_stats(self):
         self.load_monster_models()
@@ -302,8 +321,7 @@ class WorkshopState(GameState):
         def reject():
             self.input_state = 'STATS'
 
-        def select(_idx):
-            selection = self.menu_helper.current_selection
+        def select(selection):
             if selection[0] == 'Back':
                 wepid = self.current_monster.weapon.id
             else:

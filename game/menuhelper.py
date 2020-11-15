@@ -60,7 +60,7 @@ class MenuHelper(DirectObject):
 
         if self.selection_change_cb is not None:
             # pylint: disable=not-callable
-            self.selection_change_cb(self.selection_idx)
+            self.selection_change_cb(self.current_selection)
 
     def move_selection(self, delta):
         if self.lock:

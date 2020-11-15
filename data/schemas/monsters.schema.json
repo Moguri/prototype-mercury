@@ -23,6 +23,22 @@
         "weapon": {
           "type": "string",
           "default": "unarmed"
+        },
+        "abilities_learned_form": {
+            "type": "array",
+            "default": [],
+            "uniqueItems": true,
+            "items": {
+                "type": "string"
+            }
+        },
+        "abilities_learned_weapon": {
+            "type": "array",
+            "default": [],
+            "uniqueItems": true,
+            "items": {
+                "type": "string"
+            }
         }
     },
     "links": {

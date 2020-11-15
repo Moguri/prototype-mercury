@@ -216,6 +216,7 @@ class Monster:
             gdb = gamedb.get_instance()
             value = gdb['weapons'][value]
 
+        self._monsterdata.abilities_learned_weapon = []
         self._monsterdata.weapon = value
 
     @classmethod
