@@ -28,3 +28,10 @@ def test_tags(player):
 
     player.personal_tags.remove('in_test')
     assert not player.can_use_form(player.monsters[0].form)
+
+def test_max_monsters(player):
+    '''Increasing rank should allow for more golems'''
+
+    prev_limit = player.max_monsters
+    player.rank += 1
+    assert player.max_monsters > prev_limit

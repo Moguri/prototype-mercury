@@ -13,13 +13,14 @@ class PlayerData:
         self.saveid = uuid.uuid4().hex
         self.last_access_time = datetime.datetime.now().isoformat()
         self.personal_tags = set()
-        self.max_monsters = 3
+        self.rank = 1
 
     def to_dict(self):
         return {
             'name': self.name,
             'saveid': self.saveid,
             'personal_tags': list(self.personal_tags),
+            'rank': self.rank,
             'monsters': [i.to_dict(skip_extras=True) for i in self.monsters],
             'last_access_time': self.last_access_time,
         }
@@ -46,9 +47,19 @@ class PlayerData:
         player.name = data['name']
         player.saveid = data['saveid']
         player.personal_tags = set(data['personal_tags'])
+        player.rank = data['rank']
         for monster_data in data['monsters']:
             monster = gdb.schema_to_datamodel['monsters'](monster_data)
             monster.link(gdb)
             player.monsters.append(Monster(monster))
 
         return player
+
+    @property
+    def max_monsters(self):
+        return {
+            1: 2,
+            2: 3,
+            3: 5,
+            4: 8,
+        }[self.rank]
