@@ -221,12 +221,26 @@ class WorkshopState(GameState):
     def enter_stats(self):
         self.set_background('base')
 
-        self.load_monster_models([self.current_monster.form], [self.current_monster.weapon.id])
         self.set_camera_x(base.get_aspect_ratio() * 1.25)
+        def update_monster_selection(delta):
+            self.monster_selection += delta
+            if self.monster_selection < 0:
+                self.monster_selection = len(self.player.monsters) - 1
+            elif self.monster_selection >= len(self.player.monsters):
+                self.monster_selection = 0
+            self.load_monster_models(
+                [self.current_monster.form],
+                [self.current_monster.weapon.id]
+            )
+            self.update_ui({
+                'monster': self.current_monster.to_dict()
+            })
+        update_monster_selection(0)
+        self.accept('move-left', update_monster_selection, [-1])
+        self.accept('move-right', update_monster_selection, [1])
 
         self.update_ui({
             'show_stats': True,
-            'monster': self.current_monster.to_dict()
         })
 
         def add_power():
