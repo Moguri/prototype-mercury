@@ -4,9 +4,9 @@
         "mage",
         "advanced_fighter"
     ],
-    "required_tags": [
-      "disabled"
-    ],
+    "mesh": {
+        "bam_file": "dragon_golem"
+    },
     "hp": 12,
     "physical_attack": 6,
     "magical_attack": 6,
