@@ -5,8 +5,7 @@
         "advanced_fighter"
     ],
     "mesh": {
-        "bam_file": "dragon_golem",
-        "root_node": "dragonGolem"
+        "bam_file": "dragon_golem"
     },
     "hp": 12,
     "physical_attack": 6,
