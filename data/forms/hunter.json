@@ -1,0 +1,10 @@
+{
+    "name": "Hunter",
+    "mesh": {
+        "bam_file": "hunter_golem"
+    },
+    "hp": 8,
+    "physical_attack": 4,
+    "magical_attack": 3,
+    "movement": 5
+}
