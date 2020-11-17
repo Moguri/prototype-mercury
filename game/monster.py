@@ -80,6 +80,8 @@ class MonsterActor:
         if mesh.is_empty():
             print(f'Warning: could not find weapon {meshname}')
             modelroot.ls()
+        elif weapon_joint is None:
+            print(f'Warning: could not find weapon joint on {self.form.name}')
         else:
             mesh.set_y(0.4)
             inv_scale = [1 / i for i in weapon_joint.get_scale()]
