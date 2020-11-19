@@ -241,13 +241,21 @@ class CombatState(GameState):
 
         # Enemy Combatants
         default_combat_type = p3d.ConfigVariableString('mercury-default-combat-type', 'skirmish')
-        combat_type = base.blackboard.get('combat_type', default_combat_type)
+        self.combat_type = base.blackboard.get('combat_type', default_combat_type)
+        if self.combat_type == 'tournament':
+            num_enemies = {
+                1: 3,
+                2: 5,
+                3: 8
+            }.get(self.player.rank, 8)
+        else:
+            num_enemies = len(self.player_combatants)
         self.enemy_combatants = [
             Combatant(
                 Monster.gen_random(f'combatant{i}', 1),
                 self.root_node
             )
-            for i in range(7 if combat_type == 'boss' else len(self.player_combatants))
+            for i in range(num_enemies)
         ]
         possible_positions = [
             (x, y)
@@ -510,6 +518,11 @@ class CombatState(GameState):
             self.display_message('Match was forfeited')
         elif isvictory:
             self.display_message('Victory!')
+            if self.combat_type == 'tournament':
+                self.player.rank += 1
+                results += [
+                    f'Advanced to Rank {self.player.rank}'
+                ]
         else:
             self.display_message('Defeat.')
 

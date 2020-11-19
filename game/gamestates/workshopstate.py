@@ -358,11 +358,13 @@ class WorkshopState(GameState):
         def enter_combat(ctype):
             base.blackboard['combat_type'] = ctype
             base.change_state('Combat')
-        self.menu_helper.set_menu('', [
+        menu_items = [
             ('Back', self.set_input_state, ['MAIN']),
             ('Skirmish', enter_combat, ['skirmish']),
-            ('Boss Fight', enter_combat, ['boss']),
-        ])
+        ]
+        if self.player.rank < self.player.MAX_RANK:
+            menu_items.append(('Tournament', enter_combat, ['tournament']))
+        self.menu_helper.set_menu('', menu_items)
 
     def enter_dismiss(self):
         mon = self.player.monsters.pop(self.monster_selection)

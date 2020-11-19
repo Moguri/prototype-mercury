@@ -7,6 +7,7 @@ from .monster import Monster
 
 
 class PlayerData:
+    MAX_RANK = 4
     def __init__(self):
         self.name = 'Foo Man'
         self.monsters = []
