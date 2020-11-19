@@ -29,10 +29,8 @@ jobs:
     - name: Install Blender
       run: |
         sudo snap install blender --classic
-        echo "::add-path::/snap/bin"
     - name: Convert Assets
       run: |
-        echo $PATH
         blender --version
         pman build
     - name: Run Tests
