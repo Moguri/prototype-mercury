@@ -215,6 +215,8 @@ class SequenceBuilder:
             parameters['animation_name'] = 'magic'
         if 'vfx' not in parameters and self.ability.type == 'magical':
             parameters['vfx'] = ['dust']
+        else:
+            parameters['vfx'] = ['sparks']
 
         sequence.extend(intervals.Sequence(
             self.play_animation(self.combatant, parameters),

@@ -15,3 +15,6 @@
 
 # Title Background Video
 [Title Unknown](https://pixabay.com/videos/loops-motion-loops-motion-moving-12529/) by [Thomas Lopez](https://pixabay.com/users/tommyclopez-5456791) is licensed under the [Simplified Pixabay License](https://pixabay.com/service/license/)
+
+# VFX
+[slash sprites] (https://opengameart.org/content/slash-0) by [Raja_kutai](https://opengameart.org/users/rajakutai) are licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0/)
