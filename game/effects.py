@@ -215,7 +215,7 @@ class SequenceBuilder:
             parameters['animation_name'] = 'magic'
         if 'vfx' not in parameters and self.ability.type == 'magical':
             parameters['vfx'] = ['dust']
-        else:
+        elif 'vfx' not in parameters:
             parameters['vfx'] = ['sparks']
 
         sequence.extend(intervals.Sequence(
