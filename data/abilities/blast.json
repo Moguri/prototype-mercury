@@ -4,5 +4,13 @@
     "range_max": 4,
     "power": 20,
     "hit_chance": 80,
-    "type": "magical"
+    "type": "magical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "vfx": ["blast"]
+            }
+        }
+    ]
 }
