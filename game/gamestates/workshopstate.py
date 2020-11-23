@@ -149,6 +149,8 @@ class WorkshopState(GameState):
         self.display_message(None)
         self.update_ui({
             'show_stats': False,
+            'num_golems': len(self.player.monsters),
+            'max_golems': self.player.max_monsters
         })
 
         def back_to_main():

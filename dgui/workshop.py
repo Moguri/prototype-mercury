@@ -11,6 +11,16 @@ class WorkshopUI(CommonUI):
     def __init__(self, showbase):
         super().__init__(base)
 
+        self.num_golems_label = self.create_box(
+            0, 0,
+            (self.display_width / 2 -0.1, 0.95),
+            box_padding=0,
+            text_scale=settings.TEXT_SCALE * 1.50,
+            text_align=p3d.TextNode.A_right,
+            frameColor=(0, 0, 0, 0),
+        )
+        self.roots.append(self.num_golems_label)
+
         self.stats_box = self.create_box(
             self.display_width * 0.6, 1.7,
             (0.4, 0.1)
@@ -76,6 +86,9 @@ class WorkshopUI(CommonUI):
         if 'num_weapon_abilities' in statedata:
             self._stats_num_wabilities = statedata['num_weapon_abilities']
 
+        if 'num_golems' in statedata or 'max_golems' in statedata:
+            self.num_golems_label['text'] = f'Golems: {statedata["num_golems"]}/{statedata["max_golems"]}'
+
         if 'monster' in statedata:
             self.rebuild_stats(statedata['monster'])
 
@@ -93,9 +106,11 @@ class WorkshopUI(CommonUI):
                 ).start()
                 self.stats_box.show()
                 self.menu.hide()
+                self.num_golems_label.hide()
             elif not show:
                 self.stats_box.hide()
                 self.menu.show()
+                self.num_golems_label.show()
 
     def _stats_build_buttons(self, items, _has_heading, common_kwargs):
         common_kwargs['parent'] = self.stats_box

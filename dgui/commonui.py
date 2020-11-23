@@ -41,24 +41,25 @@ class CommonUI():
                 self.message_box.hide()
 
     def create_box(self, box_width, box_height, pos, *, box_padding=0.05, **kwargs):
-        return DirectLabel(
-            parent=self.showbase.aspect2d,
-            pos=(pos[0], 0, pos[1]),
-            text='',
-            text_mayChange=True,
-            text_scale=settings.TEXT_SCALE,
-            text_fg=settings.TEXT_ACTIVE_COLOR,
-            text_align=p3d.TextNode.A_left,
-            text_pos=(
+        defaults = {
+            'parent': self.showbase.aspect2d,
+            'pos': (pos[0], 0, pos[1]),
+            'text': '',
+            'text_mayChange': True,
+            'text_scale': settings.TEXT_SCALE,
+            'text_fg': settings.TEXT_ACTIVE_COLOR,
+            'text_align': p3d.TextNode.A_left,
+            'text_pos': (
                 -box_width / 2 + box_padding,
                 box_height / 2 - box_padding - settings.TEXT_SCALE / 2
             ),
-            frameColor=settings.PRIMARY_COLOR,
-            frameSize=(
+            'frameColor': settings.PRIMARY_COLOR,
+            'frameSize': (
                 -box_width / 2,
                 box_width / 2,
                 -box_height / 2,
                 box_height / 2
             ),
-            **kwargs
-        )
+        }
+        defaults.update(kwargs)
+        return DirectLabel(**defaults)
