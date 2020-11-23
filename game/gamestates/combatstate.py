@@ -564,8 +564,6 @@ class CombatState(GameState):
             combatant.tile_position,
             other.tile_position
         )
-        if distance == target_range:
-            return intervals.Sequence()
 
         inc = 1 if target_range < distance else -1
 

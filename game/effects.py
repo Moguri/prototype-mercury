@@ -228,7 +228,7 @@ class SequenceBuilder:
             if 'end_range' in parameters:
                 parameters['range_index'] = parameters['end_range']
             else:
-                parameters['range_index'] = -1
+                parameters['range_index'] = parameters['start_range']
             sequence.append(self.move_to_range(self.combatant, parameters))
 
         return sequence
