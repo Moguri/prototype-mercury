@@ -72,6 +72,7 @@ class MonsterActor:
         if isinstance(weapon,str):
             gdb = gamedb.get_instance()
             weapon = gdb['weapons'][weapon]
+
         meshname = weapon.mesh['root_node']
         if meshname == '':
             return
@@ -81,13 +82,23 @@ class MonsterActor:
         if mesh.is_empty():
             print(f'Warning: could not find weapon {meshname}')
             modelroot.ls()
+            return
         elif weapon_joint is None:
             print(f'Warning: could not find weapon joint on {self.form.name}')
-        else:
-            mesh.set_y(0.4)
-            inv_scale = [1 / i for i in weapon_joint.get_scale()]
-            mesh.set_scale(*inv_scale)
-            mesh.instance_to(weapon_joint)
+            return
+
+        # Update weapon transform
+        weaponxf = self.form.weapon_offset
+        pos, hpr, scale = weaponxf['position'][:], weaponxf['hpr'][:], weaponxf['scale'][:]
+        pos[1] += 0.4
+        mesh.set_pos(mesh.get_pos() + p3d.LVector3(*pos))
+        mesh.set_hpr(*hpr)
+        scale = [
+            scale[idx] / inv
+            for idx, inv in enumerate(weapon_joint.get_scale())
+        ]
+        mesh.set_scale(*scale)
+        mesh.instance_to(weapon_joint)
 
     def __getattr__(self, name):
         return getattr(self._path, name)
