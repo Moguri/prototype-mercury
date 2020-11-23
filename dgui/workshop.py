@@ -53,12 +53,12 @@ class WorkshopUI(CommonUI):
         self._stats_num_fabilities = 0
         self._stats_num_wabilities = 0
         self._stats_menu.build_buttons = self._stats_build_buttons
-        self._stats_menu.INACTIVE_COLOR = common_kwargs['frameColor']
-        self._stats_menu.ACTIVE_COLOR = (
+        self._stats_menu.inactive_color = common_kwargs['frameColor']
+        self._stats_menu.active_color = (
             *settings.SECONDARY_COLOR[:3], 0.9
         )
-        self._stats_menu.BUTTON_WIDTH = 0.5
-        self._stats_menu.BUTTON_HEIGHT = 0.125
+        self._stats_menu.button_width = 0.5
+        self._stats_menu.button_height = 0.125
 
     def cleanup(self):
         super().cleanup()
@@ -100,8 +100,8 @@ class WorkshopUI(CommonUI):
     def _stats_build_buttons(self, items, _has_heading, common_kwargs):
         common_kwargs['parent'] = self.stats_box
         common_kwargs['text_align'] = p3d.TextNode.A_left
-        button_height = self._stats_menu.BUTTON_HEIGHT
-        button_spacing = self._stats_menu.BUTTON_SPACING
+        button_height = self._stats_menu.button_height
+        button_spacing = self._stats_menu.button_spacing
         common_kwargs['frameSize'][2] = -0.025
 
         add_power_item = items[0]

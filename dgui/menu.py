@@ -6,15 +6,6 @@ from direct.gui.DirectGui import DirectLabel, DirectButton, DGG
 from . import settings
 
 class Menu():
-    MENU_START = 0.7
-    BUTTON_WIDTH = 0.75
-    BUTTON_HEIGHT = 0.15
-    BUTTON_SPACING = 0
-    TEXT_SCALE = settings.TEXT_SCALE
-    TEXT_INACTIVE_COLOR = settings.TEXT_INACTIVE_COLOR
-    TEXT_ACTIVE_COLOR = settings.TEXT_ACTIVE_COLOR
-    INACTIVE_COLOR = settings.PRIMARY_COLOR
-    ACTIVE_COLOR = settings.SECONDARY_COLOR
 
     def __init__(self, showbase):
         self.showbase = showbase
@@ -24,6 +15,16 @@ class Menu():
         self._item_text = []
         self._heading_text = ''
         self._left_edge = 0
+
+        self.menu_start = 0.7
+        self.button_width = 0.75
+        self.button_height = 0.15
+        self.button_spacing = 0
+        self.text_scale = settings.TEXT_SCALE
+        self.text_inactive_color = settings.TEXT_INACTIVE_COLOR
+        self.text_active_color = settings.TEXT_ACTIVE_COLOR
+        self.inactive_color = settings.PRIMARY_COLOR
+        self.active_color = settings.SECONDARY_COLOR
 
     def show(self):
         self.root.show()
@@ -51,10 +52,10 @@ class Menu():
 
     def update_selection(self, index):
         for button in self.menu_buttons:
-            button['frameColor'] = self.INACTIVE_COLOR
-            button['text_fg'] = self.TEXT_INACTIVE_COLOR
-        self.menu_buttons[index]['frameColor'] = self.ACTIVE_COLOR
-        self.menu_buttons[index]['text_fg'] = self.TEXT_ACTIVE_COLOR
+            button['frameColor'] = self.inactive_color
+            button['text_fg'] = self.text_inactive_color
+        self.menu_buttons[index]['frameColor'] = self.active_color
+        self.menu_buttons[index]['text_fg'] = self.text_active_color
 
     def build_buttons(self, items, has_heading, common_kwargs):
         return [
@@ -62,7 +63,7 @@ class Menu():
                 pos=(
                     self._left_edge,
                     0,
-                    self.MENU_START- (self.BUTTON_HEIGHT + self.BUTTON_SPACING) * (i+has_heading)
+                    self.menu_start- (self.button_height + self.button_spacing) * (i+has_heading)
                 ),
                 text=item,
                 text_align=p3d.TextNode.ALeft,
@@ -75,13 +76,13 @@ class Menu():
         self._left_edge = -self.showbase.get_aspect_ratio() + 0.2
         common_kwargs = {
             'parent': self.root,
-            'text_scale': self.TEXT_SCALE,
+            'text_scale': self.text_scale,
             'relief': DGG.FLAT,
             'frameSize': [
                 -0.05,
-                self.BUTTON_WIDTH - 0.05,
+                self.button_width - 0.05,
                 -0.05,
-                self.BUTTON_HEIGHT - 0.05
+                self.button_height - 0.05
             ],
         }
 
@@ -91,12 +92,12 @@ class Menu():
                 pos=(
                     self._left_edge,
                     0,
-                    self.MENU_START
+                    self.menu_start
                 ),
                 text=heading.upper(),
                 text_align=p3d.TextNode.ACenter,
-                text_fg=self.TEXT_ACTIVE_COLOR,
-                text_pos=(-0.05 + self.BUTTON_WIDTH/2, 0),
+                text_fg=self.text_active_color,
+                text_pos=(-0.05 + self.button_width/2, 0),
                 **common_kwargs
             )
 
