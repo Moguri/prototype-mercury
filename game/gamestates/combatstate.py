@@ -461,7 +461,7 @@ class CombatState(GameState):
                 def cleanup():
                     self.selected_tile = combatant.tile_position
                     if self.input_state != 'END_COMBAT':
-                        self.set_input_state('ACTION', combatant)
+                        self.set_input_state('END_TURN')
                 sequence.append(
                     intervals.Func(cleanup)
                 )
