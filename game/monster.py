@@ -238,7 +238,16 @@ class Monster:
 
     @property
     def abilities(self):
-        return self.weapon.abilities + self.form.abilities
+        def filter_abilities(abilities, learned_list):
+            return [
+                ability
+                for ability in abilities
+                if ability.id in learned_list
+            ]
+        return (
+            filter_abilities(self.weapon.abilities, self.abilities_learned_weapon)
+            + filter_abilities(self.form.abilities, self.abilities_learned_form)
+        )
 
     def upgrades_for_stat(self, stat):
         return sum([
