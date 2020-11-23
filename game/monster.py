@@ -7,6 +7,7 @@ from direct.actor.Actor import Actor
 from direct.interval import IntervalGlobal as intervals
 
 from . import gamedb
+from . import effects
 
 
 RANDOM_NAMES = [
@@ -250,10 +251,14 @@ class Monster:
         )
 
     def upgrades_for_stat(self, stat):
-        return sum([
-            upgrades.get(stat, 0)
-            for upgrades in self.stat_upgrades.values()
-        ])
+        total = 0
+        for ability in self.abilities:
+            for passive in ability.passives:
+                if passive['type'] == 'change_stat' and passive['parameters']['stat'] == stat:
+                    incr = effects.calculate_strength(self, ability)
+                    total += incr
+
+        return total
 
     @property
     def power_available(self):

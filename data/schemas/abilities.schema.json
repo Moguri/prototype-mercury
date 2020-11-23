@@ -53,12 +53,22 @@
             "type": "string",
             "enum": [
                 "physical",
-                "magical"
+                "magical",
+                "none"
             ]
+        },
+        "passives": {
+            "type": "array",
+            "items": {
+                "type": "object"
+            },
+            "default": []
         },
         "effects": {
             "type": "array",
-            "items": {},
+            "items": {
+                "type": "object"
+            },
             "default": [
                 {
                     "type": "template_simple"

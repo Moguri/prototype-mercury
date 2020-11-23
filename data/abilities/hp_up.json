@@ -1,0 +1,14 @@
+{
+    "name": "HP Up",
+    "description": "Increase hit points",
+    "power": 1,
+    "type": "none",
+    "passives": [
+        {
+            "type": "change_stat",
+            "parameters": {
+                "stat": "hp"
+            }
+        }
+    ]
+}

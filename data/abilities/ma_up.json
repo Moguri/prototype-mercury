@@ -1,0 +1,14 @@
+{
+    "name": "Magical Attack Up",
+    "description": "Increase magical attack",
+    "power": 1,
+    "type": "none",
+    "passives": [
+        {
+            "type": "change_stat",
+            "parameters": {
+                "stat": "magical_attack"
+            }
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "name": "Physical Attack Up",
+    "description": "Increase physical attack",
+    "power": 1,
+    "type": "none",
+    "passives": [
+        {
+            "type": "change_stat",
+            "parameters": {
+                "stat": "physical_attack"
+            }
+        }
+    ]
+}

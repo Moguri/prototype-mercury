@@ -20,7 +20,11 @@ class Combatant:
 
         self.abilities = [
             gdb['abilities']['basic_attack']
-        ] + monster.abilities
+        ] + [
+            ability
+            for ability in monster.abilities
+            if ability.effects
+        ]
 
         self.range_index = 0
         self.target = None

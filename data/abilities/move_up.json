@@ -1,0 +1,14 @@
+{
+    "name": "Movement Up",
+    "description": "Increase movement",
+    "power": 1,
+    "type": "none",
+    "passives": [
+        {
+            "type": "change_stat",
+            "parameters": {
+                "stat": "movement"
+            }
+        }
+    ]
+}

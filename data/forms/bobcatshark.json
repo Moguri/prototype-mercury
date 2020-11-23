@@ -8,6 +8,9 @@
         "advanced_fighter",
         "in_test"
     ],
+    "abilities": [
+        "hp_up"
+    ],
     "hp": 10,
     "physical_attack": 5,
     "magical_attack": 5,

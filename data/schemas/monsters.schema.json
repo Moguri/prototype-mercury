@@ -10,16 +10,6 @@
         "form": {
             "type": "string"
         },
-        "stat_upgrades": {
-            "type": "object",
-            "default": {},
-            "additionalProperties": {
-                "type": "object",
-                "additionalProperties": {
-                    "type": "integer"
-                }
-            }
-        },
         "weapon": {
           "type": "string",
           "default": "unarmed"

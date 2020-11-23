@@ -12,11 +12,12 @@ def calculate_hit_chance(_combatant, _target, ability):
 
 
 def calculate_strength(combatant, ability):
-    attack_stat = (
-        combatant.physical_attack
-        if ability.type == 'physical'
-        else combatant.magical_attack
-    )
+    if ability.type == 'magical':
+        attack_stat = combatant.magical_attack
+    elif ability.type == 'physical':
+        attack_stat = combatant.physical_attack
+    else:
+        attack_stat = 1
 
     if ability.power == 'weapon':
         ability_power = combatant.weapon.damage
