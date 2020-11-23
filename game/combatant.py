@@ -14,8 +14,6 @@ class Combatant:
 
         self._current_hp = self.max_hp
         self.current_ct = random.randrange(0, 10)
-        self.move_max = self.movement
-        self.move_current = 0
         self.ability_used = False
 
         self.abilities = [
@@ -94,12 +92,6 @@ class Combatant:
                 controller
             )
         )
-
-    def can_move(self):
-        return self.move_current > 0
-
-    def can_rest(self):
-        return self.move_current == self.move_max and not self.ability_used
 
     def can_use_ability(self, _ability):
         if self.ability_used:

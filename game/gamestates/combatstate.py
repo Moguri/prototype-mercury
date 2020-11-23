@@ -162,7 +162,7 @@ class AiController():
                 target_tile = tile
                 dist_to_target = tile_dist
 
-        if target_tile and combatant.can_move():
+        if target_tile:
             self.controller.selected_tile = target_tile
             sequence.extend([
                 self.controller.move_combatant_to_tile(combatant, target_tile),
@@ -238,6 +238,7 @@ class CombatState(GameState):
                 True
             )
             combatant.set_h(90)
+        self.starting_tile_position = (0, 0)
 
         # Enemy Combatants
         default_combat_type = p3d.ConfigVariableString('mercury-default-combat-type', 'skirmish')
@@ -347,20 +348,15 @@ class CombatState(GameState):
         self.display_message('Select a combatant')
 
     def enter_action(self, combatant):
-        if combatant.ability_used and not combatant.can_move():
-            # Out of actions, auto end turn
-            self.set_input_state('END_TURN')
-            return
-
         def use_ability(ability):
             if combatant.can_use_ability(ability):
                 self.set_input_state('TARGET', combatant, ability)
         def end_combat():
             self.set_input_state('END_COMBAT', forfeit=True)
 
-        menu_items = []
-        if combatant.can_move():
-            menu_items.append(('Move', self.set_input_state, ['MOVE', combatant]))
+        menu_items = [
+            ('Move', self.set_input_state, ['MOVE', combatant]),
+        ]
 
         if not combatant.ability_used:
             menu_items += [
@@ -378,13 +374,7 @@ class CombatState(GameState):
         def update_ability(menu_item):
             self.range_tiles = []
             item_name = menu_item[0]
-            if item_name == 'Move':
-                self.range_tiles = self.arena.find_tiles_in_range(
-                    combatant.tile_position,
-                    0,
-                    combatant.move_current
-                )
-            elif item_name not in ('Rest', 'End Turn', 'End Combat'):
+            if item_name not in ('Move', 'Rest', 'End Turn', 'End Combat'):
                 ability = menu_item[2][0]
                 self.range_tiles = self.arena.find_tiles_in_range(
                     combatant.tile_position,
@@ -398,9 +388,9 @@ class CombatState(GameState):
 
     def enter_move(self, combatant):
         self.range_tiles = self.arena.find_tiles_in_range(
-            combatant.tile_position,
+            self.starting_tile_position,
             0,
-            combatant.move_current
+            combatant.movement
         )
         def accept_move():
             selection = self.combatant_in_tile(self.selected_tile)
@@ -408,16 +398,11 @@ class CombatState(GameState):
                 selection = None
             in_range = self.arena.tile_in_range(
                 self.selected_tile,
-                combatant.tile_position,
+                self.starting_tile_position,
                 0,
-                combatant.move_current
+                combatant.movement
             )
             if selection is None and in_range:
-                dist = self.arena.tile_distance(
-                    combatant.tile_position,
-                    self.selected_tile
-                )
-                combatant.move_current -= dist
                 intervals.Sequence(
                     self.move_combatant_to_tile(
                         combatant,
@@ -487,7 +472,6 @@ class CombatState(GameState):
             key=lambda x: x.current_ct
         )
         next_combatant = combatants_by_ct[0]
-        next_combatant.move_current = next_combatant.move_max
         next_combatant.ability_used = False
         ctdiff = 100 - next_combatant.current_ct
         if ctdiff > 0:
@@ -495,6 +479,7 @@ class CombatState(GameState):
                 combatant.current_ct += ctdiff
         next_combatant.current_ct = 0
         self.selected_tile = next_combatant.tile_position
+        self.starting_tile_position = next_combatant.tile_position
 
         if next_combatant in self.player_combatants:
             self.set_input_state('ACTION', next_combatant)
