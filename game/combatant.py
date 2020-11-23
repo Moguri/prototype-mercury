@@ -14,7 +14,6 @@ class Combatant:
 
         self._current_hp = self.max_hp
         self.current_ct = random.randrange(0, 10)
-        self.ability_used = False
 
         self.abilities = [
             gdb['abilities']['basic_attack']
@@ -77,8 +76,6 @@ class Combatant:
         self.target = target
         target.target = self
 
-        self.ability_used = True
-
         return intervals.Sequence(
             intervals.Func(
                 controller.display_message,
@@ -94,6 +91,4 @@ class Combatant:
         )
 
     def can_use_ability(self, _ability):
-        if self.ability_used:
-            return False
         return True

@@ -356,18 +356,13 @@ class CombatState(GameState):
 
         menu_items = [
             ('Move', self.set_input_state, ['MOVE', combatant]),
-        ]
-
-        if not combatant.ability_used:
-            menu_items += [
-                (f'{ability.name}', use_ability, [ability])
-                for ability in combatant.abilities
-            ]
-
-        menu_items.extend([
+        ] + [
+            (f'{ability.name}', use_ability, [ability])
+            for ability in combatant.abilities
+        ] + [
             ('End Turn', self.set_input_state, ['END_TURN']),
-            ('End Combat', end_combat, [])
-        ])
+            ('End Combat', end_combat, []),
+        ]
 
         self.menu_helper.set_menu(combatant.name, menu_items)
 
@@ -472,7 +467,6 @@ class CombatState(GameState):
             key=lambda x: x.current_ct
         )
         next_combatant = combatants_by_ct[0]
-        next_combatant.ability_used = False
         ctdiff = 100 - next_combatant.current_ct
         if ctdiff > 0:
             for combatant in self.combatants:
