@@ -1,0 +1,17 @@
+{
+    "name": "Restore Self",
+    "description": "Activating emergency runes within itself, the Tomb Golem replenishes its energy.",
+    "power": -3,
+    "range_min": 0,
+    "range_max": 0,
+    "type": "magical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "stat": "current_hp",
+                "target": "self"
+            }
+        }
+    ]
+}

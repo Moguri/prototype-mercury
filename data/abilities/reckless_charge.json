@@ -1,0 +1,24 @@
+{
+    "name": "Reckless Charge",
+    "description": "The armor golem lunges forward to close the gap on an enemy.",
+    "range_min": 2,
+    "range_max": 2,
+    "power": 0,
+    "type": "physical",
+    "effects": [
+        {
+            "type": "template_simple",
+            "parameters": {
+                "start_range": 1
+            }
+        },
+        {
+            "type": "change_stat",
+            "parameters": {
+                "target": "self",
+                "stat": "current_hp",
+                "strength_factor": 2
+            }
+        }
+    ]
+}

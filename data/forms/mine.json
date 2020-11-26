@@ -17,5 +17,10 @@
     "hp": 10,
     "physical_attack": 2,
     "magical_attack": 2,
-    "movement": 4
+    "movement": 4,
+    "abilities": [
+        "burrowing_strike",
+        "ma_up",
+        "pa_up"
+    ]
 }

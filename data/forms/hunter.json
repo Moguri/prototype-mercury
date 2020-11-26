@@ -6,5 +6,10 @@
     "hp": 8,
     "physical_attack": 3,
     "magical_attack": 2,
-    "movement": 5
+    "movement": 5,
+    "abilities": [
+        "leap",
+        "hp_up",
+        "pa_up"
+    ]
 }

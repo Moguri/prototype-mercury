@@ -2,7 +2,8 @@
     "name": "Dragon",
     "tags": [
         "mage",
-        "advanced_fighter"
+        "advanced_fighter",
+        "Dragon"
     ],
     "mesh": {
         "bam_file": "dragon_golem"
@@ -10,5 +11,10 @@
     "hp": 11,
     "physical_attack": 3,
     "magical_attack": 3,
-    "movement": 4
+    "movement": 4,
+    "abilities": [
+        "dragon_blast",
+        "ma_up_2",
+        "hp_up"
+    ]
 }

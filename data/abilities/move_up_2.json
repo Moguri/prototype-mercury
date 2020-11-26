@@ -1,13 +1,13 @@
 {
-    "name": "HP Up",
-    "description": "Increase hit points by 2",
+    "name": "Movement Up",
+    "description": "Increase movement by 2",
     "power": 2,
     "type": "none",
     "passives": [
         {
             "type": "change_stat",
             "parameters": {
-                "stat": "hp"
+                "stat": "movement"
             }
         }
     ]
