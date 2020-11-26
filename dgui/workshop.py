@@ -87,7 +87,9 @@ class WorkshopUI(CommonUI):
             self._stats_num_wabilities = statedata['num_weapon_abilities']
 
         if 'num_golems' in statedata or 'max_golems' in statedata:
-            self.num_golems_label['text'] = f'Golems: {statedata["num_golems"]}/{statedata["max_golems"]}'
+            self.num_golems_label['text'] = (
+                f'Golems: {statedata["num_golems"]}/{statedata["max_golems"]}'
+            )
 
         if 'monster' in statedata:
             self.rebuild_stats(statedata['monster'])
