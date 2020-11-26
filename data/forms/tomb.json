@@ -9,5 +9,10 @@
     "hp": 7,
     "physical_attack": 1,
     "magical_attack": 4,
-    "movement": 4
+    "movement": 4,
+    "abilities": [
+        "restore_self",
+        "ma_up_2",
+        "hp_up_2"
+    ]
 }

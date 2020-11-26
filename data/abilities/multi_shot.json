@@ -1,7 +1,7 @@
 {
     "name": "Multi-Shot",
     "description": "Put multiple shots into the enemy for extra damage",
-    "power": 11,
+    "power": 6,
     "range_max": 4,
     "type": "physical"
 }

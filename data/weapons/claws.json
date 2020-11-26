@@ -1,0 +1,14 @@
+{
+    "name": "Claws",
+    "description": "The razor sharp claws of a dragon!",
+    "damage": 0,
+    "abilities": [
+        "dragon_fury",
+        "pa_up_2",
+        "move_up"
+    ],
+    "required_tags": [
+        "Dragon"
+    ]
+}
+

@@ -1,9 +1,9 @@
 {
     "name": "Leap",
-    "description": "The golem jumps into the air, allowing to reach otherwise difficult to reach locations",
+    "description": "The Hunter Golem jumps into the air, allowing to reach otherwise difficult to reach locations",
     "range_min": 2,
-    "range_max": 4,
-    "power": 1,
+    "range_max": 12,
+    "power": 0,
     "type": "physical",
     "effects": [
         {
