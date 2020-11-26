@@ -15,7 +15,7 @@
         "walk": "cg.Run"
     },
     "hp": 10,
-    "physical_attack": 5,
-    "magical_attack": 5,
+    "physical_attack": 2,
+    "magical_attack": 2,
     "movement": 4
 }

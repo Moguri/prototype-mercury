@@ -1,7 +1,7 @@
 {
     "name": "Mace",
     "description": "Heavy blunt weapon, designed to smash armor and knock opponents away.",
-    "damage": 4,
+    "damage": 2,
     "mesh": {
         "root_node": "warMace"
     },

@@ -4,7 +4,7 @@
         "bam_file": "hunter_golem"
     },
     "hp": 8,
-    "physical_attack": 4,
-    "magical_attack": 3,
+    "physical_attack": 3,
+    "magical_attack": 2,
     "movement": 5
 }

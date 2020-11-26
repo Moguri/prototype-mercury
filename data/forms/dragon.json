@@ -7,8 +7,8 @@
     "mesh": {
         "bam_file": "dragon_golem"
     },
-    "hp": 12,
-    "physical_attack": 6,
-    "magical_attack": 6,
+    "hp": 11,
+    "physical_attack": 3,
+    "magical_attack": 3,
     "movement": 4
 }

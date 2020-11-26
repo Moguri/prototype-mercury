@@ -6,8 +6,8 @@
     "mesh": {
         "bam_file": "armor_golem"
     },
-    "hp": 14,
-    "physical_attack": 8,
+    "hp": 12,
+    "physical_attack": 3,
     "magical_attack": 1,
     "movement": 3
 }

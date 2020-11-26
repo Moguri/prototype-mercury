@@ -6,8 +6,8 @@
     "mesh": {
         "bam_file": "tomb_golem"
     },
-    "hp": 8,
-    "physical_attack": 3,
-    "magical_attack": 6,
+    "hp": 7,
+    "physical_attack": 1,
+    "magical_attack": 4,
     "movement": 4
 }
