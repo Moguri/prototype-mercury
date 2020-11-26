@@ -349,6 +349,7 @@ class WorkshopState(GameState):
                 [weapon.id]
             )
             for weapon in sorted(gdb['weapons'].values(), key=lambda x: x.name)
+            if self.current_monster.can_use_weapon(weapon, self.player.tags)
         ])
         self.menu_helper.selection_change_cb = select
         self.menu_helper.reject_cb = reject

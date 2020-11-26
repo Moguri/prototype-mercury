@@ -11,6 +11,14 @@
             "type": "string",
             "default": ""
         },
+        "required_tags": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "default": []
+        },
         "mesh": {
             "properties": {
                 "bam_file": {

@@ -285,3 +285,8 @@ class Monster:
             len(self._monsterdata.abilities_learned_weapon)
             + len(self._monsterdata.abilities_learned_form)
         )
+
+    def can_use_weapon(self, weapon, extra_tags=None):
+        if extra_tags is None:
+            extra_tags = set()
+        return set(weapon.required_tags).issubset(self.tags | extra_tags)
