@@ -150,7 +150,8 @@ class WorkshopState(GameState):
         self.update_ui({
             'show_stats': False,
             'num_golems': len(self.player.monsters),
-            'max_golems': self.player.max_monsters
+            'max_golems': self.player.max_monsters,
+            'num_power_gems': self.player.num_power_gems,
         })
 
         def back_to_main():
@@ -245,12 +246,18 @@ class WorkshopState(GameState):
         })
 
         def add_power():
-            if self.current_monster.power_available < self.current_monster.MAX_POWER:
+            can_add_power = (
+                self.current_monster.power_available < self.current_monster.MAX_POWER
+                and self.player.num_power_gems > 0
+            )
+            if can_add_power:
                 self.current_monster.power_available += 1
+                self.player.num_power_gems -= 1
             else:
                 self.menu_helper.sfx_reject.play()
             self.update_ui({
-                'monster': self.current_monster.to_dict()
+                'monster': self.current_monster.to_dict(),
+                'num_power_gems': self.player.num_power_gems
             })
 
         def toggle_ability(ability, learned_list):

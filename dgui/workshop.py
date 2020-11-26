@@ -21,6 +21,16 @@ class WorkshopUI(CommonUI):
         )
         self.roots.append(self.num_golems_label)
 
+        self.num_gems_label = self.create_box(
+            0, 0,
+            (-self.display_width / 2 + 0.1, 0.95),
+            box_padding=0,
+            text_scale=settings.TEXT_SCALE * 1.50,
+            text_align=p3d.TextNode.A_left,
+            frameColor=(0, 0, 0, 0),
+        )
+        self.roots.append(self.num_gems_label)
+
         self.stats_box = self.create_box(
             self.display_width * 0.6, 1.7,
             (0.4, 0.1)
@@ -89,6 +99,11 @@ class WorkshopUI(CommonUI):
         if 'num_golems' in statedata or 'max_golems' in statedata:
             self.num_golems_label['text'] = (
                 f'Golems: {statedata["num_golems"]}/{statedata["max_golems"]}'
+            )
+
+        if 'num_power_gems' in statedata:
+            self.num_gems_label['text'] = (
+                f'Power Gems: {statedata["num_power_gems"]}'
             )
 
         if 'monster' in statedata:

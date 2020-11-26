@@ -15,6 +15,7 @@ class PlayerData:
         self.last_access_time = datetime.datetime.now().isoformat()
         self.personal_tags = set()
         self.rank = 1
+        self.num_power_gems = 0
 
     def to_dict(self):
         return {
@@ -24,6 +25,7 @@ class PlayerData:
             'rank': self.rank,
             'monsters': [i.to_dict(skip_extras=True) for i in self.monsters],
             'last_access_time': self.last_access_time,
+            'num_power_gems': self.num_power_gems,
         }
 
     def can_use_form(self, form):
@@ -49,6 +51,7 @@ class PlayerData:
         player.saveid = data['saveid']
         player.personal_tags = set(data['personal_tags'])
         player.rank = data['rank']
+        player.num_power_gems = data['num_power_gems']
         for monster_data in data['monsters']:
             monster = gdb.schema_to_datamodel['monsters'](monster_data)
             monster.link(gdb)

@@ -502,6 +502,12 @@ class CombatState(GameState):
                 results += [
                     f'Advanced to Rank {self.player.rank}'
                 ]
+            elif self.combat_type == 'skirmish':
+                gems = self.player.rank
+                self.player.num_power_gems += gems
+                results += [
+                    f'Gained {gems} power gem(s)'
+                ]
         else:
             self.display_message('Defeat.')
 
