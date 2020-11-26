@@ -11,6 +11,10 @@ def calculate_hit_chance(_combatant, _target, ability):
     return ability.hit_chance
 
 
+def calculate_crit_chance(_combatant, _target, _ability):
+    return 5
+
+
 def calculate_strength(combatant, ability):
     if ability.type == 'magical':
         attack_stat = combatant.magical_attack
@@ -54,7 +58,12 @@ class SequenceBuilder:
         roll = random.randrange(0, 99)
         self.is_hit = hit_chance > roll
         #print(hit, hit_chance, die)
+        crit_chance = calculate_crit_chance(combatant, combatant.target, ability)
+        roll = random.randrange(0, 99)
+        self.is_crit = crit_chance > roll
         self.strength = calculate_strength(combatant, ability)
+        if self.is_crit:
+            self.strength *= 1.5
 
         self.sequence = intervals.Sequence()
 
@@ -136,6 +145,8 @@ class SequenceBuilder:
         if parameters.get('show_result', True):
             if self.is_hit:
                 result = self.CHANGE_STATE_PREFIX.get(stat, '') + f'{strength * -1:+}'
+                if self.is_crit:
+                    result += ' (CRIT!)'
             else:
                 result = 'Miss'
             seq.append(self.show_result(target, result))
