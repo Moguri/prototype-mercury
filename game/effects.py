@@ -28,7 +28,7 @@ def calculate_strength(combatant, ability):
     else:
         ability_power = ability.power
 
-    return round(attack_stat * ability_power)
+    return round(attack_stat + ability_power)
 
 class SequenceBuilder:
     ALLOWED_EFFECTS = [
@@ -136,12 +136,11 @@ class SequenceBuilder:
     #
     def change_stat(self, target, parameters):
         stat = parameters['stat']
-        local_str_fac = parameters.get('strength_factor', 1)
+        local_str_fac = parameters.get('strength_factor', 0)
         seq = intervals.Sequence()
-        strength = self.strength * local_str_fac
-        strength = max(round(abs(strength) * 0.1), 1)
-        if self.strength * local_str_fac < 0:
-            strength *= -1
+        strength = self.strength + local_str_fac
+        if local_str_fac < 0:
+            strength = local_str_fac * -1
         if parameters.get('show_result', True):
             if self.is_hit:
                 result = self.CHANGE_STATE_PREFIX.get(stat, '') + f'{strength * -1:+}'
