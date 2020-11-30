@@ -2,7 +2,7 @@
     "name": "Give HP",
     "description": "The golem gives another golem within range, HP",
     "range_max": 3,
-    "power": 10,
+    "power": 0,
     "type": "magical",
     "effects": [
         {

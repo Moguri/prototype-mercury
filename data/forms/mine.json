@@ -15,8 +15,8 @@
         "walk": "cg.Run"
     },
     "hp": 10,
-    "physical_attack": 2,
-    "magical_attack": 2,
+    "physical_attack": 1,
+    "magical_attack": 1,
     "movement": 4,
     "abilities": [
         "burrowing_strike",

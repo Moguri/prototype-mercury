@@ -1,7 +1,7 @@
 {
     "name": "Heavy Attack",
     "description": "A hard swinging but unwieldy attack",
-    "power": 12,
-    "hit_chance": 80,
+    "power": 2,
+    "hit_chance": 90,
     "type": "physical"
 }

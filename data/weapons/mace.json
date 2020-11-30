@@ -7,7 +7,8 @@
     },
     "abilities": [
         "heavy_attack",
-        "gust"
+        "knock",
+        "pa_up"
     ]
 }
 

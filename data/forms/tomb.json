@@ -7,8 +7,8 @@
         "bam_file": "tomb_golem"
     },
     "hp": 7,
-    "physical_attack": 1,
-    "magical_attack": 4,
+    "physical_attack": 0,
+    "magical_attack": 3,
     "movement": 4,
     "abilities": [
         "restore_self",

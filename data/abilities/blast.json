@@ -2,8 +2,8 @@
     "name": "Blast",
     "description": "The golem expels its own magical energy in an attempt to crack the casing of another, resulting in immense damage if successful",
     "range_max": 4,
-    "power": 20,
-    "hit_chance": 80,
+    "power": 4,
+    "hit_chance": 75,
     "type": "magical",
     "effects": [
         {

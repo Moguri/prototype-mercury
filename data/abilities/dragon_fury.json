@@ -1,6 +1,7 @@
 {
     "name": "Dragon Fury",
     "description": "The primal rage of the dragon is unleashed in a flurry of claws.",
-    "power": 4,
+    "power": 3,
+    "hit_chance": 70,
     "type": "physical"
 }
