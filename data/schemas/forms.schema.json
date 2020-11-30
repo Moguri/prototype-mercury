@@ -47,19 +47,28 @@
                     "type": "array",
                     "minItems": 3,
                     "maxItems": 3,
-                    "default": [0, 0, 0]
+                    "default": [0, 0, 0],
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "hpr": {
                     "type": "array",
                     "minItems": 3,
                     "maxItems": 3,
-                    "default": [0, 0, 0]
+                    "default": [0, 0, 0],
+                    "items": {
+                        "type": "number"
+                    }
                 },
                 "scale": {
                     "type": "array",
                     "minItems": 3,
                     "maxItems": 3,
-                    "default": [1, 1, 1]
+                    "default": [1, 1, 1],
+                    "items": {
+                        "type": "number"
+                    }
                 }
             },
             "default": {}

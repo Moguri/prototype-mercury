@@ -9,7 +9,8 @@
     },
     "abilities": [
         "multi_shot",
-        "pin_down"
+        "pin_down",
+        "move_up"
     ]
 }
 

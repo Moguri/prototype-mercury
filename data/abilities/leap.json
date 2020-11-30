@@ -11,10 +11,6 @@
             "parameters": {
                 "start_range": 1
             }
-        },
-        {
-            "type": "move_to_start",
-            "target": "self"
         }
     ]
 }

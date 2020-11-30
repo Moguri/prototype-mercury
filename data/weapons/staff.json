@@ -9,7 +9,8 @@
     },
     "abilities": [
         "gust",
-        "blast"
+        "blast",
+        "ma_up"
     ]
 }
 

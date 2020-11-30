@@ -2,7 +2,7 @@
     "name": "Drain HP",
     "description": "Drains the HP of another golem adding to itself",
     "range_max": 3,
-    "power": 10,
+    "power": 0,
     "type": "magical",
     "effects": [
         {

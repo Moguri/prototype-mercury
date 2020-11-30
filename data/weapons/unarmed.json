@@ -1,5 +1,10 @@
 {
     "name": "Unarmed",
-    "damage": 1
+    "damage": 1,
+    "abilities": [
+        "hp_up",
+        "move_up",
+        "pa_up"
+    ]
 }
 

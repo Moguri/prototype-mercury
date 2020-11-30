@@ -1,8 +1,8 @@
 {
-    "name": "Gust",
-    "description": "Deals little damage but knocks back an adjacent opponent",
+    "name": "Knock",
+    "description": "Using raw might the Golem pushes a target away.",
     "power": 0,
-    "type": "magical",
+    "type": "physical",
     "effects": [
         {
             "type": "template_simple"

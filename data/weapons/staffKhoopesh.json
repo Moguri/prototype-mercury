@@ -10,7 +10,8 @@
     },
     "abilities": [
         "drainhp",
-        "givehp"
+        "givehp",
+        "hp_up"
     ]
 }
 
