@@ -1,7 +1,7 @@
 {
     "name": "Restore Self",
     "description": "Activating emergency runes within itself, the Golem replenishes its energy.",
-    "power": -3,
+    "power": 1,
     "range_min": 0,
     "range_max": 0,
     "type": "magical",
