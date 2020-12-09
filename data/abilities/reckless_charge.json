@@ -1,6 +1,6 @@
 {
     "name": "Reckless Charge",
-    "description": "The armor golem lunges forward to close the gap on an enemy.",
+    "description": "The Golem lunges forward to close the gap on an enemy.",
     "range_min": 2,
     "range_max": 2,
     "power": 0,
