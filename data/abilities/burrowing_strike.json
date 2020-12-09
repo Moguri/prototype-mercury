@@ -1,6 +1,6 @@
 {
     "name": "Burrowing Strike",
-    "description": "The mining golem rapidly digs through the ground emerging next to an enemy to attack.",
+    "description": "The Golem rapidly digs through the ground emerging next to an enemy to attack.",
     "range_min": 3,
     "range_max": 5,
     "power": 0,

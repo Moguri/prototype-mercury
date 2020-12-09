@@ -3,5 +3,7 @@
     "description": "A hard swinging but unwieldy attack",
     "power": 2,
     "hit_chance": 90,
+    "range_min": "weapon",
+    "range_max": "weapon",
     "type": "physical"
 }

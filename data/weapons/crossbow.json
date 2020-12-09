@@ -2,7 +2,7 @@
     "name": "Crossbow",
     "description": "A heavy ranged weapon, fires slowly but deals great damage.",
     "damage": 1,
-    "range_min": 2,
+    "range_min": 3,
     "range_max": 5,
     "mesh": {
         "root_node": "crossbow"
