@@ -138,7 +138,7 @@ class SequenceBuilder:
         stat = parameters['stat']
         local_str_fac = parameters.get('strength_factor', 1)
         seq = intervals.Sequence()
-        strength = max(round(abs(strength) * 0.1), 1)
+        strength = self.strength * local_str_fac
         if self.strength * local_str_fac < 0:
             strength *= -1
         if local_str_fac < 0:

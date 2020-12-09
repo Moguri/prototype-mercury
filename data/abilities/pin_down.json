@@ -1,7 +1,7 @@
 {
     "name": "Pin Down",
     "description": "The golem imbues an arrow with magical energy to slow another golem",
-    "power": 0,
+    "power": 1,
     "range_max": 4,
     "type": "physical",
     "effects": [
