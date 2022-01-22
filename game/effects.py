@@ -139,10 +139,6 @@ class SequenceBuilder:
         local_str_fac = parameters.get('strength_factor', 1)
         seq = intervals.Sequence()
         strength = self.strength * local_str_fac
-        if self.strength * local_str_fac < 0:
-            strength *= -1
-        if local_str_fac < 0:
-            strength = local_str_fac * -1
         if parameters.get('show_result', True):
             if self.is_hit:
                 result = self.CHANGE_STATE_PREFIX.get(stat, '') + f'{strength * -1:+}'
