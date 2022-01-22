@@ -20,7 +20,7 @@ def test_accuracy(combatant, basic_attack):
 
 def test_strength(combatant, basic_attack):
     combatant.weapon = None
-    assert effects.calculate_strength(combatant, basic_attack) == 5
+    assert effects.calculate_strength(combatant, basic_attack) == 6
 
     combatant.weapon = 'mace'
-    assert effects.calculate_strength(combatant, basic_attack) == 20
+    assert effects.calculate_strength(combatant, basic_attack) == 7

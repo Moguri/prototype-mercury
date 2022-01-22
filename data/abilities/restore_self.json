@@ -10,7 +10,7 @@
             "type": "template_simple",
             "parameters": {
                 "stat": "current_hp",
-                "strength_factor": 1
+                "strength_factor": -1
             },
             "target": "self"
         }

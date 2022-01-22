@@ -16,8 +16,7 @@
         {
             "type": "change_stat",
             "parameters": {
-                "stat": "current_hp",
-                "strength_factor": 1
+                "stat": "current_hp"
             }
         }
     ]
