@@ -1,6 +1,6 @@
 {
     "name": "Unarmed",
-    "damage": 1,
+    "damage": 0,
     "abilities": [
         "hp_up",
         "move_up",
