@@ -7,15 +7,6 @@ APP_NAME = CONFIG['general']['name']
 
 setup(
     name=APP_NAME,
-    setup_requires=[
-        'pytest-runner',
-    ],
-    tests_require=[
-        'pytest',
-        'pylint~=2.6.0',
-        'pytest-pylint',
-        'pytest-cov',
-    ],
     cmdclass={
         'build_apps': pman.build_apps.BuildApps,
     },

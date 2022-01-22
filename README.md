@@ -59,6 +59,20 @@ In addition to the base Panda3D PRC variables, this project defines some custom 
 * `mercury-default-form` (string) - ID of which form to use when generating the default monster used when skipping states (default: `mine`)
 * `mercury-default-monster` (string) - ID of a monster file to load for the default monster used when skipping states (default: `''`; overrides the default form if set)
 
+### Running tests
+
+Install test dependencies with:
+
+```bash
+python -m pip install -e .[test]
+```
+
+Run tests with pytest:
+
+```bash
+python -m pytest
+```
+
 ## License
 
 * Anything mentioned in [CREDITS.md](CREDITS.md) have licenses as specified in the file

@@ -1,5 +1,4 @@
 #pylint:disable=redefined-outer-name,import-outside-toplevel
-import sys
 import os
 
 from unittest.mock import MagicMock
@@ -8,8 +7,10 @@ import panda3d.core as p3d
 from direct.interval import IntervalGlobal as intervals
 import pytest
 
+
+# Fix MAIN_DIR when running from PyTest
 TESTDIR = os.path.abspath(os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(TESTDIR, '..', 'game'))
+p3d.ExecutionEnvironment.set_environment_variable('MAIN_DIR', f'{TESTDIR}/..')
 
 
 @pytest.fixture
