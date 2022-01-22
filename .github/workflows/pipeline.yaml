@@ -36,7 +36,7 @@ jobs:
         pman build
     - name: Run Tests
       run: |
-        pman test
+        python -m pytest
     - name: Build Binary Distributions
       run: |
         blender --version
