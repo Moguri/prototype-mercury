@@ -29,7 +29,7 @@ jobs:
         python -m pip install -e .[test]
     - name: Install Blender
       run: |
-        sudo snap install blender --classic
+        sudo snap install blender --channel=2.93lts/stable --classic
     - name: Convert Assets
       run: |
         blender --version
