@@ -63,7 +63,7 @@ class SequenceBuilder:
         self.is_crit = crit_chance > roll
         self.strength = calculate_strength(combatant, ability)
         if self.is_crit:
-            self.strength *= 1.5
+            self.strength = round(self.strength * 1.5)
 
         self.sequence = intervals.Sequence()
 
