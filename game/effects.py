@@ -28,7 +28,7 @@ def calculate_strength(combatant, ability):
     else:
         ability_power = ability.power
 
-    return attack_stat + ability_power
+    return 1 + attack_stat + ability_power
 
 class SequenceBuilder:
     ALLOWED_EFFECTS = [
