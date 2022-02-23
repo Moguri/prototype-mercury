@@ -47,6 +47,8 @@ def generate(parent=None, texture=None, foreground=False):
     bgnp.set_bin('fixed' if foreground else 'background', 0)
     bgnp.set_depth_test(False)
     bgnp.set_depth_write(False)
+    bgnp.node().set_bounds(p3d.OmniBoundingVolume())
+    bgnp.node().set_final(True)
 
     if parent is not None:
         bgnp.reparent_to(parent)
