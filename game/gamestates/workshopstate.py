@@ -237,7 +237,8 @@ class WorkshopState(GameState):
             self.update_ui({
                 'monster': self.current_monster.to_dict()
             })
-        update_monster_selection(0)
+            self.menu_helper.set_menu('', build_menu())
+
         self.accept('move-left', update_monster_selection, [-1])
         self.accept('move-right', update_monster_selection, [1])
 
@@ -324,6 +325,7 @@ class WorkshopState(GameState):
         self.menu_helper.selection_change_cb = select
         self.menu_helper.set_menu('', build_menu())
         select(self.menu_helper.current_selection)
+        update_monster_selection(0)
 
     def exit_stats(self):
         self.load_monster_models()
