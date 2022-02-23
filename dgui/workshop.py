@@ -77,7 +77,7 @@ class WorkshopUI(CommonUI):
         self._stats_menu.active_color = (
             *settings.SECONDARY_COLOR[:3], 0.9
         )
-        self._stats_menu.button_width = 0.5
+        self._stats_menu.button_width = 0.575
         self._stats_menu.button_height = 0.125
 
     def cleanup(self):
