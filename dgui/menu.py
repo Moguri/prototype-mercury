@@ -17,6 +17,7 @@ class Menu():
         self._left_edge = 0
 
         self.menu_start = 0.7
+        self.edge_inset = 0.2
         self.button_width = 0.75
         self.button_height = 0.15
         self.button_spacing = 0
@@ -73,7 +74,7 @@ class Menu():
         ]
 
     def rebuild_menu(self, newitems, heading):
-        self._left_edge = -self.showbase.get_aspect_ratio() + 0.2
+        self._left_edge = -self.showbase.get_aspect_ratio() + self.edge_inset
         common_kwargs = {
             'parent': self.root,
             'text_scale': self.text_scale,

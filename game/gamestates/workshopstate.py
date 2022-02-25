@@ -164,6 +164,8 @@ class WorkshopState(GameState):
             ('Battle', self.set_input_state, ['COMBAT']),
             ('Golem Stats', self.set_input_state, ['STATS']),
             ('Dismiss Golem', self.set_input_state, ['DISMISS']),
+            ('Save Game', base.change_state, ['Save']),
+            ('Load Game', base.change_state, ['Load']),
             ('Quit', self.set_input_state, ['QUIT']),
         ]
         if len(self.player.monsters) < self.player.max_monsters:

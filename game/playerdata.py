@@ -11,11 +11,16 @@ class PlayerData:
     def __init__(self):
         self.name = 'Foo Man'
         self.monsters = []
-        self.saveid = uuid.uuid4().hex
-        self.last_access_time = datetime.datetime.now().isoformat()
+        self.saveid = None
+        self.last_save = datetime.datetime.now()
         self.personal_tags = set()
         self.rank = 1
         self.num_power_gems = 0
+
+        self.newid()
+
+    def newid(self):
+        self.saveid = uuid.uuid4().hex
 
     def to_dict(self):
         return {
@@ -24,7 +29,7 @@ class PlayerData:
             'personal_tags': list(self.personal_tags),
             'rank': self.rank,
             'monsters': [i.to_dict(skip_extras=True) for i in self.monsters],
-            'last_access_time': self.last_access_time,
+            'last_save': self.last_save.isoformat(),
             'num_power_gems': self.num_power_gems,
         }
 
@@ -38,6 +43,7 @@ class PlayerData:
         }
 
     def save(self, file_object):
+        self.last_save = datetime.datetime.now()
         data = self.to_dict()
         json.dump(data, file_object, sort_keys=True)
 
@@ -49,6 +55,7 @@ class PlayerData:
 
         player.name = data['name']
         player.saveid = data['saveid']
+        player.last_save = datetime.datetime.fromisoformat(data['last_save'])
         player.personal_tags = set(data['personal_tags'])
         player.rank = data['rank']
         player.num_power_gems = data['num_power_gems']

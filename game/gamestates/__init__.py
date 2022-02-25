@@ -5,6 +5,7 @@ from .combatstate import CombatState
 from .workshopstate import WorkshopState
 from .titlestate import TitleState
 from .newtrainerstate import NewTrainerState
+from .saveloadstate import SaveState, LoadState, ContinueState
 
 
 __all__ = [
@@ -19,6 +20,9 @@ states = {
     'Workshop': WorkshopState,
     'Title': TitleState,
     'NewTrainer': NewTrainerState,
+    'Save': SaveState,
+    'Load': LoadState,
+    'Continue': ContinueState,
 }
 
 class StateManager:
