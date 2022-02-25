@@ -61,6 +61,8 @@ def generate(parent=None, texture=None, foreground=False):
             tex.set_format(p3d.Texture.F_srgb_alpha)
         else:
             tex.set_format(p3d.Texture.F_srgb)
-        bgnp.set_shader_input('tex', tex)
+    else:
+        tex = p3d.Texture()
+    bgnp.set_shader_input('tex', tex)
 
     return bgnp
