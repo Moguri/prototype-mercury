@@ -164,7 +164,7 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
         write('   :align: left')
         write()
         for item, label in table_items.items():
-            if item is 'range':
+            if item == 'range':
                 rmin = ability.range_min
                 rmax = ability.range_max
                 if rmin == rmax:
