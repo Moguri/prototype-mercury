@@ -3,6 +3,9 @@
     "tags": [
         "advanced_fighter"
     ],
+    "required_tags": [
+        "rank_2"
+    ],
     "mesh": {
         "bam_file": "armor_golem"
     },

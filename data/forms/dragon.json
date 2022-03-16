@@ -5,6 +5,9 @@
         "advanced_fighter",
         "dragon"
     ],
+    "required_tags": [
+        "rank_3"
+    ],
     "mesh": {
         "bam_file": "dragon_golem"
     },

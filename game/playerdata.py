@@ -34,7 +34,7 @@ class PlayerData:
         }
 
     def can_use_form(self, form):
-        return set(form.required_tags).issubset(self.personal_tags)
+        return set(form.required_tags).issubset(self.tags)
 
     @property
     def tags(self):

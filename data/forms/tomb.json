@@ -3,6 +3,9 @@
     "tags": [
         "mage"
     ],
+    "required_tags": [
+        "rank_2"
+    ],
     "mesh": {
         "bam_file": "tomb_golem"
     },
