@@ -9,6 +9,7 @@ from ..monster import Monster
 from ..combatant import Combatant
 from ..commonlighting import CommonLighting
 from .. import bgnode
+from .. import gamedb
 
 from .gamestate import GameState
 
@@ -491,6 +492,7 @@ class CombatState(GameState):
             sequence.start()
 
     def enter_end_combat(self, forfeit=False):
+        gdb = gamedb.get_instance()
         results = []
         isvictory = not self.get_remaining_enemy_combatants()
         if forfeit:
@@ -498,9 +500,25 @@ class CombatState(GameState):
         elif isvictory:
             self.display_message('Victory!')
             if self.combat_type == 'tournament':
+                oldforms = set([
+                    form.name
+                    for form in gdb['forms'].values()
+                    if self.player.can_use_form(form)
+                ])
                 self.player.rank += 1
+
                 results += [
                     f'Advanced to Rank {self.player.rank}'
+                ]
+
+                newforms = set([
+                    form.name
+                    for form in gdb['forms'].values()
+                    if self.player.can_use_form(form)
+                ]) - oldforms
+                results += [
+                    f'New form available: {form}'
+                    for form in newforms
                 ]
             elif self.combat_type == 'skirmish':
                 gems = self.player.rank
