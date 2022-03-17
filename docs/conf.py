@@ -88,6 +88,24 @@ def make_writer(fileobj):
         print(*args, file=fileobj, **kwargs)
     return wrap
 
+def write_table(writefn, tableitems, data):
+    writefn('.. list-table::')
+    writefn('   :align: left')
+    writefn()
+    for item, label in tableitems.items():
+        if item == 'range':
+            rmin = data.range_min
+            rmax = data.range_max
+            if rmin == rmax:
+                value = rmin
+            else:
+                value = f'{rmin} - {rmax}'
+        else:
+            value = getattr(data, item)
+        writefn(f'   * - {label}')
+        writefn(f'     - {value}')
+    writefn()
+
 with open(f'{gen_dir}/forms.rst', 'w') as rstfile:
     write = make_writer(rstfile)
     write('Forms')
@@ -159,23 +177,7 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
         write()
         write(f'{ability.description}\n')
 
-
-        write('.. list-table::')
-        write('   :align: left')
-        write()
-        for item, label in table_items.items():
-            if item == 'range':
-                rmin = ability.range_min
-                rmax = ability.range_max
-                if rmin == rmax:
-                    value = rmin
-                else:
-                    value = f'{rmin} - {rmax}'
-            else:
-                value = getattr(ability, item)
-            write(f'   * - {label}')
-            write(f'     - {value}')
-        write()
+        write_table(write, table_items, ability)
 
         write('Effects')
         write('^^^^^^^\n')
@@ -183,6 +185,35 @@ with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
         for effect in ability.effects:
             write(f'* ``{effect}``')
         write()
+
+with open(f'{gen_dir}/weapons.rst', 'w') as rstfile:
+    write = make_writer(rstfile)
+    write('Weapons')
+    write('=======\n')
+
+    table_items = {
+        'type': 'Type',
+        'damage': 'Damage',
+        'range': 'Range',
+    }
+
+    for weapon in sorted(gdb['weapons'].values(), key=lambda x: x.name):
+        write(f'.. _weapon-{weapon.id}:\n')
+        title = f'{weapon.name} ({weapon.id})'
+        write(title)
+        write('-' * len(title))
+        write()
+        write(f'{weapon.description}\n')
+        write()
+
+        write_table(write, table_items, weapon)
+
+        write('Abilities')
+        write('^^^^^^^^^\n')
+        for ability in weapon.abilities:
+            write(f'* :ref:`ability-{ability.id}`')
+        write()
+
 
 with open(f'{gen_dir}/index.rst', 'w') as rstfile:
     write = make_writer(rstfile)
@@ -195,6 +226,7 @@ with open(f'{gen_dir}/index.rst', 'w') as rstfile:
     datamodels = [
         'forms',
         'abilities',
+        'weapons',
     ]
     for datamodel in datamodels:
         write(f'   {datamodel}.rst')
