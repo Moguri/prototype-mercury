@@ -151,10 +151,10 @@ with open(f'{gen_dir}/forms.rst', 'w') as rstfile:
             write(f'     - {amount}')
         write()
 
-        write('Mesh')
-        write('^^^^\n')
-        mesh = form.mesh
-        write(f'``{mesh["bam_file"]}/{mesh["root_node"]}``')
+        write('Abilities')
+        write('^^^^^^^^^\n')
+        for ability in form.abilities:
+            write(f'* :ref:`ability-{ability.id}`')
         write()
 
 with open(f'{gen_dir}/abilities.rst', 'w') as rstfile:
