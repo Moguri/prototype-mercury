@@ -1,20 +1,12 @@
 import os
 
-import panda3d.core as p3d
-
 from .gamestate import GameState
 from .. import pathutils
 from ..playerdata import PlayerData
 
 
-def get_saves_dir():
-    savespath = p3d.ConfigVariableString('mercury-saves-dir', '$USER_APPDATA/saves')
-    savesdir = pathutils.parse_path(savespath)
-    return savesdir
-
-
 def get_saves():
-    savesdir = get_saves_dir()
+    savesdir = pathutils.get_saves_dir()
     if not os.path.exists(savesdir):
         return []
 
@@ -57,7 +49,7 @@ class SaveState(GameState):
         self.save(self.player.saveid)
 
     def save(self, saveid):
-        savesdir = get_saves_dir()
+        savesdir = pathutils.get_saves_dir()
         saveloc = os.path.join(savesdir, f'{saveid}.sav')
         os.makedirs(savesdir, exist_ok=True)
         with open(saveloc, 'w') as savefile:

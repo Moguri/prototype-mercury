@@ -28,3 +28,9 @@ def parse_path(path):
     ]
 
     return p3d.Filename('/'.join(path_parts))
+
+
+def get_saves_dir():
+    savespath = p3d.ConfigVariableString('mercury-saves-dir', '$USER_APPDATA/saves')
+    savesdir = parse_path(savespath)
+    return savesdir

@@ -1,3 +1,4 @@
+import os
 import sys
 
 from direct.showbase.ShowBase import ShowBase
@@ -47,15 +48,28 @@ class GameApp(ShowBase):
 
         # Global storage
         self.blackboard = {
-            'player': PlayerData(),
         }
+        default_save = p3d.ConfigVariableString('mercury-default-save', '').get_value()
+        if default_save:
+            saveloc = os.path.join(
+                pathutils.get_saves_dir(),
+                default_save,
+            )
+            if not saveloc.endswith('.sav'):
+                saveloc += '.sav'
+            if os.path.exists(saveloc):
+                with open(saveloc) as savefile:
+                    self.blackboard['player'] = PlayerData.load(savefile)
         default_monster_id = p3d.ConfigVariableString('mercury-default-monster', '').get_value()
         if default_monster_id:
             default_monster = Monster(gdb['monsters'][default_monster_id])
         else:
             default_form = p3d.ConfigVariableString('mercury-default-form', 'mine').get_value()
             default_monster = Monster.make_new('player_monster', form_id=default_form)
-        self.blackboard['player'].monsters = [default_monster]
+
+        if 'player' not in self.blackboard:
+            self.blackboard['player'] = PlayerData()
+            self.blackboard['player'].monsters = [default_monster]
 
         # UI
         default_font = self.loader.load_font(
