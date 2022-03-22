@@ -25,12 +25,6 @@ setup(
             'rename_paths': {
                 CONFIG['build']['export_dir']: 'assets/',
             },
-            'package_data_dirs': {
-                'simplepbr': [
-                    ('simplepbr/*.vert', '', {}),
-                    ('simplepbr/*.frag', '', {}),
-                ],
-            },
             'gui_apps': {
                 APP_NAME: CONFIG['run']['main_file'],
             },

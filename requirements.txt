@@ -5,4 +5,4 @@ panda3d-pman~=0.13
 panda3d-blend2bam~=0.17
 panda3d-gltf~=0.11
 panda3d-eventmapper~=0.2
-panda3d-simplepbr~=0.7
+panda3d-simplepbr~=0.10
