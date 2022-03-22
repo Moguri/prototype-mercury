@@ -40,7 +40,7 @@ setup(
                 ]
             },
             'platforms': [
-                'manylinux1_x86_64',
+                'manylinux2010_x86_64',
                 'win_amd64',
             ],
         },
