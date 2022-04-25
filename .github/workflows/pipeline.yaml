@@ -63,4 +63,4 @@ jobs:
         CHANNEL: linux-dev
         ITCH_GAME: mercury
         ITCH_USER: mogurijin
-        PACKAGE: build/manylinux1_x86_64
+        PACKAGE: build/manylinux2010_x86_64
