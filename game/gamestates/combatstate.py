@@ -196,7 +196,8 @@ class AiController():
 
 class CombatState(GameState):
     SELECTED_COLOR = (3, 0, 0, 1)
-    RANGE_COLOR = (0, 0, 3, 1)
+    MOVE_RANGE_COLOR = (0, 0, 3, 1)
+    ABILITY_RANGE_COLOR = (0, 3, 0, 1)
 
     def __init__(self):
         super().__init__()
@@ -211,7 +212,8 @@ class CombatState(GameState):
         # Arena
         self.arena = Arena(self.root_node, 10, 10)
         self.selected_tile = (0, 0)
-        self.range_tiles = []
+        self.move_range_tiles = []
+        self.ability_range_tiles = []
 
         self.player = base.blackboard['player']
 
@@ -331,7 +333,8 @@ class CombatState(GameState):
         super().enter_state()
 
         self.display_message(None)
-        self.range_tiles = []
+        self.move_range_tiles = []
+        self.ability_range_tiles = []
 
         # Kill all enemies cheat
         # def kill_all():
@@ -368,11 +371,11 @@ class CombatState(GameState):
         self.menu_helper.set_menu(combatant.name, menu_items)
 
         def update_ability(menu_item):
-            self.range_tiles = []
+            self.ability_range_tiles = []
             item_name = menu_item[0]
             if item_name not in ('Move', 'Rest', 'End Turn', 'End Combat'):
                 ability = menu_item[2][0]
-                self.range_tiles = self.arena.find_tiles_in_range(
+                self.ability_range_tiles = self.arena.find_tiles_in_range(
                     combatant.tile_position,
                     *self.get_ability_range(combatant, ability)
                 )
@@ -383,7 +386,7 @@ class CombatState(GameState):
         self.menu_helper.reject_cb = action_reject
 
     def enter_move(self, combatant):
-        self.range_tiles = self.arena.find_tiles_in_range(
+        self.move_range_tiles = self.arena.find_tiles_in_range(
             self.starting_tile_position,
             0,
             combatant.movement
@@ -421,7 +424,7 @@ class CombatState(GameState):
         )
 
     def enter_target(self, combatant, ability):
-        self.range_tiles = self.arena.find_tiles_in_range(
+        self.ability_range_tiles = self.arena.find_tiles_in_range(
             combatant.tile_position,
             *self.get_ability_range(combatant, ability)
         )
@@ -655,7 +658,8 @@ class CombatState(GameState):
 
         # Update tile color tints
         self.arena.color_tiles((1, 1, 1, 1))
-        self.arena.color_tiles(self.RANGE_COLOR, self.range_tiles)
+        self.arena.color_tiles(self.MOVE_RANGE_COLOR, self.move_range_tiles)
+        self.arena.color_tiles(self.ABILITY_RANGE_COLOR, self.ability_range_tiles)
         self.arena.color_tiles(self.SELECTED_COLOR, [self.selected_tile])
 
         # Update stat display
