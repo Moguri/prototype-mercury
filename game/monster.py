@@ -53,6 +53,9 @@ class MonsterActor:
             model = base.loader.load_model('models/{}.bam'.format(mesh['bam_file']))
             root_node = model.find('**/{}'.format(mesh['root_node']))
             if root_node.is_empty():
+                root_node = model.find(f'**/{mesh["root_node"]}_proxy')
+
+            if root_node.is_empty():
                 print(
                     f"Warning: root node ({mesh['root_node']}) not found in "
                     f"bam_file ({mesh['bam_file']}) for {form.id}"
